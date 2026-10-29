@@ -1,0 +1,12 @@
+{
+  "name": "guitarpuli",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs && npx --yes serve public"
+  },
+  "dependencies": {
+    "gray-matter": "4.0.3"
+  }
+}
