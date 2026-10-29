@@ -120,4 +120,59 @@ npm run dev
 ## 五、注意
 
 - `songs/` 裡目前的 14 首都是虛構範例，正式上線前請刪除或換成你自己的編曲。
-- 網站底部「版權聲明」頁目前是草稿範本，上線前請律師審閱並補上聯絡資料。
+- 「版權聲明」頁已填入聯絡人 pulipapa 和信箱；開始收費或開放會員公開上傳前，建議請律師看過。
+
+---
+
+## 六、網站上的其他功能
+
+- **後台連結**：在某台裝置用 `你的網址/admin/` 進過一次後台後，那台裝置的網站側欄最下面就會出現「後台」。一般訪客看不到。
+- **回報問題**：側欄和頁尾的「回報問題」會產生一段範本（自動帶入頁面網址和裝置），讓訪客複製後到 Instagram 私訊 pulipapa5986。
+- **Instagram / YouTube**：側欄和每一頁的頁尾都有連結。要改帳號，在 `public/index.html` 搜尋 `IG_URL`。
+
+## 七、會員同步（Supabase）
+
+開啟後，訪客可以登入帳號，收藏、自建譜、最近瀏覽、移調設定和歌詞會在手機和電腦之間同步。沒設定之前，網站不會顯示登入按鈕，其他功能照常使用。
+
+### 1. 建立 Supabase 專案
+1. 到 https://supabase.com → **Start your project**，用 GitHub 帳號登入。
+2. **New project**：
+   - Name：`guitarpuli`
+   - Database Password：按 Generate 產生，存到記事本
+   - Region：選 **Northeast Asia (Tokyo)** 或 **Southeast Asia (Singapore)**
+   - 其他維持預設，按 **Create new project**，等 1～2 分鐘。
+
+### 2. 建立資料表
+1. 左側選單 **SQL Editor** → **New query**。
+2. 打開這個資料夾裡的 `supabase.sql`，全部複製貼上，按 **Run**，看到 Success 就完成。
+
+### 3. 設定登入後回到哪個網址
+1. 左側 **Authentication → URL Configuration**。
+2. **Site URL** 填 `https://guitarpuli.netlify.app`（換成你的網址），按 Save。
+3. **Redirect URLs** 按 Add URL，填 `https://guitarpuli.netlify.app/**`，按 Save。
+
+做到這裡，**Email 登入**（寄登入連結）就能用了。Supabase 內建寄信服務每小時只能寄少量信件，自己測試足夠；會員變多後再到 Authentication → Emails 設定自己的寄信服務。
+
+### 4. 把金鑰放進網站
+1. 左側 **Project Settings → API Keys**（或首頁上方的 **Connect**）。
+2. 複製 **Project URL**（像 `https://xxxx.supabase.co`）和 **Publishable key**（`sb_publishable_` 開頭；舊專案叫 anon key）。
+   - 這兩個可以公開放在網頁裡，資料由第 2 步的權限保護。
+   - **絕對不要**使用或貼出 `secret` / `service_role` key。
+3. 在 GitHub 打開 `public/index.html`，按鉛筆編輯，搜尋 `SUPABASE_URL`，把兩行改成：
+   ```
+   const SUPABASE_URL='https://xxxx.supabase.co';
+   const SUPABASE_KEY='sb_publishable_xxxx';
+   ```
+   Commit 後約 1 分鐘，側欄就會出現「登入」。
+
+### 5. Google 登入（可以之後再做）
+1. 到 https://console.cloud.google.com 建立專案 → **APIs & Services → OAuth consent screen**，填應用程式名稱「吉他普利」和你的 Email，對象選 External。
+2. **Credentials → Create credentials → OAuth client ID**，類型選 **Web application**：
+   - Authorized JavaScript origins：`https://guitarpuli.netlify.app`
+   - Authorized redirect URIs：Supabase 的 **Authentication → Sign In / Providers → Google** 頁面顯示的 Callback URL（像 `https://xxxx.supabase.co/auth/v1/callback`）
+3. 把 Google 給的 Client ID 和 Client Secret 貼回 Supabase 的 Google 設定，開啟並儲存。
+
+### 同步規則
+- 第一次登入時，會把這台裝置原本的資料和帳號裡的資料合併，不會互相蓋掉。
+- 之後每次修改約 1 秒內上傳；切回網頁分頁時會自動抓最新資料。
+- 歌詞只存在該會員自己的資料列，其他會員和訪客讀不到。

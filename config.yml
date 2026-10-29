@@ -1,0 +1,62 @@
+# 吉他普利 後台設定（Decap CMS）
+# 把下面的 repo 改成你自己的「GitHub 帳號/儲存庫名稱」
+backend:
+  name: github
+  repo: similu87/guitarpuli
+  branch: main
+
+locale: zh_Hant
+media_folder: public/uploads
+public_folder: /uploads
+
+collections:
+  - name: songs
+    label: 樂譜
+    label_singular: 樂譜
+    folder: songs
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{fields.url_id}}"
+    identifier_field: title
+    summary: "{{title}} — {{artist}}（{{key}}）"
+    sortable_fields: [added, title, artist]
+    fields:
+      - { name: url_id, label: "網址代稱（小寫英文、數字、-，例如 rocket-88）", widget: string, pattern: ['^[a-z0-9-]+$', '只能用小寫英文、數字和 -'] }
+      - { name: title, label: 歌名, widget: string }
+      - { name: artist, label: 歌手, widget: string, required: false }
+      - { name: key, label: 原調（實際音高）, widget: select, options: [C, C#, Db, D, Eb, E, F, F#, Gb, G, Ab, A, Bb, B, Cm, C#m, Dm, D#m, Ebm, Em, Fm, F#m, Gm, G#m, Am, Bbm, Bm] }
+      - { name: capo, label: 建議 Capo（0 = 不夾）, widget: number, value_type: int, min: 0, max: 9, default: 0 }
+      - { name: bpm, label: BPM, widget: number, value_type: int, min: 30, max: 260, default: 90 }
+      - { name: time, label: 拍號, widget: select, options: ["4/4", "3/4", "6/8", "12/8", "2/4"], default: "4/4" }
+      - name: feel
+        label: 律動
+        widget: select
+        default: straight8
+        options:
+          - { label: "平均八分 Straight 8ths", value: straight8 }
+          - { label: "搖擺八分 Swing", value: swing }
+          - { label: "三連音拖曳 Shuffle", value: shuffle }
+          - { label: "平均十六分 Straight 16ths", value: straight16 }
+          - { label: "12/8 三連音 Triplet", value: triplet }
+      - { name: strum, label: 刷法（例如 ↓ ↓↑ ↑↓↑）, widget: string, required: false }
+      - { name: strum_note, label: 刷法補充（中文）, widget: string, required: false }
+      - { name: strum_note_en, label: 刷法補充（英文）, widget: string, required: false }
+      - { name: level, label: 難度, widget: select, options: [{ label: 初級, value: 1 }, { label: 中級, value: 2 }, { label: 進階, value: 3 }], default: 1 }
+      - name: genre
+        label: 曲風
+        widget: select
+        default: pop
+        options:
+          - { label: 流行, value: pop }
+          - { label: 民謠, value: folk }
+          - { label: 藍調, value: blues }
+          - { label: 搖滾, value: rock }
+          - { label: 抒情, value: ballad }
+          - { label: 老搖滾, value: oldies }
+      - { name: added, label: 上架日期, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - name: body
+        label: 和弦譜
+        widget: text
+        hint: "「## 段落名」開新段落（前奏、主歌、導歌、副歌、橋段、間奏、尾奏）。每列用 | 隔開小節，同一小節兩個和弦用空格，例如 | G | D | Em C | D |"
+        default: "## 前奏\n| G | D | Em | C |\n\n## 主歌\n| G | D | Em | C |\n\n## 副歌\n| C | D | G | Em |"

@@ -1,0 +1,859 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="吉他普利 Guitarpuli：可移調、可夾 Capo 的吉他和弦譜。">
+<style>html{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>吉他普利</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: 64px icon rail (expands on hover) + content column; song page = framed tool panel, collapsible practice panel, two-column chord sheet */
+:root{
+  --bg:#F2F3EF; --surface:#FFFFFF; --sunk:#E8EAE4; --ink:#1B2220; --muted:#5D6762; --line:#D8DCD5;
+  --chord:#0D6A64; --brass:#9C6A12; --brass-soft:#F3E6CC; --on-brass:#FFFFFF; --panel:#E3E7E0; --panel-line:#C6CCC3;
+  --g-pop:#2E7383; --g-folk:#52703C; --g-blues:#24476F; --g-rock:#97392C; --g-ballad:#715887; --g-oldies:#A6731A; --g-mine:#46504C;
+  --f-body:"Noto Sans TC",system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
+  --f-disp:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --sheet-size:16px; --rail:64px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111413; --surface:#191D1C; --sunk:#222827; --ink:#E3E7E3; --muted:#9AA39E; --line:#2C3331;
+  --chord:#62C7BD; --brass:#D9A443; --brass-soft:#3A2F1A; --on-brass:#1A1406; --panel:#1F2524; --panel-line:#363F3C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111413; --surface:#191D1C; --sunk:#222827; --ink:#E3E7E3; --muted:#9AA39E; --line:#2C3331;
+  --chord:#62C7BD; --brass:#D9A443; --brass-soft:#3A2F1A; --on-brass:#1A1406; --panel:#1F2524; --panel-line:#363F3C; color-scheme:dark}
+:root[data-skin="sepia"]{
+  --bg:#EEE5D0; --surface:#F8F1E0; --sunk:#E4D8BD; --ink:#2B2116; --muted:#6C5C46; --line:#D4C5A6;
+  --chord:#7C361A; --brass:#86560F; --brass-soft:#E9D6AE; --on-brass:#FFFFFF; --panel:#E3D5B5; --panel-line:#C8B48B; color-scheme:light}
+:root[data-skin="amber"]{
+  --bg:#0E0D0B; --surface:#171512; --sunk:#24201A; --ink:#EFE7D8; --muted:#A69C8A; --line:#2F2A22;
+  --chord:#F2B84B; --brass:#E2865C; --brass-soft:#3A2418; --on-brass:#1A0E06; --panel:#1D1A15; --panel-line:#3B342A; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+a{color:inherit;text-decoration:none}
+button,select,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* rail */
+.rail{position:fixed;z-index:40;top:0;bottom:0;left:0;width:calc(var(--rail) + env(safe-area-inset-left,0px));padding:calc(14px + env(safe-area-inset-top,0px)) 8px 14px calc(8px + env(safe-area-inset-left,0px));
+  background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;gap:4px;overflow:hidden;transition:width .18s ease,box-shadow .18s}
+@media (hover:hover) and (min-width:721px){.rail:hover{width:272px;box-shadow:8px 0 24px rgba(0,0,0,.08)}}
+.rail .rbtn{border:0;background:none;font:inherit;text-align:left;width:100%;cursor:pointer}
+.rail a,.rail .rbtn{display:flex;align-items:center;gap:16px;min-height:46px;padding:0 13px;border-radius:8px;white-space:nowrap;color:var(--muted)}
+.rail a:hover,.rail .rbtn:hover{background:var(--sunk);color:var(--ink)}
+.rail a.on{background:var(--brass-soft);color:var(--brass)}
+.rail .brand{color:var(--ink);margin-bottom:14px;min-height:58px}
+.rail svg.i{width:22px;height:22px}
+.rail .brand svg{stroke:var(--brass)}
+.rail .lbl.brandtxt{display:grid;gap:3px;line-height:1.1}
+.brandtxt b{font-family:var(--f-disp);font-weight:900;font-size:22px;letter-spacing:.02em}
+.brandtxt b.en{font-size:21px;letter-spacing:.01em}
+.brandtxt small{font-size:12px;letter-spacing:.24em;color:var(--muted);font-weight:700}
+.rail .lbl{font-size:15.5px;opacity:0;transition:opacity .12s;display:flex;align-items:center;gap:8px}
+.rail:hover .lbl{opacity:1}
+.pro{font-size:9.5px;font-weight:700;letter-spacing:.12em;background:var(--brass);color:var(--on-brass);border-radius:4px;padding:1px 5px}
+.rail .sep{margin-top:auto}
+.rail .small{min-height:40px}
+.rail .small .lbl{font-size:14px}
+.rail .foot{font-size:11.5px;color:var(--muted);white-space:normal;padding:4px 10px 0;opacity:0;transition:opacity .15s;margin:0}
+.rail:hover .foot{opacity:1}
+
+main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px max(16px,env(safe-area-inset-right,0px)) 60px 32px;max-width:1720px}
+@media (max-width:720px){
+  .rail{top:auto;right:0;width:auto;height:auto;flex-direction:row;justify-content:space-around;padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));border-right:0;border-top:1px solid var(--line)}
+  .rail .brand,.rail .lbl,.rail .foot{display:none}
+  .rail .sep{margin-top:0}
+  main{margin-left:0;padding:18px max(16px,env(safe-area-inset-right,0px)) 96px max(16px,env(safe-area-inset-left,0px))}
+}
+
+/* page heads */
+.pagehead{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;margin-bottom:14px}
+.pagehead h1{font-family:var(--f-disp);font-weight:900;font-size:24px;margin:0;letter-spacing:.02em}
+.pagehead .count{color:var(--muted);font-size:13px}
+.search{flex:1 1 260px;max-width:420px;margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:0 12px;height:38px;color:var(--muted)}
+.search input{border:0;background:none;outline:none;flex:1;min-width:0;color:var(--ink)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:20px}
+.filters select{height:32px;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:0 8px;font-size:13px}
+.seg-toggle{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-left:auto}
+.seg-toggle button{border:0;background:var(--surface);height:30px;padding:0 10px;font-size:13px;color:var(--muted)}
+.seg-toggle button.on{background:var(--ink);color:var(--bg)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
+.tabs a{padding:8px 14px;font-size:14px;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tabs a.on{color:var(--ink);border-bottom-color:var(--brass);font-weight:700}
+.tabs a span{font-size:12px;color:var(--muted);margin-left:4px;font-weight:400}
+
+/* grid cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:22px 16px}
+.card{position:relative;min-width:0}
+.card a{display:block}
+.cover{aspect-ratio:1;max-width:100%;border-radius:6px;background:var(--c);color:#fff;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:10px 12px}
+.cover::after{content:"";position:absolute;inset:auto -20% -38% auto;width:85%;aspect-ratio:1;border-radius:50%;border:10px solid rgba(255,255,255,.12);box-shadow:0 0 0 14px rgba(255,255,255,.05)}
+.cover .cv-g{font-size:11px;letter-spacing:.12em;opacity:.85}
+.cover .cv-t{font-family:var(--f-disp);font-weight:900;font-size:20px;line-height:1.2;text-wrap:balance;position:relative;z-index:1}
+.cover .cv-k{position:absolute;right:10px;top:8px;font-family:var(--f-mono);font-weight:700;font-size:13px;opacity:.9}
+.card a:hover .cover{filter:brightness(1.08)}
+.meta{padding-top:8px;display:grid;gap:1px}
+.meta b{font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.meta span{color:var(--muted);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fav{position:absolute;top:6px;left:6px;width:30px;height:30px;border-radius:50%;border:0;background:rgba(0,0,0,.28);color:#fff;display:grid;place-items:center;opacity:0;transition:opacity .15s}
+.card:hover .fav,.fav.on,.fav:focus-visible{opacity:1}
+.fav svg{width:16px;height:16px}
+.fav.on svg{fill:currentColor}
+.diff{display:inline-flex;gap:2px;vertical-align:middle}
+.diff i{width:5px;height:9px;border-radius:1px;background:var(--line)}
+.diff i.on{background:var(--brass)}
+
+/* list */
+.list{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.lrow{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.3fr) 56px 70px 70px 56px 44px;gap:12px;align-items:center;padding:9px 14px;border-top:1px solid var(--line);font-size:13.5px}
+.lrow:first-child{border-top:0}
+.lrow.h{font-size:11.5px;color:var(--muted);letter-spacing:.08em;background:var(--sunk)}
+.lrow a.t{font-weight:700}
+.lrow a.t:hover{color:var(--chord)}
+.lrow .m{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lrow .k{font-family:var(--f-mono);font-weight:700;color:var(--chord)}
+.lrow .num{font-variant-numeric:tabular-nums;color:var(--muted)}
+.lrow .fav{position:static;opacity:1;background:none;color:var(--muted);width:28px;height:28px}
+.lrow .fav.on{color:var(--brass)}
+.chip{font-size:11px;border:1px solid var(--line);border-radius:4px;padding:0 5px;color:var(--muted);margin-left:6px;font-weight:400}
+@media (max-width:720px){.lrow{grid-template-columns:minmax(0,1fr) 44px 40px}.lrow>:nth-child(2),.lrow>:nth-child(4),.lrow>:nth-child(5),.lrow>:nth-child(6){display:none}}
+
+.empty{border:1px dashed var(--line);border-radius:8px;padding:36px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
+
+/* song page */
+.songhead{display:flex;gap:14px;align-items:flex-start;margin-bottom:12px}
+.back{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);display:grid;place-items:center;background:var(--surface);flex:none}
+.songhead h1{font-family:var(--f-disp);font-weight:900;font-size:26px;line-height:1.25;margin:0;text-wrap:balance}
+.songhead p{margin:2px 0 0;color:var(--muted);font-size:13px}
+.songhead p .k{font-family:var(--f-mono);color:var(--chord);font-weight:700}
+.songhead .grow{flex:1;min-width:0}
+.hbtn{height:34px;border-radius:8px;border:1px solid var(--line);background:var(--surface);padding:0 12px;display:inline-flex;align-items:center;gap:6px;font-size:13px;flex:none}
+.hbtn.on{color:var(--brass);border-color:var(--brass)}
+.hbtn.on svg{fill:currentColor}
+
+.toolwrap{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding-block:10px;margin-bottom:8px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;border-bottom:1px solid var(--line)}
+.tools{display:flex;flex-wrap:wrap;gap:1px;background:var(--panel-line);border:1.5px solid var(--panel-line);border-radius:12px;overflow:hidden;box-shadow:0 8px 20px -14px rgba(0,0,0,.35);min-width:0}
+.tg{display:flex;flex-direction:column;gap:5px;padding:8px 14px 10px;background:var(--panel);flex:1 1 auto}
+.tc{display:flex;align-items:center;gap:3px}
+.tl{font-size:10.5px;letter-spacing:.14em;color:var(--muted);font-weight:700;white-space:nowrap}
+.tb{min-width:30px;height:30px;border:0;border-radius:6px;background:var(--sunk);padding:0 8px;font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap}
+.tb:hover{background:var(--line)}
+.tb.on{background:var(--brass);color:var(--on-brass)}
+.tools .tb,.tools select{background:var(--surface)}
+.tools .tb:hover{background:var(--sunk)}
+.tools .tb.on{background:var(--brass)}
+.tools select{height:30px;border:0;border-radius:6px;padding:0 6px}
+.viewbtns{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-left:auto}
+.viewbtns .tb{background:none;border:1px solid var(--line)}
+.viewbtns .tb.on{background:var(--brass);border-color:var(--brass)}
+.tv{font-family:var(--f-mono);font-weight:700;min-width:36px;text-align:center;font-variant-numeric:tabular-nums}
+.dots{display:flex;gap:3px;margin-left:2px}
+.dots i{width:6px;height:6px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--brass)}
+.dots i.on:first-child{background:var(--chord)}
+
+.note{font-size:12.5px;color:var(--muted);margin:0 0 14px;display:flex;flex-wrap:wrap;gap:4px 16px}
+.note b{color:var(--brass);font-weight:500}
+
+/* wide-screen side columns */
+.homecols{display:grid;grid-template-columns:minmax(0,1fr);gap:32px}
+.aside{display:none}
+@media (min-width:1400px){.homecols{grid-template-columns:minmax(0,1fr) 288px}.aside{display:grid;gap:16px;align-content:start;position:sticky;top:24px}}
+.aside section{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.aside h4{margin:0 0 10px;font-size:10.5px;letter-spacing:.14em;color:var(--muted)}
+.cont{display:grid;gap:2px}
+.cont a{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:10px;align-items:center;padding:6px;border-radius:8px;margin:0 -6px}
+.cont a:hover{background:var(--sunk)}
+.cont .sq{width:36px;height:36px;border-radius:6px;background:var(--c);color:#fff;display:grid;place-items:center;font-family:var(--f-mono);font-weight:700;font-size:12px}
+.cont b{font-size:13.5px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cont small{color:var(--muted);font-size:12px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cont .cp{font-size:11.5px;color:var(--brass);font-family:var(--f-mono);white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:3px 10px;font-size:12.5px}
+.chips button:hover{border-color:var(--muted)}
+.chips button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chips button span{color:var(--muted);margin-left:5px;font-size:11px}
+.chips button.on span{color:inherit;opacity:.7}
+.songbody{display:flex;flex-direction:column}
+.songbody #practice{order:-1}
+.songmain{min-width:0}
+@media (min-width:1400px){.songbody.withside{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:36px;align-items:start}
+  .songbody.withside #practice{order:2;position:sticky;top:130px}
+  .songbody.withside .practice{grid-template-columns:minmax(0,1fr);margin:0}}
+
+/* practice panel */
+.practice{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px 6px;margin-bottom:20px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 28px}
+@media (max-width:720px){.practice{grid-template-columns:minmax(0,1fr)}}
+.practice h4{margin:0 0 4px;font-size:10.5px;letter-spacing:.14em;color:var(--muted)}
+.chordgrid{display:flex;flex-wrap:wrap;gap:2px 6px}
+.cd{text-align:center;width:82px}
+.cd b{font-family:var(--f-mono);color:var(--chord);font-size:14px}
+.cd svg{display:block;margin:0 auto;color:var(--ink);width:78px;height:91px}
+.cd small{display:grid;place-items:center;height:91px;color:var(--muted);font-size:11px}
+.rhythm{display:grid;gap:10px;align-content:start;min-width:200px}
+.rhythm .v{font-size:15px;font-weight:700}
+.rhythm .v small{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:6px}
+.snote{font-size:12.5px;color:var(--muted);margin-top:2px}
+.strum{font-family:var(--f-mono);font-size:17px;letter-spacing:.08em;color:var(--chord)}
+
+.sheet{font-size:var(--sheet-size);line-height:1.5}
+@media (min-width:980px){.sheet.cols2{column-count:2;column-gap:56px;column-rule:1px solid var(--line)}}
+.sec{break-inside:avoid;margin-bottom:1.4em}
+.sec h3{font-size:.72em;letter-spacing:.14em;color:var(--brass);margin:0 0 .5em;font-weight:700;display:flex;align-items:center;gap:8px}
+.sec h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.ch{font-family:var(--f-mono);font-weight:700;color:var(--chord);cursor:help}
+.ch:hover{text-decoration:underline;text-underline-offset:3px}
+.row{margin-bottom:.55em}
+.bars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-left:2px solid var(--muted)}
+.bar{border-right:1px solid var(--muted);padding:.15em .6em;display:flex;gap:.8em;min-height:1.9em;align-items:center}
+.bar:last-child{border-right-width:2px}
+.lyr{padding:.1em .6em 0;color:var(--ink)}
+.lyr.ph{color:var(--muted);opacity:.55;font-size:.85em}
+.ln{display:flex;flex-wrap:wrap;align-items:flex-end;margin-bottom:.35em}
+.seg{display:inline-flex;flex-direction:column}
+.seg .c{min-height:1.35em;padding-right:.5em;font-family:var(--f-mono);font-weight:700;color:var(--chord);white-space:nowrap}
+.seg .l{white-space:pre}
+
+.lyrpanel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:18px;display:grid;gap:8px}
+.lyrpanel p{margin:0;font-size:12.5px;color:var(--muted)}
+textarea{width:100%;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:10px 12px;font-size:14px;line-height:1.6;resize:vertical}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn{height:34px;border-radius:8px;border:1px solid var(--line);background:var(--surface);padding:0 14px;font-size:13px;display:inline-flex;align-items:center}
+.btn.pri{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.warn{color:var(--g-rock)}
+
+/* editor */
+.edit{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+@media (max-width:900px){.edit{grid-template-columns:minmax(0,1fr)}}
+.form{display:grid;gap:10px;align-content:start}
+.form .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form .three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media (max-width:520px){.form .three{grid-template-columns:1fr 1fr}}
+.form label{display:grid;gap:4px;font-size:12px;color:var(--muted)}
+.form input,.form select{height:36px;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:0 10px;font-size:14px;min-width:0}
+.form textarea{min-height:320px;font-family:var(--f-mono);font-size:13px}
+.preview{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;min-width:0;overflow-x:auto}
+.hint{font-size:12px;color:var(--muted);background:var(--sunk);border-radius:8px;padding:10px 12px}
+.hint code{font-family:var(--f-mono);color:var(--chord)}
+
+/* prose pages */
+.prose{max-width:720px}
+.prose h1{font-family:var(--f-disp);font-weight:900;font-size:26px;margin:0 0 4px;text-wrap:balance}
+.prose .en{color:var(--muted);font-size:13px;letter-spacing:.06em;margin:0 0 18px}
+.prose h2{font-size:16px;margin:26px 0 6px}
+.prose p,.prose li{font-size:14.5px;line-height:1.8}
+.prose ol,.prose ul{padding-left:1.3em}
+.draft{background:var(--brass-soft);color:var(--ink);border-radius:8px;padding:10px 14px;font-size:13px}
+.studio-hero{display:grid;gap:6px;margin-bottom:22px}
+.studio-hero h1{display:flex;align-items:center;gap:10px}
+.tabbox{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;overflow-x:auto;margin:10px 0 6px}
+.tabbox pre{margin:0;font-family:var(--f-mono);font-size:14px;line-height:1.45;color:var(--ink)}
+.tabbox pre em{font-style:normal;color:var(--chord);font-weight:700}
+.feat{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:14px}
+.feat div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.feat b{display:block;margin-bottom:2px}
+.feat span{font-size:13px;color:var(--muted)}
+
+/* theme menu + tooltip */
+.themepop{position:fixed;z-index:50;left:calc(var(--rail) + 12px + env(safe-area-inset-left,0px));bottom:16px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px;display:grid;gap:2px;min-width:180px;box-shadow:0 14px 30px -10px rgba(0,0,0,.35)}
+.themepop .h{font-size:11px;letter-spacing:.12em;color:var(--muted);padding:6px 10px 4px}
+.themepop button{display:flex;align-items:center;gap:10px;border:0;background:none;padding:8px 10px;border-radius:6px;text-align:left;font-size:13.5px}
+.themepop button:hover{background:var(--sunk)}
+.themepop button.on{color:var(--brass);font-weight:700}
+.sw{width:20px;height:20px;border-radius:50%;border:1px solid var(--line);flex:none}
+@media (max-width:720px){.themepop{left:auto;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(72px + env(safe-area-inset-bottom,0px))}}
+.tip{position:fixed;z-index:60;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px 6px;box-shadow:0 10px 24px -8px rgba(0,0,0,.3);pointer-events:none;text-align:center}
+.tip b{font-family:var(--f-mono);color:var(--chord);font-size:14px}
+.tip svg{display:block;color:var(--ink)}
+.tip small{display:block;color:var(--muted);font-size:11px;width:96px}
+
+body.perform .rail,body.perform .songhead,body.perform .note,body.perform .practice,body.perform .sitefoot{display:none}
+/* social, footer, modal, report */
+.rail .ig svg{color:#E1306C}
+.rail .yt svg{color:#FF0033}
+.rail .divider{height:1px;background:var(--line);margin:6px 10px;flex:none}
+.rail .avatar{width:22px;height:22px;border-radius:50%;background:var(--brass);color:var(--on-brass);display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}
+.rail .sync{font-size:11.5px;color:var(--muted);margin-left:2px}
+.rail .bottom{min-height:38px}
+@media (max-width:720px){.rail .m-hide{display:none}.rail .bottom{min-height:46px}}
+.sitefoot{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;color:var(--muted);font-size:13px}
+.sitefoot .follow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sitefoot .follow b{color:var(--ink);font-size:13.5px;margin-right:4px}
+.sbtn{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 16px 0 12px;border-radius:999px;color:#fff;font-weight:700;font-size:13.5px}
+.sbtn svg.i{width:19px;height:19px}
+.sbtn.ig{background:linear-gradient(45deg,#F58529,#DD2A7B 55%,#8134AF)}
+.sbtn.yt{background:#E00000}
+.sbtn:hover{filter:brightness(1.08)}
+.sitefoot .links{display:flex;gap:16px;margin-left:auto;flex-wrap:wrap}
+.sitefoot .links a:hover{color:var(--ink)}
+.modal{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px}
+.modal .box{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;width:min(420px,100%);display:grid;gap:12px}
+.modal h2{margin:0;font-family:var(--f-disp);font-size:20px}
+.modal p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.7}
+.modal input{height:40px;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:0 12px;font-size:14px;width:100%}
+.btn.wide{width:100%;justify-content:center;height:40px;font-size:14px}
+.or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.msg{font-size:13px;color:var(--chord)}
+.report pre{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;white-space:pre-wrap;font-family:var(--f-body);font-size:14px;line-height:1.8;margin:8px 0 12px}
+body.perform main{margin-left:0;max-width:none;padding-left:max(24px,env(safe-area-inset-left,0px))}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<nav class="rail" id="rail" aria-label="Main"></nav>
+<div class="themepop" id="themepop" hidden></div>
+<main><div id="app"></div><footer class="sitefoot" id="sitefoot"></footer></main>
+<div class="modal" id="modal" hidden></div>
+<div id="tip" class="tip" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const LS={get(k,d){try{const v=localStorage.getItem('gp_'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('gp_'+k,JSON.stringify(v))}catch(e){}}};
+
+/* ---------- i18n ---------- */
+let lang=LS.get('lang','zh');
+const I={
+zh:{admin:'後台',report:'回報問題',follow:'追蹤 pulipapa',login:'登入',account:'我的帳號',
+  loginTitle:'登入吉他普利',loginWhy:'登入後，收藏、自建譜、歌詞和每首歌的移調設定，會在你的手機和電腦之間同步。',google:'用 Google 登入',or:'或',emailPh:'你的 Email',sendLink:'寄登入連結給我',sent:'已寄出。請到信箱點信裡的連結完成登入。',badEmail:'請輸入正確的 Email',
+  signedIn:'已登入',synced:'已同步',syncing:'同步中…',syncErr:'同步失敗，稍後會自動重試',logout:'登出',close:'關閉',
+  rTitle:'回報問題',rIntro:'發現和弦寫錯、畫面跑掉或功能壞掉，請到 Instagram 私訊告訴我。照下面的範本寫，我能比較快找到問題。',
+  rCopy:'複製範本',rCopied:'已複製，貼到 Instagram 私訊就好',rOpen:'到 Instagram 私訊我',rNote:'需要登入 Instagram。手機會直接打開 Instagram App。截圖可以直接傳在私訊裡。',
+  rTpl:(u,d)=>`【吉他普利 問題回報】\n頁面：${u}\n裝置／瀏覽器：${d}\n發生了什麼事：\n我做了哪些步驟：\n（附上截圖會更清楚）`,
+home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲明',langSwitch:'English',foot:'© 吉他普利 Guitarpuli',
+  th:{system:'跟隨系統',light:'淺色',dark:'深色',sepia:'復古紙',amber:'夜間琥珀'},
+  allSheets:'全部樂譜',count:n=>`${n} 首`,search:'搜尋歌名或歌手',allKeys:'所有調性',allDiff:'所有難度',allGenre:'所有曲風',
+  sortNew:'最新上架',sortTitle:'依歌名',sortEasy:'由易到難',grid:'卡片',list:'列表',noMatch:['找不到符合的譜','換個關鍵字或清除篩選條件。'],
+  colTitle:'歌名',colArtist:'歌手',colKey:'調性',colLevel:'難度',colType:'類別',edit:'編輯',save:'收藏',saved:'已收藏',
+  diff:['','初級','中級','進階'],genre:{pop:'流行',folk:'民謠',blues:'藍調',rock:'搖滾',ballad:'抒情',oldies:'老搖滾'},mineTag:'自建譜',
+  cont:'繼續練習',contEmpty:'打開任一首譜後，會在這裡接著上次的調性和 Capo 繼續練。',byLevel:'依難度',byGenre:'依曲風',byKey:'依調性',
+  tabs:{library:'全部','library-saved':'收藏','library-mine':'自建譜','library-recent':'最近瀏覽'},newSheet:'新增譜',
+  empty:{library:['曲庫是空的','在任何一首譜按「收藏」，或按右上角「新增譜」抄寫自己的版本，都會集中在這裡。'],'library-saved':['還沒有收藏','在卡片上按愛心，或在譜面頁按「收藏」。'],
+    'library-mine':['還沒有自建譜','用 ChordPro 格式輸入歌詞和和弦，只存在你自己的瀏覽器，一樣可以移調、夾 Capo。'],'library-recent':['還沒有瀏覽紀錄','打開任一首譜後會出現在這裡。']},
+  back:'返回',origKey:'原調',transpose:'移調',reset:'原調',resetTip:'回原調並套用編者建議的 Capo',capoNone:'無',best:'最好彈',bestTip:'依目前調性找出開放和弦最多的夾法',
+  size:'字體',metro:'節拍器',sub:'細分',subTip:'依律動加入細分拍',practice:'練習面板',lyrics:'我的歌詞',cols:'兩欄',perform:'演奏模式',endPerform:'結束演奏',
+  noteCapo:(a,c,s)=>`實際音高 <b>${a}</b>，夾 Capo ${c}，用 <b>${s}</b> 調指型彈奏`,noteKey:a=>`目前調性 <b>${a}</b>`,
+  noteShift:(o,n)=>`（原調 ${o}，${n>0?'升':'降'} ${Math.abs(n)} 個半音）`,noteEditor:(c,s)=>`編者建議：Capo ${c}，用 ${s} 調指型`,notePub:'公開譜只含和弦與段落；歌詞由你自己輸入，只存在這台裝置',notePubAcct:'公開譜只含和弦與段落；你的歌詞存在你的帳號裡，只有你看得到',
+  chordsTitle:c=>c?`本曲和弦（Capo ${c} 指型）`:'本曲和弦',feel:'律動',strum:'刷法',noDiagram:'指法圖待補',noDiagramTip:'這個和弦的指法圖之後補上',
+  feels:{straight8:'平均八分',swing:'搖擺八分',shuffle:'三連音拖曳',straight16:'平均十六分',triplet:'12/8 三連音'},
+  strumNote:{late:'後半拍稍微延後',down:'全部下刷'},
+  sec:{solo:'間奏',intro:'前奏',verse:'主歌',verse12:'主歌（12 小節）',solo12:'間奏（12 小節）',prechorus:'導歌',chorus:'副歌',bridge:'橋段',outro:'尾奏'},
+  lyrHelp:n=>`每一行歌詞對應一列和弦（這首共 ${n} 列），空白行代表該列沒有歌詞。內容只存在你的瀏覽器，不會上傳到網站。`,lyrHelpAcct:n=>`每一行歌詞對應一列和弦（這首共 ${n} 列），空白行代表該列沒有歌詞。歌詞會存到你的帳號，手機和電腦都看得到，其他人看不到。`,lyrPh:'第 1 行歌詞\n第 2 行歌詞\n…',
+  lyrSave:'儲存歌詞',lyrSaved:'已儲存',lyrClose:'收起',lyrLine:n=>`第 ${n} 行歌詞`,
+  editTitle:'編輯譜',newTitle:'新增譜',fTitle:'歌名',fArtist:'歌手',fKey:'原調（實際音高）',fCapo:'建議 Capo',capoNo:'不夾',fFeel:'律動',fTime:'拍號',fStrum:'刷法',
+  fBody:'歌詞與和弦（寫實際音高的和弦）',hint:'和弦放在方括號裡：<code>[G]歌詞[D]歌詞</code>。段落標題寫 <code>{c: 副歌}</code> 或 <code># 副歌</code>，空一行分段。',
+  btnSave:'儲存',btnCancel:'取消',btnDel:'刪除',delConfirm:'再按一次確認刪除',needTitle:'請先填歌名',
+  capoHint:(c,s,b)=>`讀者打開時會${c?`自動夾 Capo ${c}，看到 <code>${s}</code> 調指型`:'看到原調指型'}。依這首的和弦，開放和弦最多的夾法是 <code>${b}</code>。`,
+  bestLabel:(c,s)=>c?`Capo ${c}（${s} 指型）`:'不夾',
+  sample:`{c: 主歌}\n[G]這是一段示[D]範歌詞\n[Em]把你自己的[C]歌詞貼在這裡\n[G]和弦寫在方[D]括號裡面\n[C]它就會浮在[D]字的上方\n\n{c: 副歌}\n[C]移調的時[D]候\n[G]括號裡的和[Em]弦會一起變\n[C]夾上 Capo [D]也會自動換指型\n[G]`},
+en:{admin:'Admin',report:'Report a Bug',follow:'Follow pulipapa',login:'Sign in',account:'My Account',
+  loginTitle:'Sign in to Guitarpuli',loginWhy:'Once you sign in, your saved sheets, your own sheets, lyrics and key settings sync between your phone and computer.',google:'Continue with Google',or:'or',emailPh:'Your email',sendLink:'Email me a sign-in link',sent:'Sent. Open the link in your email to finish signing in.',badEmail:'Enter a valid email address',
+  signedIn:'Signed in',synced:'Synced',syncing:'Syncing…',syncErr:'Sync failed. Retrying shortly.',logout:'Sign out',close:'Close',
+  rTitle:'Report a Bug',rIntro:'Found a wrong chord, a broken layout or a feature that doesn’t work? Send me a message on Instagram. Using the template below helps me find the problem faster.',
+  rCopy:'Copy template',rCopied:'Copied. Paste it into your Instagram message.',rOpen:'Message me on Instagram',rNote:'You need to be signed in to Instagram. On a phone this opens the Instagram app. You can attach screenshots in the message.',
+  rTpl:(u,d)=>`[Guitarpuli bug report]\nPage: ${u}\nDevice / browser: ${d}\nWhat happened:\nSteps I took:\n(Screenshots help a lot)`,
+home:'Home',library:'My Library',theme:'Theme',legal:'Copyright',langSwitch:'中文',foot:'© Guitarpuli',
+  th:{system:'System',light:'Light',dark:'Dark',sepia:'Vintage Paper',amber:'Night Amber'},
+  allSheets:'All Sheets',count:n=>`${n} ${n===1?'song':'songs'}`,search:'Search songs or artists',allKeys:'All keys',allDiff:'All levels',allGenre:'All genres',
+  sortNew:'Newest',sortTitle:'Title',sortEasy:'Easiest first',grid:'Grid',list:'List',noMatch:['No matching sheets','Try another keyword or clear the filters.'],
+  colTitle:'Title',colArtist:'Artist',colKey:'Key',colLevel:'Level',colType:'Type',edit:'Edit',save:'Save',saved:'Saved',
+  diff:['','Beginner','Intermediate','Advanced'],genre:{pop:'Pop',folk:'Folk',blues:'Blues',rock:'Rock',ballad:'Ballad',oldies:'Oldies'},mineTag:'My Sheet',
+  cont:'Continue Practicing',contEmpty:'Open any sheet and it will show up here with your last key and capo.',byLevel:'By Level',byGenre:'By Genre',byKey:'By Key',
+  tabs:{library:'All','library-saved':'Saved','library-mine':'My Sheets','library-recent':'Recent'},newSheet:'New Sheet',
+  empty:{library:['Your library is empty','Save any sheet, or use New Sheet to write your own arrangement.'],'library-saved':['Nothing saved yet','Tap the heart on a card or Save on a sheet.'],
+    'library-mine':['No sheets of your own yet','Write lyrics and chords in ChordPro. They stay in your browser and still transpose and use a capo.'],'library-recent':['No history yet','Sheets you open will appear here.']},
+  back:'Back',origKey:'Original key',transpose:'Transpose',reset:'Reset',resetTip:'Back to the original key and the editor’s capo',capoNone:'None',best:'Easiest',bestTip:'Pick the capo that gives the most open chords',
+  size:'Text',metro:'Metronome',sub:'Subdivide',subTip:'Add subdivisions that follow the feel',practice:'Practice Panel',lyrics:'My Lyrics',cols:'Two Columns',perform:'Stage Mode',endPerform:'Exit Stage Mode',
+  noteCapo:(a,c,s)=>`Sounds in <b>${a}</b> · Capo ${c} · play <b>${s}</b> shapes`,noteKey:a=>`Key: <b>${a}</b>`,
+  noteShift:(o,n)=>` (original ${o}, ${n>0?'up':'down'} ${Math.abs(n)} ${Math.abs(n)===1?'semitone':'semitones'})`,noteEditor:(c,s)=>`Editor’s pick: Capo ${c}, ${s} shapes`,notePub:'Public sheets show chords and sections only. Lyrics you add stay on this device.',notePubAcct:'Public sheets show chords and sections only. Your lyrics are saved to your account and only you can see them.',
+  chordsTitle:c=>c?`Chords (Capo ${c} shapes)`:'Chords',feel:'Feel',strum:'Strumming',noDiagram:'Diagram coming',noDiagramTip:'Diagram for this chord is coming',
+  feels:{straight8:'Straight 8ths',swing:'Swing',shuffle:'Shuffle',straight16:'Straight 16ths',triplet:'12/8 Triplet'},
+  strumNote:{late:'lay back on the upbeat',down:'all downstrokes'},
+  sec:{solo:'Solo',intro:'Intro',verse:'Verse',verse12:'Verse (12-bar)',solo12:'Solo (12-bar)',prechorus:'Pre-Chorus',chorus:'Chorus',bridge:'Bridge',outro:'Outro'},
+  lyrHelp:n=>`Each line of lyrics goes under one row of chords (${n} rows in this song). Leave a line blank to skip a row. Your lyrics stay in this browser and are never uploaded.`,lyrHelpAcct:n=>`Each line of lyrics goes under one row of chords (${n} rows in this song). Leave a line blank to skip a row. Lyrics are saved to your account, so they show up on all your devices. Nobody else can see them.`,lyrPh:'Line 1\nLine 2\n…',
+  lyrSave:'Save Lyrics',lyrSaved:'Saved',lyrClose:'Close',lyrLine:n=>`Line ${n}`,
+  editTitle:'Edit Sheet',newTitle:'New Sheet',fTitle:'Title',fArtist:'Artist',fKey:'Key (concert pitch)',fCapo:'Suggested capo',capoNo:'None',fFeel:'Feel',fTime:'Time',fStrum:'Strumming',
+  fBody:'Lyrics and chords (write chords in concert pitch)',hint:'Put chords in brackets: <code>[G]lyric[D]lyric</code>. Mark sections with <code>{c: Chorus}</code> or <code># Chorus</code>, and leave a blank line between sections.',
+  btnSave:'Save',btnCancel:'Cancel',btnDel:'Delete',delConfirm:'Click again to delete',needTitle:'Title required',
+  capoHint:(c,s,b)=>`Readers ${c?`start with Capo ${c} and see <code>${s}</code> shapes`:'see the chords in the original key'}. For these chords, the most open-chord option is <code>${b}</code>.`,
+  bestLabel:(c,s)=>c?`Capo ${c} (${s} shapes)`:'no capo',
+  sample:`{c: Verse}\n[G]This is a sample [D]lyric line\n[Em]paste your own [C]words in here\n[G]chords go inside [D]square brackets\n[C]and float above the [D]syllable\n\n{c: Chorus}\n[C]When you trans[D]pose\n[G]every bracket [Em]chord moves too\n[C]add a capo and the [D]shapes change\n[G]`}
+};
+const t=k=>I[lang][k];
+
+/* ---------- music theory ---------- */
+const SH=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'],FL=['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
+const idx=n=>{const i=SH.indexOf(n);return i>=0?i:FL.indexOf(n)};
+const mod=n=>((n%12)+12)%12;
+function keyFlat(k){const m=k.match(/^([A-G][#b]?)(m?)$/);if(!m)return false;let i=idx(m[1]);if(m[2])i=mod(i+3);return [5,10,3,8,1].includes(i)}
+function tNote(n,s,flat){const i=idx(n);return i<0?n:(flat?FL:SH)[mod(i+s)]}
+function tKey(k,s){const m=k.match(/^([A-G][#b]?)(m?)$/);const minor=!!m[2];const i=mod(idx(m[1])+s);const rel=minor?mod(i+3):i;return ([5,10,3,8,1].includes(rel)?FL:SH)[i]+(minor?'m':'')}
+function tChord(c,s,flat){const m=c.match(/^([A-G][#b]?)([^/]*)(?:\/([A-G][#b]?))?$/);if(!m)return c;return tNote(m[1],s,flat)+m[2]+(m[3]?'/'+tNote(m[3],s,flat):'')}
+const MAJ={I:0,II:2,III:4,IV:5,V:7,VI:9,VII:11},MIN={I:0,II:2,III:3,IV:5,V:7,VI:8,VII:10};
+function deg(tok,key){const m=tok.match(/^(b?)(VII|VI|V|IV|III|II|I|vii|vi|v|iv|iii|ii|i)(.*)$/);if(!m)return tok;
+  const minorKey=key.endsWith('m'),root=key.replace(/m$/,'');const semi=(minorKey?MIN:MAJ)[m[2].toUpperCase()]-(m[1]?1:0);
+  return tNote(root,semi,keyFlat(key))+(m[2]===m[2].toLowerCase()?'m':'')+m[3]}
+const SUB={straight8:[.5],swing:[2/3],shuffle:[2/3],straight16:[.25,.5,.75],triplet:[1/3,2/3]};
+
+/* ---------- songs (built from songs/*.md into songs.json) ---------- */
+const GCOL={pop:'--g-pop',folk:'--g-folk',blues:'--g-blues',rock:'--g-rock',ballad:'--g-ballad',oldies:'--g-oldies'};
+let SONGS=[];
+
+/* ---------- chord shapes ---------- */
+const SHAPES={C:'x32010',D:'xx0232',E:'022100',G:'320003',A:'x02220',Am:'x02210',Em:'022000',Dm:'xx0231',F:'133211',Bm:'x24432',
+ E7:'020100',A7:'x02020',D7:'xx0212',G7:'320001',B7:'x21202',C7:'x32310',Bb:'x13331',Bb7:'x13131',F7:'131211','F#m':'244222','C#m':'x46654',
+ Gm:'355333',Cm:'x35543',Fm:'133111',Eb:'x68886',Ab:'466544',Db:'x46664','G#m':'466444',Bbm:'x13321',Fmaj7:'xx3210',Cmaj7:'x32000',
+ Gmaj7:'320002',Dmaj7:'xx0222',Amaj7:'x02120',Am7:'x02010',Em7:'020000',Dm7:'xx0211',Bm7:'x20202','F#7':'242322','C#7':'x46464',
+ Eb7:'x68686',Ab7:'464544',Db7:'x46464','F#':'244322',B:'x24442',Gb:'244322','D#m':'x68876',Ebm:'x68876',Abm:'466444','A#m':'x13321',
+ 'G#':'466544','C#':'x46664','D#':'x68886','A#':'x13331','G#7':'464544','D#7':'x68686','A#7':'x13131',Gm7:'353333',Cm7:'x35343',Fm7:'131111'};
+const OPEN=new Set(['C','D','E','G','A','Am','Em','Dm','E7','A7','D7','G7','B7','C7','Cmaj7','Fmaj7','Gmaj7','Dmaj7','Amaj7','Am7','Em7','Dm7','Bm7']);
+const ENH={'C#':'Db','Db':'C#','D#':'Eb','Eb':'D#','F#':'Gb','Gb':'F#','G#':'Ab','Ab':'G#','A#':'Bb','Bb':'A#'};
+function shapeOf(c){c=c.split('/')[0];if(SHAPES[c])return SHAPES[c];const m=c.match(/^([A-G][#b]?)(.*)$/);if(m&&ENH[m[1]]&&SHAPES[ENH[m[1]]+m[2]])return SHAPES[ENH[m[1]]+m[2]];return null}
+function diagram(sh){const f=[...sh].map(x=>x==='x'?-1:+x);const pos=f.filter(n=>n>0);const max=Math.max(0,...pos);const base=max>4?Math.min(...pos):1;
+  let s=`<svg width="96" height="112" viewBox="0 0 96 112">`;const X=i=>16+i*13,Y=r=>26+r*17;
+  s+=base===1?`<line x1="16" y1="26" x2="81" y2="26" stroke="currentColor" stroke-width="4"/>`:`<text x="92" y="${Y(.5)+4}" font-size="10" fill="currentColor" text-anchor="end">${base}fr</text>`;
+  for(let r=0;r<=5;r++)s+=`<line x1="16" y1="${Y(r)}" x2="81" y2="${Y(r)}" stroke="currentColor" stroke-width="1" opacity=".5"/>`;
+  for(let i=0;i<6;i++)s+=`<line x1="${X(i)}" y1="26" x2="${X(i)}" y2="${Y(5)}" stroke="currentColor" stroke-width="1"/>`;
+  f.forEach((v,i)=>{if(v<0)s+=`<text x="${X(i)}" y="18" font-size="11" text-anchor="middle" fill="currentColor">×</text>`;
+    else if(v===0)s+=`<circle cx="${X(i)}" cy="14" r="3.5" fill="none" stroke="currentColor"/>`;
+    else s+=`<circle cx="${X(i)}" cy="${Y(v-base+.5)}" r="5" fill="currentColor"/>`});
+  return s+'</svg>'}
+
+/* ---------- state ---------- */
+const st={layout:LS.get('layout','grid'),f:{q:'',key:'',diff:'',genre:'',sort:'new'},cols:LS.get('cols',true),size:LS.get('size',16),
+  practice:LS.get('practice',true),sub:LS.get('sub',true),shift:0,capo:0,bpm:90,metro:false,song:null,lyrOpen:false};
+const favs=()=>LS.get('fav',[]),mine=()=>LS.get('mine',[]);
+function toggleFav(id){const f=favs();const i=f.indexOf(id);i<0?f.unshift(id):f.splice(i,1);LS.set('fav',f);return i<0}
+const heart='<svg class="i" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg>';
+const diffDots=d=>`<span class="diff" title="${t('diff')[d]}">${[1,2,3].map(n=>`<i class="${n<=d?'on':''}"></i>`).join('')}</span>`;
+const secName=n=>t('sec')[n]||n;
+
+/* ---------- rail + theme menu ---------- */
+const ICON={
+  home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
+  library:'<path d="M5 4v16M9 4v16"/><path d="M13 5l4-1 3 15-4 1z"/>',
+  studio:'<path d="M4 6h16M4 10h16M4 14h16M4 18h16"/><circle cx="9" cy="10" r="1.6" fill="currentColor"/><circle cx="15" cy="14" r="1.6" fill="currentColor"/>',
+  theme:'<path d="M12 4a8 8 0 1 0 0 16c1.2 0 1.6-.8 1.3-1.7-.4-1 .3-2.3 1.5-2.3H17a3 3 0 0 0 3-3c0-5-3.6-9-8-9z"/><circle cx="8" cy="11" r="1"/><circle cx="11" cy="7.5" r="1"/><circle cx="15" cy="8.5" r="1"/>',
+  lang:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.6 2.5 14.4 0 17M12 3.5c-2.5 2.6-2.5 14.4 0 17"/>',
+  legal:'<circle cx="12" cy="12" r="8.5"/><path d="M14.5 9.5a3.5 3.5 0 1 0 0 5"/>',
+  ig:'<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/>',
+  yt:'<rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10 9.2l5 2.8-5 2.8z" fill="currentColor"/>',
+  bug:'<path d="M4 5h16v11H9l-5 4z"/><path d="M12 8v4M12 14.5v.01"/>',
+  admin:'<circle cx="8" cy="12" r="4"/><path d="M12 12h9M18 12v3M21 12v2"/>',
+  user:'<circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1-4 4-6 7-6s6 2 7 6"/>'};
+const IG_URL='https://www.instagram.com/pulipapa5986/',YT_URL='https://www.youtube.com/@pulipapa5986',IG_DM='https://ig.me/m/pulipapa5986';
+const ico=k=>`<svg class="i" viewBox="0 0 24 24">${ICON[k]}</svg>`;
+function renderRail(){
+  $('#rail').setAttribute('aria-label',lang==='zh'?'主選單':'Main menu');
+  $('#rail').innerHTML=`
+  <a class="brand" href="#home"><svg class="i" viewBox="0 0 24 24"><path d="M12 3c5 0 8 2 8 5 0 5-5 11-8 13-3-2-8-8-8-13 0-3 3-5 8-5z"/></svg><span class="lbl brandtxt">${lang==='zh'?'<b>吉他普利</b><small>GUITARPULI</small>':'<b class="en">Guitarpuli</b>'}</span></a>
+  <a href="#home" data-nav="home">${ico('home')}<span class="lbl">${t('home')}</span></a>
+  <a href="#library" data-nav="library">${ico('library')}<span class="lbl">${t('library')}</span></a>
+  <a href="#studio" data-nav="studio">${ico('studio')}<span class="lbl">Puli Studio <i class="pro">PRO</i></span></a>
+  <a class="ig sep m-hide" href="${IG_URL}" target="_blank" rel="noopener">${ico('ig')}<span class="lbl">Instagram</span></a>
+  <a class="yt m-hide" href="${YT_URL}" target="_blank" rel="noopener">${ico('yt')}<span class="lbl">YouTube</span></a>
+  <div class="divider m-hide"></div>
+  ${sb?`<button class="rbtn bottom" id="acctbtn">${user?`<span class="avatar">${esc((user.email||'?')[0].toUpperCase())}</span><span class="lbl">${t('account')}<span class="sync" id="syncdot">${syncLabel()}</span></span>`:`${ico('user')}<span class="lbl">${t('login')}</span>`}</button>`:''}
+  <button class="rbtn bottom" id="themebtn" aria-haspopup="true" aria-controls="themepop">${ico('theme')}<span class="lbl">${t('theme')}</span></button>
+  <button class="rbtn bottom" id="langbtn" lang="${lang==='zh'?'en':'zh-Hant'}">${ico('lang')}<span class="lbl">${t('langSwitch')}</span></button>
+  <a class="bottom m-hide" href="#report" data-nav="report">${ico('bug')}<span class="lbl">${t('report')}</span></a>
+  <a class="bottom m-hide" href="#legal" data-nav="legal">${ico('legal')}<span class="lbl">${t('legal')}</span></a>
+  ${LS.get('admin',false)?`<a class="bottom m-hide" href="admin/" target="_blank" rel="noopener">${ico('admin')}<span class="lbl">${t('admin')}</span></a>`:''}
+  <p class="foot">${t('foot')}</p>`;
+  if($('#acctbtn'))$('#acctbtn').onclick=openAccount;
+  const sw={system:'linear-gradient(135deg,#F2F3EF 50%,#111413 50%)',light:'#F2F3EF',dark:'#111413',sepia:'#EEE5D0',amber:'radial-gradient(circle at 35% 35%,#F2B84B 30%,#0E0D0B 32%)'};
+  $('#themepop').innerHTML=`<div class="h">${t('theme')}</div>`+Object.keys(sw).map(k=>`<button data-theme-opt="${k}"><span class="sw" style="background:${sw[k]}"></span>${t('th')[k]}</button>`).join('');
+  markTheme();
+  $('#themebtn').onclick=e=>{e.stopPropagation();$('#themepop').hidden=!$('#themepop').hidden};
+  $('#langbtn').onclick=()=>{lang=lang==='zh'?'en':'zh';LS.set('lang',lang);document.documentElement.lang=lang==='zh'?'zh-Hant':'en';renderRail();renderFooter();route(true)};
+}
+const THEMES={system:['',''],light:['light',''],dark:['dark',''],sepia:['light','sepia'],amber:['dark','amber']};
+let curTheme=LS.get('theme','system');
+function applyTheme(k){const [th,sk]=THEMES[k]||THEMES.system;const r=document.documentElement;th?r.setAttribute('data-theme',th):r.removeAttribute('data-theme');sk?r.setAttribute('data-skin',sk):r.removeAttribute('data-skin');curTheme=k;markTheme()}
+function markTheme(){document.querySelectorAll('[data-theme-opt]').forEach(b=>b.classList.toggle('on',b.dataset.themeOpt===curTheme))}
+$('#themepop').onclick=e=>{const b=e.target.closest('[data-theme-opt]');if(b){applyTheme(b.dataset.themeOpt);LS.set('theme',curTheme);$('#themepop').hidden=true}};
+document.addEventListener('click',e=>{if(!e.target.closest('#themepop'))$('#themepop').hidden=true});
+
+/* ---------- cards & lists ---------- */
+const pubItem=s=>({href:'#song-'+s.id,title:s.title,artist:s.artist,key:s.key,color:`var(${GCOL[s.genre]})`,tag:t('genre')[s.genre],diff:s.diff,bpm:s.bpm,favId:s.id});
+const myItem=s=>({href:'#my-'+s.id,title:s.title,artist:s.artist,key:s.key,color:'var(--g-mine)',tag:t('mineTag'),diff:0,bpm:s.bpm,favId:null,edit:'#edit-'+s.id});
+function renderItems(box,items,onFavChange){
+  const f=favs();
+  if(st.layout==='grid'){
+    box.innerHTML=`<div class="grid">${items.map(s=>`<div class="card"><a href="${s.href}">
+      <div class="cover" style="--c:${s.color}"><span class="cv-g">${esc(s.tag)}</span><span class="cv-k">${s.key}</span><span class="cv-t">${esc(s.title)}</span></div>
+      <div class="meta"><b>${esc(s.title)}</b><span>${esc(s.artist||'—')}</span><span>${s.diff?diffDots(s.diff)+' '+t('diff')[s.diff]+' · ':''}${s.bpm} BPM</span></div></a>
+      ${s.favId?`<button class="fav ${f.includes(s.favId)?'on':''}" data-fav="${s.favId}" aria-label="${t('save')}">${heart}</button>`:''}</div>`).join('')}</div>`;
+  }else{
+    box.innerHTML=`<div class="list"><div class="lrow h"><span>${t('colTitle')}</span><span>${t('colArtist')}</span><span>${t('colKey')}</span><span>${t('colLevel')}</span><span>${t('colType')}</span><span>BPM</span><span></span></div>
+    ${items.map(s=>`<div class="lrow"><a class="t" href="${s.href}">${esc(s.title)}</a><span class="m">${esc(s.artist||'—')}</span><span class="k">${s.key}</span><span>${s.diff?diffDots(s.diff):''}</span><span class="m">${esc(s.tag)}</span><span class="num">${s.bpm}</span>
+    ${s.favId?`<button class="fav ${f.includes(s.favId)?'on':''}" data-fav="${s.favId}" aria-label="${t('save')}">${heart}</button>`:`<a class="m" href="${s.edit}">${t('edit')}</a>`}</div>`).join('')}</div>`;
+  }
+  box.querySelectorAll('[data-fav]').forEach(b=>b.onclick=e=>{e.preventDefault();const on=toggleFav(b.dataset.fav);b.classList.toggle('on',on);onFavChange&&onFavChange()});
+}
+const layoutToggle=()=>`<div class="seg-toggle" role="group"><button data-layout="grid" class="${st.layout==='grid'?'on':''}">${t('grid')}</button><button data-layout="list" class="${st.layout==='list'?'on':''}">${t('list')}</button></div>`;
+const bindLayout=re=>document.querySelectorAll('[data-layout]').forEach(b=>b.onclick=()=>{st.layout=b.dataset.layout;LS.set('layout',st.layout);re()});
+
+/* ---------- home ---------- */
+function viewHome(){
+  const keys=[...new Set(SONGS.map(s=>s.key))].sort();
+  $('#app').innerHTML=`
+  <header class="pagehead"><h1>${t('allSheets')}</h1><span class="count" id="count"></span>
+    <label class="search"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg>
+    <input id="q" placeholder="${t('search')}" value="${esc(st.f.q)}" aria-label="${t('search')}"></label></header>
+  <div class="filters">
+    <select id="f-key" aria-label="${t('colKey')}"><option value="">${t('allKeys')}</option>${keys.map(k=>`<option ${st.f.key===k?'selected':''}>${k}</option>`).join('')}</select>
+    <select id="f-diff" aria-label="${t('colLevel')}"><option value="">${t('allDiff')}</option>${[1,2,3].map(d=>`<option value="${d}" ${st.f.diff==d?'selected':''}>${t('diff')[d]}</option>`).join('')}</select>
+    <select id="f-genre" aria-label="${t('byGenre')}"><option value="">${t('allGenre')}</option>${Object.keys(GCOL).map(g=>`<option value="${g}" ${st.f.genre===g?'selected':''}>${t('genre')[g]}</option>`).join('')}</select>
+    <select id="f-sort"><option value="new" ${st.f.sort==='new'?'selected':''}>${t('sortNew')}</option><option value="title" ${st.f.sort==='title'?'selected':''}>${t('sortTitle')}</option><option value="easy" ${st.f.sort==='easy'?'selected':''}>${t('sortEasy')}</option></select>
+    ${layoutToggle()}
+  </div><div class="homecols"><div id="results"></div><aside class="aside" id="aside"></aside></div>`;
+  const draw=()=>{const q=st.f.q.trim().toLowerCase();
+    let list=SONGS.filter(s=>(!q||(s.title+s.artist).toLowerCase().includes(q))&&(!st.f.key||s.key===st.f.key)&&(!st.f.diff||s.diff==st.f.diff)&&(!st.f.genre||s.genre===st.f.genre));
+    if(st.f.sort==='new')list.sort((a,b)=>b.added.localeCompare(a.added));if(st.f.sort==='title')list.sort((a,b)=>a.title.localeCompare(b.title,lang==='zh'?'zh-Hant':'en'));if(st.f.sort==='easy')list.sort((a,b)=>a.diff-b.diff);
+    $('#count').textContent=t('count')(list.length);
+    if(!list.length){$('#results').innerHTML=`<div class="empty"><b>${t('noMatch')[0]}</b>${t('noMatch')[1]}</div>`;return}
+    renderItems($('#results'),list.map(pubItem))};
+  const drawAside=()=>{
+    const rec=LS.get('recent',[]).map(id=>SONGS.find(s=>s.id===id)).filter(Boolean).slice(0,5);
+    const cnt=f=>{const m={};SONGS.forEach(s=>{const k=f(s);m[k]=(m[k]||0)+1});return m};
+    const g=cnt(s=>s.genre),k=cnt(s=>s.key),d=cnt(s=>s.diff);
+    const chip=(type,val,label,n)=>`<button data-chip="${type}" data-v="${esc(val)}" class="${String(st.f[type])===String(val)?'on':''}">${esc(label)}<span>${n}</span></button>`;
+    $('#aside').innerHTML=`<section><h4>${t('cont')}</h4>${rec.length?`<div class="cont">${rec.map(s=>{const p=LS.get('pref_'+s.id,null);const cp=p?p.capo:s.capo;const sk=tKey(s.key,p?p.shift:0);
+      return `<a href="#song-${s.id}"><span class="sq" style="--c:var(${GCOL[s.genre]})">${sk}</span><span style="min-width:0"><b>${esc(s.title)}</b><small>${esc(s.artist)}</small></span><span class="cp">${cp?'Capo '+cp:''}</span></a>`}).join('')}</div>`:`<p style="margin:0;font-size:13px;color:var(--muted)">${t('contEmpty')}</p>`}</section>
+    <section><h4>${t('byLevel')}</h4><div class="chips">${[1,2,3].map(n=>chip('diff',n,t('diff')[n],d[n]||0)).join('')}</div></section>
+    <section><h4>${t('byGenre')}</h4><div class="chips">${Object.keys(GCOL).map(x=>chip('genre',x,t('genre')[x],g[x]||0)).join('')}</div></section>
+    <section><h4>${t('byKey')}</h4><div class="chips">${Object.keys(k).sort().map(x=>chip('key',x,x,k[x])).join('')}</div></section>`;
+    $('#aside').querySelectorAll('[data-chip]').forEach(b=>b.onclick=()=>{const ty=b.dataset.chip,v=b.dataset.v;st.f[ty]=String(st.f[ty])===v?'':v;$('#f-'+ty).value=st.f[ty];draw();drawAside()})};
+  const upd=()=>{st.f.q=$('#q').value;st.f.key=$('#f-key').value;st.f.diff=$('#f-diff').value;st.f.genre=$('#f-genre').value;st.f.sort=$('#f-sort').value;draw();drawAside()};
+  ['#q','#f-key','#f-diff','#f-genre','#f-sort'].forEach(s=>$(s).addEventListener('input',upd));
+  bindLayout(viewHome);draw();drawAside();
+}
+
+/* ---------- library ---------- */
+function viewLibrary(tab){
+  const fav=favs().map(id=>SONGS.find(s=>s.id===id)).filter(Boolean).map(pubItem);
+  const my=mine().map(myItem);
+  const rec=LS.get('recent',[]).map(id=>SONGS.find(s=>s.id===id)).filter(Boolean).map(pubItem);
+  const n={library:fav.length+my.length,'library-saved':fav.length,'library-mine':my.length,'library-recent':rec.length};
+  $('#app').innerHTML=`<header class="pagehead"><h1>${t('library')}</h1><span style="margin-left:auto;display:flex;gap:8px;align-items:center">${layoutToggle()}<a class="btn pri" href="#new">${t('newSheet')}</a></span></header>
+  <nav class="tabs">${Object.keys(n).map(h=>`<a href="#${h}" class="${tab===h?'on':''}">${t('tabs')[h]}<span>${n[h]}</span></a>`).join('')}</nav><div id="results"></div>`;
+  bindLayout(()=>viewLibrary(tab));
+  const items=tab==='library-saved'?fav:tab==='library-mine'?my:tab==='library-recent'?rec:[...my,...fav];
+  if(!items.length){const e=t('empty')[tab];$('#results').innerHTML=`<div class="empty"><b>${e[0]}</b>${e[1]}</div>`;return}
+  renderItems($('#results'),items,()=>{if(tab!=='library-recent')viewLibrary(tab)});
+}
+
+/* ---------- song page ---------- */
+function chordsOf(song){const out=[];const add=c=>{if(c&&/^[A-G]/.test(c)&&!out.includes(c))out.push(c)};
+  if(song.sections)song.sections.forEach(s=>s.rows.forEach(r=>r.forEach(b=>b.forEach(add))));
+  else parsePro(song.body).forEach(s=>s.lines.forEach(l=>l.forEach(g=>add(g.c))));return out}
+function capoScore(song,shift,capo){const shape=tKey(tKey(song.key,shift),-capo),flat=keyFlat(shape);let sc=0;
+  chordsOf(song).forEach(c=>{const x=tChord(c,shift-capo,flat).split('/')[0];sc+=OPEN.has(x)?2:['F','Bm','F#m','Bb'].includes(x)?.6:0});return sc-capo*.15}
+function bestCapo(song,shift){let best=0,bs=-1e9;for(let c=0;c<=7;c++){const v=capoScore(song,shift,c);if(v>bs+1e-9){bs=v;best=c}}return best}
+
+function openSong(song,isMine,keepState){
+  stopAll();st.song=song;st.isMine=isMine;if(!keepState)st.lyrOpen=false;
+  const p=LS.get('pref_'+song.id,null);st.shift=p?p.shift:0;st.capo=p?p.capo:(song.capo||0);if(!keepState)st.bpm=song.bpm||90;
+  if(!isMine&&!keepState){const r=LS.get('recent',[]).filter(x=>x!==song.id);r.unshift(song.id);LS.set('recent',r.slice(0,20))}
+  const isFav=favs().includes(song.id);
+  $('#app').innerHTML=`
+  <div class="songhead"><a class="back" href="${isMine?'#library-mine':'#home'}" aria-label="${t('back')}">←</a>
+    <div class="grow"><h1>${esc(song.title)}</h1><p>${esc(song.artist||'')}${song.artist?' · ':''}${t('origKey')} <span class="k">${song.key}</span> · ${st.bpm} BPM · ${song.time||'4/4'} · ${t('feels')[song.feel]||t('feels').straight8}${song.diff?' · '+t('diff')[song.diff]:''}</p></div>
+    ${isMine?`<a class="hbtn" href="#edit-${song.id}">${t('edit')}</a>`:`<button class="hbtn ${isFav?'on':''}" id="favbtn">${heart}<span>${isFav?t('saved'):t('save')}</span></button>`}
+  </div>
+  <div class="toolwrap"><div class="tools" role="toolbar">
+    <div class="tg"><span class="tl">${t('transpose')}</span><div class="tc"><button class="tb" data-act="key-" aria-label="−1">−</button><span class="tv" id="keyv"></span><button class="tb" data-act="key+" aria-label="+1">+</button><button class="tb" data-act="key0" title="${t('resetTip')}">${t('reset')}</button></div></div>
+    <div class="tg"><label class="tl" for="capo">CAPO</label><div class="tc"><select id="capo">${[...Array(8)].map((_,i)=>`<option value="${i}">${i||t('capoNone')}</option>`).join('')}</select><button class="tb" data-act="bestcapo" title="${t('bestTip')}">${t('best')}</button></div></div>
+    <div class="tg"><span class="tl">${t('size')}</span><div class="tc"><button class="tb" data-act="size-">A−</button><button class="tb" data-act="size+">A+</button></div></div>
+    <div class="tg"><span class="tl">${t('metro')}</span><div class="tc"><button class="tb" data-act="bpm-" aria-label="−">−</button><span class="tv" id="bpmv"></span><button class="tb" data-act="bpm+" aria-label="+">+</button><button class="tb" data-act="metro" id="metrobtn" aria-label="${t('metro')}">▶</button><button class="tb ${st.sub?'on':''}" data-act="sub" id="subbtn" title="${t('subTip')}">${t('sub')}</button><span class="dots" id="dots"><i></i><i></i><i></i><i></i></span></div></div>
+    </div><div class="viewbtns"><button class="tb ${st.practice?'on':''}" data-act="practice" id="pracbtn">${t('practice')}</button>${isMine?'':`<button class="tb ${st.lyrOpen?'on':''}" data-act="lyr" id="lyrbtn">${t('lyrics')}</button>`}<button class="tb ${st.cols?'on':''}" data-act="cols" id="colsbtn">${t('cols')}</button><button class="tb" data-act="perform" id="perfbtn">${t('perform')}</button></div>
+  </div>
+  <p class="note" id="note"></p>
+  <div class="songbody"><div class="songmain"><div id="lyrpanel"></div><div class="sheet" id="sheet"></div></div><div id="practice"></div></div>`;
+  $('#capo').onchange=e=>{st.capo=+e.target.value;savePref();drawSheet()};
+  if($('#favbtn'))$('#favbtn').onclick=()=>{const on=toggleFav(song.id);$('#favbtn').classList.toggle('on',on);$('#favbtn span').textContent=on?t('saved'):t('save')};
+  $('.toolwrap').onclick=e=>{const b=e.target.closest('[data-act]');if(b)act(b.dataset.act)};
+  st.lyrOpen?drawLyrPanel():drawSheet();
+}
+function savePref(){LS.set('pref_'+st.song.id,{shift:st.shift,capo:st.capo})}
+function act(a){
+  if(a==='key-'||a==='key+'){st.shift=mod(st.shift+(a==='key+'?1:-1)+6)-6;savePref();drawSheet()}
+  if(a==='key0'){st.shift=0;st.capo=st.song.capo||0;savePref();drawSheet()}
+  if(a==='bestcapo'){st.capo=bestCapo(st.song,st.shift);savePref();drawSheet()}
+  if(a==='size-'||a==='size+'){st.size=Math.min(26,Math.max(12,st.size+(a==='size+'?1:-1)));LS.set('size',st.size);document.documentElement.style.setProperty('--sheet-size',st.size+'px')}
+  if(a==='cols'){st.cols=!st.cols;LS.set('cols',st.cols);$('#colsbtn').classList.toggle('on',st.cols);$('#sheet').classList.toggle('cols2',st.cols)}
+  if(a==='bpm-'||a==='bpm+'){st.bpm=Math.min(240,Math.max(40,st.bpm+(a==='bpm+'?2:-2)));$('#bpmv').textContent=st.bpm;if(st.metro){metroStop();metroStart()}}
+  if(a==='metro')st.metro?metroStop():metroStart();
+  if(a==='sub'){st.sub=!st.sub;LS.set('sub',st.sub);$('#subbtn').classList.toggle('on',st.sub)}
+  if(a==='practice'){st.practice=!st.practice;LS.set('practice',st.practice);$('#pracbtn').classList.toggle('on',st.practice);drawSheet()}
+  if(a==='perform')setPerform(!document.body.classList.contains('perform'));
+  if(a==='lyr'){st.lyrOpen=!st.lyrOpen;$('#lyrbtn').classList.toggle('on',st.lyrOpen);drawLyrPanel()}
+}
+function drawSheet(){
+  const s=st.song;const sounding=tKey(s.key,st.shift);const shape=tKey(sounding,-st.capo);const flat=keyFlat(shape);const total=st.shift-st.capo;
+  $('#keyv').textContent=sounding;$('#bpmv').textContent=st.bpm;$('#capo').value=st.capo;
+  let note=`<span>${st.capo?t('noteCapo')(sounding,st.capo,shape):t('noteKey')(sounding)+(st.shift?t('noteShift')(s.key,st.shift):'')}</span>`;
+  if(s.capo&&!st.shift)note+=`<span>${t('noteEditor')(s.capo,tKey(s.key,-s.capo))}</span>`;
+  if(!st.isMine)note+=`<span>${user?t('notePubAcct'):t('notePub')}</span>`;
+  $('#note').innerHTML=note;
+  const T2=c=>tChord(c,total,flat);
+  const strumNote=lang==='en'?(s.strumNoteEn||''):(s.strumNote||'');
+  $('#practice').innerHTML=st.practice?`<div class="practice"><div><h4>${t('chordsTitle')(st.capo)}</h4><div class="chordgrid">${chordsOf(s).map(T2).filter((c,i,a)=>a.indexOf(c)===i).map(c=>{const sh=shapeOf(c);return `<div class="cd"><b>${esc(c)}</b>${sh?diagram(sh):`<small>${t('noDiagram')}</small>`}</div>`}).join('')}</div></div>
+    <div class="rhythm"><div><h4>${t('feel')}</h4><div class="v">${t('feels')[s.feel]||t('feels').straight8}<small>${s.time||'4/4'}</small></div></div>${s.strum?`<div><h4>${t('strum')}</h4><div class="strum">${esc(s.strum)}</div>${strumNote?`<div class="snote">${strumNote}</div>`:''}</div>`:''}</div></div>`:'';
+  $('.songbody').classList.toggle('withside',st.practice);
+  const sheet=$('#sheet');sheet.classList.toggle('cols2',st.cols);
+  document.documentElement.style.setProperty('--sheet-size',st.size+'px');
+  const C=c=>`<span class="ch">${esc(T2(c))}</span>`;
+  if(st.isMine){
+    sheet.innerHTML=parsePro(s.body).map(sec=>`<section class="sec">${sec.name?`<h3>${esc(sec.name)}</h3>`:''}${sec.lines.map(segs=>
+      segs.some(g=>g.c)?`<div class="ln">${segs.map(g=>`<span class="seg"><span class="c">${g.c?C(g.c):''}</span><span class="l">${esc(g.l)||' '}</span></span>`).join('')}</div>`
+      :`<div class="ln"><span class="l">${esc(segs.map(g=>g.l).join(''))}</span></div>`).join('')}</section>`).join('');
+  }else{
+    const lyr=LS.get('lyr_'+s.id,[]);let n=0;
+    sheet.innerHTML=s.sections.map(sec=>`<section class="sec"><h3>${esc(secName(sec.name))}</h3>${sec.rows.map(row=>{const i=n++;const L=lyr[i];
+      return `<div class="row"><div class="bars">${row.map(bar=>`<div class="bar">${bar.map(C).join('')}</div>`).join('')}</div>${L?`<div class="lyr">${esc(L)}</div>`:(st.lyrOpen?`<div class="lyr ph">${t('lyrLine')(i+1)}</div>`:'')}</div>`}).join('')}</section>`).join('');
+  }
+}
+function drawLyrPanel(){
+  const p=$('#lyrpanel');if(!st.lyrOpen){p.innerHTML='';drawSheet();return}
+  const rows=st.song.sections.reduce((n,s)=>n+s.rows.length,0);
+  p.innerHTML=`<div class="lyrpanel"><p>${user?t('lyrHelpAcct')(rows):t('lyrHelp')(rows)}</p>
+  <textarea id="lyrtext" rows="8" placeholder="${esc(t('lyrPh'))}">${esc(LS.get('lyr_'+st.song.id,[]).join('\n'))}</textarea>
+  <div class="btns"><button class="btn pri" id="lyrsave">${t('lyrSave')}</button><button class="btn" id="lyrclose">${t('lyrClose')}</button></div></div>`;
+  $('#lyrtext').oninput=()=>{LS.set('lyr_'+st.song.id,$('#lyrtext').value.split('\n'));drawSheet()};
+  $('#lyrsave').onclick=()=>{LS.set('lyr_'+st.song.id,$('#lyrtext').value.split('\n'));$('#lyrsave').textContent=t('lyrSaved');setTimeout(()=>{if($('#lyrsave'))$('#lyrsave').textContent=t('lyrSave')},1200)};
+  $('#lyrclose').onclick=()=>act('lyr');
+  drawSheet();
+}
+function parsePro(txt){const secs=[];let cur={name:'',lines:[]};const push=()=>{if(cur.lines.length||cur.name)secs.push(cur)};
+  String(txt||'').split(/\r?\n/).forEach(raw=>{const line=raw.replace(/\s+$/,'');
+    const d=line.match(/^\{(?:c|comment)\s*:\s*(.*)\}$/i)||line.match(/^#\s*(.+)$/);
+    if(d){push();cur={name:d[1].trim(),lines:[]};return}
+    if(/^\{\w+\s*:.*\}$/.test(line))return;
+    if(!line.trim()){if(cur.lines.length){push();cur={name:'',lines:[]}}return}
+    const segs=[];const re=/\[([^\]]+)\]/g;let last=0,m,pend=null;
+    while((m=re.exec(line))){const x=line.slice(last,m.index);if(pend!==null||x)segs.push({c:pend,l:x});pend=m[1];last=re.lastIndex}
+    segs.push({c:pend,l:line.slice(last)});cur.lines.push(segs)});
+  push();return secs}
+
+/* metronome */
+let actx,mT,beat=0;
+function metroStart(){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume()}catch(e){return}
+  st.metro=true;beat=0;$('#metrobtn').classList.add('on');$('#metrobtn').textContent='❚❚';click();mT=setInterval(click,60000/st.bpm)}
+function metroStop(){st.metro=false;clearInterval(mT);const b=$('#metrobtn');if(b){b.classList.remove('on');b.textContent='▶'}document.querySelectorAll('#dots i').forEach(d=>d.classList.remove('on'))}
+function blip(tm,freq,vol){const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=freq;g.gain.setValueAtTime(vol,tm);g.gain.exponentialRampToValueAtTime(.001,tm+.045);o.connect(g).connect(actx.destination);o.start(tm);o.stop(tm+.05)}
+function click(){const tm=actx.currentTime+.01,dur=60/st.bpm;blip(tm,beat%4===0?1600:1000,.35);
+  if(st.sub&&st.song)(SUB[st.song.feel]||SUB.straight8).forEach(fr=>blip(tm+fr*dur,2200,.08));
+  document.querySelectorAll('#dots i').forEach((d,i)=>d.classList.toggle('on',i===beat%4));beat++}
+function setPerform(on){document.body.classList.toggle('perform',on);const b=$('#perfbtn');if(b){b.classList.toggle('on',on);b.textContent=on?t('endPerform'):t('perform')}}
+function stopAll(){if(st.metro)metroStop();setPerform(false)}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')setPerform(false)});
+
+/* ---------- editor ---------- */
+function viewEdit(id){
+  stopAll();const s=mine().find(x=>x.id===id)||{id:'',title:'',artist:'',key:'G',bpm:90,capo:0,feel:'straight8',time:'4/4',strum:'',body:t('sample')};
+  const keys=['C','C#','Db','D','Eb','E','F','F#','G','Ab','A','Bb','B','Am','Bbm','Bm','Cm','C#m','Dm','Ebm','Em','Fm','F#m','Gm','G#m'];
+  $('#app').innerHTML=`<header class="pagehead"><h1>${s.id?t('editTitle'):t('newTitle')}</h1></header>
+  <div class="edit"><div class="form">
+    <div class="two"><label>${t('fTitle')}<input id="ed-title" value="${esc(s.title)}"></label><label>${t('fArtist')}<input id="ed-artist" value="${esc(s.artist)}"></label></div>
+    <div class="three"><label>${t('fKey')}<select id="ed-key">${keys.map(k=>`<option ${k===s.key?'selected':''}>${k}</option>`).join('')}</select></label>
+      <label>${t('fCapo')}<select id="ed-capo">${[...Array(8)].map((_,i)=>`<option value="${i}" ${i==s.capo?'selected':''}>${i||t('capoNo')}</option>`).join('')}</select></label>
+      <label>BPM<input id="ed-bpm" type="number" min="40" max="240" value="${s.bpm}"></label></div>
+    <div class="three"><label>${t('fFeel')}<select id="ed-feel">${Object.keys(SUB).map(k=>`<option value="${k}" ${k===s.feel?'selected':''}>${t('feels')[k]}</option>`).join('')}</select></label>
+      <label>${t('fTime')}<select id="ed-time">${['4/4','3/4','6/8','12/8','2/4'].map(x=>`<option ${x===s.time?'selected':''}>${x}</option>`).join('')}</select></label>
+      <label>${t('fStrum')}<input id="ed-strum" value="${esc(s.strum)}" placeholder="↓ ↓↑ ↑↓↑"></label></div>
+    <div class="hint" id="capohint"></div>
+    <label>${t('fBody')}<textarea id="ed-body" spellcheck="false">${esc(s.body)}</textarea></label>
+    <div class="hint">${t('hint')}</div>
+    <div class="btns"><button class="btn pri" id="ed-save">${t('btnSave')}</button><a class="btn" href="${s.id?'#my-'+s.id:'#library-mine'}">${t('btnCancel')}</a>${s.id?`<button class="btn warn" id="ed-del">${t('btnDel')}</button>`:''}</div>
+  </div><div class="preview"><div class="sheet" id="pv"></div></div></div>`;
+  const pv=()=>{const key=$('#ed-key').value,capo=+$('#ed-capo').value,body=$('#ed-body').value;const shape=tKey(key,-capo),flat=keyFlat(shape);
+    const best=bestCapo({key,body},0);
+    $('#capohint').innerHTML=t('capoHint')(capo,shape,t('bestLabel')(best,tKey(key,-best)));
+    $('#pv').innerHTML=parsePro(body).map(x=>`<section class="sec">${x.name?`<h3>${esc(x.name)}</h3>`:''}${x.lines.map(segs=>`<div class="ln">${segs.map(g=>`<span class="seg"><span class="c">${g.c?esc(tChord(g.c,-capo,flat)):''}</span><span class="l">${esc(g.l)||' '}</span></span>`).join('')}</div>`).join('')}</section>`).join('')};
+  ['#ed-body','#ed-key','#ed-capo'].forEach(x=>$(x).addEventListener('input',pv));pv();
+  $('#ed-save').onclick=()=>{const ti=$('#ed-title').value.trim();if(!ti){$('#ed-title').focus();$('#ed-title').placeholder=t('needTitle');return}
+    const rec={id:s.id||'u'+Date.now(),title:ti,artist:$('#ed-artist').value.trim(),key:$('#ed-key').value,capo:+$('#ed-capo').value,bpm:+$('#ed-bpm').value||90,
+      feel:$('#ed-feel').value,time:$('#ed-time').value,strum:$('#ed-strum').value.trim(),body:$('#ed-body').value};
+    const l=mine().filter(x=>x.id!==rec.id);l.unshift(rec);LS.set('mine',l);LS.set('pref_'+rec.id,null);location.hash='my-'+rec.id};
+  if($('#ed-del')){let armed=false;$('#ed-del').onclick=()=>{if(!armed){armed=true;$('#ed-del').textContent=t('delConfirm');return}LS.set('mine',mine().filter(x=>x.id!==s.id));location.hash='library-mine'}}
+}
+
+/* ---------- Puli Studio ---------- */
+const TAB=`  <em>E7</em>                      <em>A7</em>
+e|-------------------------|-------------------------|
+B|-------------------------|-------------------------|
+G|-------1--2--------------|-----------6--5----------|
+D|----2-----------2--0-----|--5--7-----------7--5----|
+A|-------------------------|-------------------------|
+E|-0-----------------------|-------------------------|`;
+function viewStudio(){
+  const zh=lang==='zh';
+  const feats=zh?[['六線譜','音符、技巧記號（推弦、滑音、搥勾）與和弦譜同步顯示'],['播放與游標','邊聽邊看，游標跟著小節走'],['段落循環','選一段反覆練，不用一直拉回去'],['速度訓練','從原速的 60% 開始，每輪自動加快'],['匯入檔案','支援 Guitar Pro 與 MusicXML 檔案'],['列印排版','輸出 A4 樂譜，和弦圖與律動標在首頁']]
+    :[['Tablature','Notes and technique marks (bends, slides, hammer-ons) shown alongside the chord chart'],['Playback cursor','Listen and follow along as the cursor moves bar by bar'],['A–B loop','Repeat one passage without dragging back'],['Speed trainer','Start at 60% and speed up a little each pass'],['Import','Open Guitar Pro and MusicXML files'],['Print layout','A4 output with chord diagrams and feel on the first page']];
+  $('#app').innerHTML=`<div class="prose" style="max-width:900px"><div class="studio-hero"><h1>Puli Studio <i class="pro">PRO</i></h1>
+  <p class="en">${zh?'即將推出':'Coming soon'}</p>
+  <p>${zh?'給要把一首歌練到能上台的人：六線譜、播放與分段練習放在同一個畫面。':'For players getting a song stage-ready: tablature, playback and section practice on one screen.'}</p></div>
+  <div class="tabbox"><pre>${TAB}</pre></div>
+  <p style="font-size:12.5px;color:var(--muted);margin:0">${zh?'示意：三連音拖曳律動，後半拍稍微延後。':'Example: shuffle feel, lay back on the upbeat.'}</p>
+  <div class="feat">${feats.map(([a,b])=>`<div><b>${a}</b><span>${b}</span></div>`).join('')}</div></div>`;
+}
+
+/* ---------- Copyright & DMCA ---------- */
+function viewLegal(){
+  const zh=lang==='zh';
+  $('#app').innerHTML=zh?`<article class="prose"><h1>版權聲明與侵權通報</h1>
+  <h2>1. 本站提供的內容</h2><p>吉他普利公開提供的樂譜僅包含和弦進行、段落結構、律動與刷法等演奏資訊，不提供受著作權保護的歌詞全文、旋律或錄音。歌曲名稱與演出者名稱僅用於辨識曲目。</p>
+  <h2>2. 使用者自行輸入的內容</h2><p>「我的歌詞」與「自建譜」的內容，未登入時只儲存在使用者自己的裝置瀏覽器中；登入會員後會存放在該會員的私人帳號資料中，僅該會員本人可以讀取，本站不會公開或分享給其他人。使用者應自行確認其使用符合合理使用或已取得授權。</p>
+  <h2>3. 侵權通報</h2><p>如果您是著作權人或其代理人，認為本站內容侵害您的權利，請寄送通知至 <b>pulipapa5986@gmail.com</b>，內容請包含：</p>
+  <ol><li>您的姓名、聯絡方式與身分（權利人或代理人）</li><li>被侵害的著作名稱及權利證明</li><li>涉嫌侵權內容的網址</li><li>您善意相信該使用未經授權的聲明</li><li>通知內容正確、且您有權代表權利人的聲明，以及簽名</li></ol>
+  <h2>4. 處理流程</h2><p>收到完整通知後，本站會在 5 個工作天內移除或限制存取相關內容，並通知上傳者（如有）。本站參照台灣著作權法第六章之一「網路服務提供者之民事免責事由」及美國數位千禧年著作權法第 512 條辦理。</p>
+  <h2>5. 回復通知</h2><p>內容被移除的使用者若認為係誤判，可提出回復通知並附理由；本站將轉知通報人，並依法定程序處理。</p>
+  <h2>6. 重複侵權</h2><p>經多次確認侵權的帳號，本站得終止其上傳或使用權限。</p>
+  <h2>7. 聯絡方式</h2><p>版權聯絡人：pulipapa<br>信箱：pulipapa5986@gmail.com</p>
+  <p style="color:var(--muted);font-size:13px">網站錯誤或使用問題，請改用 <a href="#report" style="text-decoration:underline">回報問題</a>。</p></article>`
+  :`<article class="prose"><h1>Copyright &amp; DMCA Policy</h1>
+  <h2>1. What this site publishes</h2><p>Public sheets on Guitarpuli contain performance information only: chord progressions, song structure, feel and strumming patterns. We do not publish copyrighted lyrics, melodies or recordings. Song titles and artist names are used only to identify the music.</p>
+  <h2>2. Content you enter yourself</h2><p>Text added through My Lyrics and My Sheets is stored in your own browser when you are signed out. When you are signed in, it is stored in your private account data, which only you can read. We never publish or share it. You are responsible for making sure your use is permitted.</p>
+  <h2>3. Reporting infringement</h2><p>If you own the copyright, or are authorized to act for the owner, and believe content on this site infringes it, send a notice to <b>pulipapa5986@gmail.com</b> that includes:</p>
+  <ol><li>Your name, contact details and whether you are the owner or an agent</li><li>The copyrighted work and proof of ownership</li><li>The URL of the material you are reporting</li><li>A statement that you believe in good faith the use is not authorized</li><li>A statement that the notice is accurate and that you are authorized to act, with your signature</li></ol>
+  <h2>4. What happens next</h2><p>Once we receive a complete notice, we remove or disable the material within 5 business days and notify the uploader, if any. We follow Chapter VI-1 of Taiwan’s Copyright Act on internet service providers and 17 U.S.C. §512.</p>
+  <h2>5. Counter-notice</h2><p>If your content was removed by mistake, you may send a counter-notice explaining why. We will forward it to the reporting party and follow the statutory process.</p>
+  <h2>6. Repeat infringers</h2><p>Accounts found to infringe repeatedly may lose upload or access privileges.</p>
+  <h2>7. Contact</h2><p>Copyright contact: pulipapa<br>Email: pulipapa5986@gmail.com</p>
+  <p style="color:var(--muted);font-size:13px">For bugs or problems using the site, please use <a href="#report" style="text-decoration:underline">Report a Bug</a>.</p></article>`;
+}
+
+/* ---------- footer ---------- */
+function renderFooter(){
+  $('#sitefoot').innerHTML=`<div class="follow"><b>${t('follow')}</b>
+    <a class="sbtn ig" href="${IG_URL}" target="_blank" rel="noopener">${ico('ig')}Instagram</a>
+    <a class="sbtn yt" href="${YT_URL}" target="_blank" rel="noopener">${ico('yt')}YouTube</a></div>
+    <div class="links"><a href="#report">${t('report')}</a><a href="#legal">${t('legal')}</a><span>© Guitarpuli</span></div>`;
+}
+
+/* ---------- report a bug ---------- */
+let lastPage='';
+function deviceInfo(){const u=navigator.userAgent;
+  const os=/iPhone/.test(u)?'iPhone':/iPad/.test(u)?'iPad':/Android/.test(u)?'Android':/Windows/.test(u)?'Windows':/Mac OS X/.test(u)?'Mac':'—';
+  const br=/Edg\//.test(u)?'Edge':/Firefox\//.test(u)?'Firefox':/CriOS|Chrome\//.test(u)?'Chrome':/Safari\//.test(u)?'Safari':'—';
+  return `${os} / ${br}`}
+function viewReport(){
+  const page=location.origin+location.pathname+(lastPage?'#'+lastPage:'');
+  const tpl=t('rTpl')(page,deviceInfo());
+  $('#app').innerHTML=`<article class="prose report"><h1>${t('rTitle')}</h1><p>${t('rIntro')}</p>
+  <pre id="rtpl">${esc(tpl)}</pre>
+  <div class="btns"><button class="btn" id="rcopy">${t('rCopy')}</button><a class="sbtn ig" href="${IG_DM}" target="_blank" rel="noopener">${ico('ig')}${t('rOpen')}</a></div>
+  <p class="msg" id="rmsg" aria-live="polite"></p><p style="font-size:13px;color:var(--muted)">${t('rNote')}</p></article>`;
+  $('#rcopy').onclick=()=>{const done=()=>{$('#rmsg').textContent=t('rCopied')};
+    try{navigator.clipboard.writeText(tpl).then(done,()=>{selectTpl();done()})}catch(e){selectTpl();done()}};
+}
+function selectTpl(){const r=document.createRange();r.selectNodeContents($('#rtpl'));const s=getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy')}catch(e){}}
+
+/* ---------- account & sync (Supabase) ---------- */
+// 填入 Supabase 專案的 Project URL 和 Publishable（anon）key 後就會啟用會員同步；留空則不顯示登入。
+const SUPABASE_URL='';
+const SUPABASE_KEY='';
+let sb=null,user=null,syncState='ok',pending=false,merged=false,pushT;
+const isSyncKey=k=>k==='fav'||k==='recent'||k==='mine'||k.startsWith('pref_')||k.startsWith('lyr_');
+const rawSet=LS.set.bind(LS);
+LS.set=(k,v)=>{rawSet(k,v);if(user&&isSyncKey(k))schedulePush()};
+function syncLabel(){return syncState==='syncing'?' · '+t('syncing'):syncState==='err'?' · !':''}
+function setSync(s){syncState=s;const d=$('#syncdot');if(d)d.textContent=syncLabel();const m=$('#acctsync');if(m)m.textContent=s==='syncing'?t('syncing'):s==='err'?t('syncErr'):t('synced')}
+function collectLocal(){const d={};try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('gp_')&&isSyncKey(k.slice(3)))d[k.slice(3)]=JSON.parse(localStorage.getItem(k))}}catch(e){}return d}
+function mergeData(local,remote){const out={...local,...remote};
+  out.fav=[...new Set([...(remote.fav||[]),...(local.fav||[])])];
+  out.recent=[...new Set([...(remote.recent||[]),...(local.recent||[])])].slice(0,20);
+  const m=new Map();[...(local.mine||[]),...(remote.mine||[])].forEach(x=>x&&m.set(x.id,x));out.mine=[...m.values()];
+  Object.keys(local).forEach(k=>{if(k.startsWith('lyr_')){const r=remote[k];if(!Array.isArray(r)||!r.some(l=>l&&l.trim()))out[k]=local[k]}});
+  return out}
+function schedulePush(){pending=true;setSync('syncing');clearTimeout(pushT);pushT=setTimeout(push,1200)}
+async function push(){if(!user)return;pending=false;
+  const {error}=await sb.from('user_data').upsert({user_id:user.id,data:collectLocal(),updated_at:new Date().toISOString()});
+  if(error){setSync('err');pending=true;pushT=setTimeout(push,15000)}else setSync('ok')}
+async function pull(merge){
+  const {data,error}=await sb.from('user_data').select('data').eq('user_id',user.id).maybeSingle();
+  if(error){setSync('err');return false}
+  const remote=(data&&data.data)||{},local=collectLocal(),next=merge?mergeData(local,remote):remote;
+  const changed=JSON.stringify(next)!==JSON.stringify(local);
+  if(!merge)Object.keys(local).forEach(k=>{if(!(k in next))try{localStorage.removeItem('gp_'+k)}catch(e){}});
+  Object.entries(next).forEach(([k,v])=>rawSet(k,v));
+  if(merge)await push();else setSync('ok');
+  return changed}
+const refresh=()=>{if(SONGS.length&&!(document.activeElement&&document.activeElement.matches('textarea,input')))route(true)};
+function initSync(){
+  if(!SUPABASE_URL||!SUPABASE_KEY||!window.supabase)return;
+  sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  sb.auth.onAuthStateChange((ev,session)=>{const u=session?session.user:null;const changedUser=(u&&u.id)!==(user&&user.id);user=u;
+    if(user&&!merged){merged=true;setTimeout(()=>pull(true).then(()=>{renderRail();refresh()}),0)}
+    if(!user)merged=false;
+    if(changedUser){renderRail();if($('#modal').dataset.kind==='acct')openAccount()}});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&user&&!pending)pull(false).then(ch=>{if(ch)refresh()})});
+  renderRail();
+}
+function closeModal(){$('#modal').hidden=true;$('#modal').dataset.kind=''}
+function openAccount(){
+  const m=$('#modal');m.dataset.kind='acct';m.hidden=false;
+  if(user){
+    m.innerHTML=`<div class="box" role="dialog" aria-modal="true"><h2>${t('account')}</h2><p>${t('signedIn')}：${esc(user.email||'')}</p><p class="msg" id="acctsync">${syncState==='err'?t('syncErr'):syncState==='syncing'?t('syncing'):t('synced')}</p>
+      <button class="btn wide" id="logout">${t('logout')}</button><button class="btn wide" id="mclose">${t('close')}</button></div>`;
+    $('#logout').onclick=async()=>{await sb.auth.signOut();closeModal();renderRail();refresh()};
+  }else{
+    m.innerHTML=`<div class="box" role="dialog" aria-modal="true"><h2>${t('loginTitle')}</h2><p>${t('loginWhy')}</p>
+      <button class="btn pri wide" id="google">${t('google')}</button><div class="or">${t('or')}</div>
+      <input type="email" id="lemail" placeholder="${t('emailPh')}" autocomplete="email"><button class="btn wide" id="lsend">${t('sendLink')}</button>
+      <p class="msg" id="lmsg" aria-live="polite"></p><button class="btn wide" id="mclose">${t('close')}</button></div>`;
+    const back=location.origin+location.pathname;
+    $('#google').onclick=()=>sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:back}});
+    $('#lsend').onclick=async()=>{const e=$('#lemail').value.trim();if(!/^\S+@\S+\.\S+$/.test(e)){$('#lmsg').textContent=t('badEmail');return}
+      const {error}=await sb.auth.signInWithOtp({email:e,options:{emailRedirectTo:back}});$('#lmsg').textContent=error?error.message:t('sent')};
+  }
+  $('#mclose').onclick=closeModal;
+}
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#modal').hidden)closeModal()});
+
+/* ---------- tooltip ---------- */
+document.addEventListener('mouseover',e=>{const c=e.target.closest('.ch');const tip=$('#tip');if(!c){tip.hidden=true;return}
+  const name=c.textContent;const sh=shapeOf(name);tip.innerHTML=`<b>${esc(name)}</b>${sh?diagram(sh):`<small>${t('noDiagramTip')}</small>`}`;tip.hidden=false;
+  const r=c.getBoundingClientRect();const w=tip.offsetWidth,h=tip.offsetHeight;let x=r.left+r.width/2-w/2,y=r.top-h-8;if(y<8)y=r.bottom+8;x=Math.max(8,Math.min(innerWidth-w-8,x));tip.style.left=x+'px';tip.style.top=y+'px'});
+window.addEventListener('scroll',()=>{$('#tip').hidden=true},{passive:true});
+
+/* ---------- router ---------- */
+function route(keep){
+  let h=location.hash.slice(1)||'home';
+  if(h!=='report')lastPage=h;
+  h={favorites:'library-saved',mine:'library-mine',recent:'library-recent'}[h]||h;
+  let nav='home';
+  if(h.startsWith('song-')){const s=SONGS.find(x=>x.id===h.slice(5));s?openSong(s,false,keep===true):viewHome()}
+  else if(h.startsWith('my-')){const s=mine().find(x=>x.id===h.slice(3));s?openSong(s,true,keep===true):viewLibrary('library-mine');nav='library'}
+  else{stopAll();
+    if(h.startsWith('edit-')){viewEdit(h.slice(5));nav='library'}
+    else if(h==='new'){viewEdit('');nav='library'}
+    else if(h.startsWith('library')){viewLibrary(['library','library-saved','library-mine','library-recent'].includes(h)?h:'library');nav='library'}
+    else if(h==='studio'){viewStudio();nav='studio'}
+    else if(h==='legal'){viewLegal();nav='legal'}
+    else if(h==='report'){viewReport();nav='report'}
+    else viewHome()}
+  document.querySelectorAll('[data-nav]').forEach(a=>a.classList.toggle('on',a.dataset.nav===nav));
+  if(keep!==true)window.scrollTo(0,0);$('#tip').hidden=true;
+}
+document.documentElement.lang=lang==='zh'?'zh-Hant':'en';
+applyTheme(curTheme);renderRail();renderFooter();initSync();
+window.addEventListener('hashchange',()=>route());
+$('#app').innerHTML='<p style="color:var(--muted)">…</p>';
+fetch('songs.json',{cache:'no-cache'}).then(r=>r.json()).then(d=>{SONGS=d;route()}).catch(()=>{$('#app').innerHTML='<div class="empty"><b>'+(lang==='zh'?'樂譜載入失敗':'Could not load sheets')+'</b>'+(lang==='zh'?'請重新整理頁面。':'Please reload the page.')+'</div>'});
+</script>
+</body>
+</html>
