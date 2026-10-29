@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>吉他普利 後台</title>
+  <script>
+    // 進過後台的裝置，網站側欄會出現「後台」連結
+    try { localStorage.setItem('gp_admin', 'true'); } catch (e) {}
+  </script>
 </head>
 <body>
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>

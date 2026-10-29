@@ -275,7 +275,35 @@ textarea{width:100%;border:1px solid var(--line);border-radius:8px;background:va
 .tip svg{display:block;color:var(--ink)}
 .tip small{display:block;color:var(--muted);font-size:11px;width:96px}
 
-body.perform .rail,body.perform .songhead,body.perform .note,body.perform .practice{display:none}
+body.perform .rail,body.perform .songhead,body.perform .note,body.perform .practice,body.perform .sitefoot{display:none}
+/* social, footer, modal, report */
+.rail .ig svg{color:#E1306C}
+.rail .yt svg{color:#FF0033}
+.rail .divider{height:1px;background:var(--line);margin:6px 10px;flex:none}
+.rail .avatar{width:22px;height:22px;border-radius:50%;background:var(--brass);color:var(--on-brass);display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}
+.rail .sync{font-size:11.5px;color:var(--muted);margin-left:2px}
+.rail .bottom{min-height:38px}
+@media (max-width:720px){.rail .m-hide{display:none}.rail .bottom{min-height:46px}}
+.sitefoot{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;color:var(--muted);font-size:13px}
+.sitefoot .follow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sitefoot .follow b{color:var(--ink);font-size:13.5px;margin-right:4px}
+.sbtn{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 16px 0 12px;border-radius:999px;color:#fff;font-weight:700;font-size:13.5px}
+.sbtn svg.i{width:19px;height:19px}
+.sbtn.ig{background:linear-gradient(45deg,#F58529,#DD2A7B 55%,#8134AF)}
+.sbtn.yt{background:#E00000}
+.sbtn:hover{filter:brightness(1.08)}
+.sitefoot .links{display:flex;gap:16px;margin-left:auto;flex-wrap:wrap}
+.sitefoot .links a:hover{color:var(--ink)}
+.modal{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px}
+.modal .box{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;width:min(420px,100%);display:grid;gap:12px}
+.modal h2{margin:0;font-family:var(--f-disp);font-size:20px}
+.modal p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.7}
+.modal input{height:40px;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:0 12px;font-size:14px;width:100%}
+.btn.wide{width:100%;justify-content:center;height:40px;font-size:14px}
+.or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.msg{font-size:13px;color:var(--chord)}
+.report pre{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;white-space:pre-wrap;font-family:var(--f-body);font-size:14px;line-height:1.8;margin:8px 0 12px}
 body.perform main{margin-left:0;max-width:none;padding-left:max(24px,env(safe-area-inset-left,0px))}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -283,9 +311,11 @@ body.perform main{margin-left:0;max-width:none;padding-left:max(24px,env(safe-ar
 <body>
 <nav class="rail" id="rail" aria-label="Main"></nav>
 <div class="themepop" id="themepop" hidden></div>
-<main id="app"></main>
+<main><div id="app"></div><footer class="sitefoot" id="sitefoot"></footer></main>
+<div class="modal" id="modal" hidden></div>
 <div id="tip" class="tip" hidden></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -294,7 +324,13 @@ const LS={get(k,d){try{const v=localStorage.getItem('gp_'+k);return v?JSON.parse
 /* ---------- i18n ---------- */
 let lang=LS.get('lang','zh');
 const I={
-zh:{home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲明',langSwitch:'English',foot:'© 吉他普利 Guitarpuli',
+zh:{admin:'後台',report:'回報問題',follow:'追蹤 pulipapa',login:'登入',account:'我的帳號',
+  loginTitle:'登入吉他普利',loginWhy:'登入後，收藏、自建譜、歌詞和每首歌的移調設定，會在你的手機和電腦之間同步。',google:'用 Google 登入',or:'或',emailPh:'你的 Email',sendLink:'寄登入連結給我',sent:'已寄出。請到信箱點信裡的連結完成登入。',badEmail:'請輸入正確的 Email',
+  signedIn:'已登入',synced:'已同步',syncing:'同步中…',syncErr:'同步失敗，稍後會自動重試',logout:'登出',close:'關閉',
+  rTitle:'回報問題',rIntro:'發現和弦寫錯、畫面跑掉或功能壞掉，請到 Instagram 私訊告訴我。照下面的範本寫，我能比較快找到問題。',
+  rCopy:'複製範本',rCopied:'已複製，貼到 Instagram 私訊就好',rOpen:'到 Instagram 私訊我',rNote:'需要登入 Instagram。手機會直接打開 Instagram App。截圖可以直接傳在私訊裡。',
+  rTpl:(u,d)=>`【吉他普利 問題回報】\n頁面：${u}\n裝置／瀏覽器：${d}\n發生了什麼事：\n我做了哪些步驟：\n（附上截圖會更清楚）`,
+home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲明',langSwitch:'English',foot:'© 吉他普利 Guitarpuli',
   th:{system:'跟隨系統',light:'淺色',dark:'深色',sepia:'復古紙',amber:'夜間琥珀'},
   allSheets:'全部樂譜',count:n=>`${n} 首`,search:'搜尋歌名或歌手',allKeys:'所有調性',allDiff:'所有難度',allGenre:'所有曲風',
   sortNew:'最新上架',sortTitle:'依歌名',sortEasy:'由易到難',grid:'卡片',list:'列表',noMatch:['找不到符合的譜','換個關鍵字或清除篩選條件。'],
@@ -307,12 +343,12 @@ zh:{home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲�
   back:'返回',origKey:'原調',transpose:'移調',reset:'原調',resetTip:'回原調並套用編者建議的 Capo',capoNone:'無',best:'最好彈',bestTip:'依目前調性找出開放和弦最多的夾法',
   size:'字體',metro:'節拍器',sub:'細分',subTip:'依律動加入細分拍',practice:'練習面板',lyrics:'我的歌詞',cols:'兩欄',perform:'演奏模式',endPerform:'結束演奏',
   noteCapo:(a,c,s)=>`實際音高 <b>${a}</b>，夾 Capo ${c}，用 <b>${s}</b> 調指型彈奏`,noteKey:a=>`目前調性 <b>${a}</b>`,
-  noteShift:(o,n)=>`（原調 ${o}，${n>0?'升':'降'} ${Math.abs(n)} 個半音）`,noteEditor:(c,s)=>`編者建議：Capo ${c}，用 ${s} 調指型`,notePub:'公開譜只含和弦與段落；歌詞由你自己輸入，只存在這台裝置',
+  noteShift:(o,n)=>`（原調 ${o}，${n>0?'升':'降'} ${Math.abs(n)} 個半音）`,noteEditor:(c,s)=>`編者建議：Capo ${c}，用 ${s} 調指型`,notePub:'公開譜只含和弦與段落；歌詞由你自己輸入，只存在這台裝置',notePubAcct:'公開譜只含和弦與段落；你的歌詞存在你的帳號裡，只有你看得到',
   chordsTitle:c=>c?`本曲和弦（Capo ${c} 指型）`:'本曲和弦',feel:'律動',strum:'刷法',noDiagram:'指法圖待補',noDiagramTip:'這個和弦的指法圖之後補上',
   feels:{straight8:'平均八分',swing:'搖擺八分',shuffle:'三連音拖曳',straight16:'平均十六分',triplet:'12/8 三連音'},
   strumNote:{late:'後半拍稍微延後',down:'全部下刷'},
   sec:{solo:'間奏',intro:'前奏',verse:'主歌',verse12:'主歌（12 小節）',solo12:'間奏（12 小節）',prechorus:'導歌',chorus:'副歌',bridge:'橋段',outro:'尾奏'},
-  lyrHelp:n=>`每一行歌詞對應一列和弦（這首共 ${n} 列），空白行代表該列沒有歌詞。內容只存在你的瀏覽器，不會上傳到網站。`,lyrPh:'第 1 行歌詞\n第 2 行歌詞\n…',
+  lyrHelp:n=>`每一行歌詞對應一列和弦（這首共 ${n} 列），空白行代表該列沒有歌詞。內容只存在你的瀏覽器，不會上傳到網站。`,lyrHelpAcct:n=>`每一行歌詞對應一列和弦（這首共 ${n} 列），空白行代表該列沒有歌詞。歌詞會存到你的帳號，手機和電腦都看得到，其他人看不到。`,lyrPh:'第 1 行歌詞\n第 2 行歌詞\n…',
   lyrSave:'儲存歌詞',lyrSaved:'已儲存',lyrClose:'收起',lyrLine:n=>`第 ${n} 行歌詞`,
   editTitle:'編輯譜',newTitle:'新增譜',fTitle:'歌名',fArtist:'歌手',fKey:'原調（實際音高）',fCapo:'建議 Capo',capoNo:'不夾',fFeel:'律動',fTime:'拍號',fStrum:'刷法',
   fBody:'歌詞與和弦（寫實際音高的和弦）',hint:'和弦放在方括號裡：<code>[G]歌詞[D]歌詞</code>。段落標題寫 <code>{c: 副歌}</code> 或 <code># 副歌</code>，空一行分段。',
@@ -320,7 +356,13 @@ zh:{home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲�
   capoHint:(c,s,b)=>`讀者打開時會${c?`自動夾 Capo ${c}，看到 <code>${s}</code> 調指型`:'看到原調指型'}。依這首的和弦，開放和弦最多的夾法是 <code>${b}</code>。`,
   bestLabel:(c,s)=>c?`Capo ${c}（${s} 指型）`:'不夾',
   sample:`{c: 主歌}\n[G]這是一段示[D]範歌詞\n[Em]把你自己的[C]歌詞貼在這裡\n[G]和弦寫在方[D]括號裡面\n[C]它就會浮在[D]字的上方\n\n{c: 副歌}\n[C]移調的時[D]候\n[G]括號裡的和[Em]弦會一起變\n[C]夾上 Capo [D]也會自動換指型\n[G]`},
-en:{home:'Home',library:'My Library',theme:'Theme',legal:'Copyright',langSwitch:'中文',foot:'© Guitarpuli',
+en:{admin:'Admin',report:'Report a Bug',follow:'Follow pulipapa',login:'Sign in',account:'My Account',
+  loginTitle:'Sign in to Guitarpuli',loginWhy:'Once you sign in, your saved sheets, your own sheets, lyrics and key settings sync between your phone and computer.',google:'Continue with Google',or:'or',emailPh:'Your email',sendLink:'Email me a sign-in link',sent:'Sent. Open the link in your email to finish signing in.',badEmail:'Enter a valid email address',
+  signedIn:'Signed in',synced:'Synced',syncing:'Syncing…',syncErr:'Sync failed. Retrying shortly.',logout:'Sign out',close:'Close',
+  rTitle:'Report a Bug',rIntro:'Found a wrong chord, a broken layout or a feature that doesn’t work? Send me a message on Instagram. Using the template below helps me find the problem faster.',
+  rCopy:'Copy template',rCopied:'Copied. Paste it into your Instagram message.',rOpen:'Message me on Instagram',rNote:'You need to be signed in to Instagram. On a phone this opens the Instagram app. You can attach screenshots in the message.',
+  rTpl:(u,d)=>`[Guitarpuli bug report]\nPage: ${u}\nDevice / browser: ${d}\nWhat happened:\nSteps I took:\n(Screenshots help a lot)`,
+home:'Home',library:'My Library',theme:'Theme',legal:'Copyright',langSwitch:'中文',foot:'© Guitarpuli',
   th:{system:'System',light:'Light',dark:'Dark',sepia:'Vintage Paper',amber:'Night Amber'},
   allSheets:'All Sheets',count:n=>`${n} ${n===1?'song':'songs'}`,search:'Search songs or artists',allKeys:'All keys',allDiff:'All levels',allGenre:'All genres',
   sortNew:'Newest',sortTitle:'Title',sortEasy:'Easiest first',grid:'Grid',list:'List',noMatch:['No matching sheets','Try another keyword or clear the filters.'],
@@ -333,12 +375,12 @@ en:{home:'Home',library:'My Library',theme:'Theme',legal:'Copyright',langSwitch:
   back:'Back',origKey:'Original key',transpose:'Transpose',reset:'Reset',resetTip:'Back to the original key and the editor’s capo',capoNone:'None',best:'Easiest',bestTip:'Pick the capo that gives the most open chords',
   size:'Text',metro:'Metronome',sub:'Subdivide',subTip:'Add subdivisions that follow the feel',practice:'Practice Panel',lyrics:'My Lyrics',cols:'Two Columns',perform:'Stage Mode',endPerform:'Exit Stage Mode',
   noteCapo:(a,c,s)=>`Sounds in <b>${a}</b> · Capo ${c} · play <b>${s}</b> shapes`,noteKey:a=>`Key: <b>${a}</b>`,
-  noteShift:(o,n)=>` (original ${o}, ${n>0?'up':'down'} ${Math.abs(n)} ${Math.abs(n)===1?'semitone':'semitones'})`,noteEditor:(c,s)=>`Editor’s pick: Capo ${c}, ${s} shapes`,notePub:'Public sheets show chords and sections only. Lyrics you add stay on this device.',
+  noteShift:(o,n)=>` (original ${o}, ${n>0?'up':'down'} ${Math.abs(n)} ${Math.abs(n)===1?'semitone':'semitones'})`,noteEditor:(c,s)=>`Editor’s pick: Capo ${c}, ${s} shapes`,notePub:'Public sheets show chords and sections only. Lyrics you add stay on this device.',notePubAcct:'Public sheets show chords and sections only. Your lyrics are saved to your account and only you can see them.',
   chordsTitle:c=>c?`Chords (Capo ${c} shapes)`:'Chords',feel:'Feel',strum:'Strumming',noDiagram:'Diagram coming',noDiagramTip:'Diagram for this chord is coming',
   feels:{straight8:'Straight 8ths',swing:'Swing',shuffle:'Shuffle',straight16:'Straight 16ths',triplet:'12/8 Triplet'},
   strumNote:{late:'lay back on the upbeat',down:'all downstrokes'},
   sec:{solo:'Solo',intro:'Intro',verse:'Verse',verse12:'Verse (12-bar)',solo12:'Solo (12-bar)',prechorus:'Pre-Chorus',chorus:'Chorus',bridge:'Bridge',outro:'Outro'},
-  lyrHelp:n=>`Each line of lyrics goes under one row of chords (${n} rows in this song). Leave a line blank to skip a row. Your lyrics stay in this browser and are never uploaded.`,lyrPh:'Line 1\nLine 2\n…',
+  lyrHelp:n=>`Each line of lyrics goes under one row of chords (${n} rows in this song). Leave a line blank to skip a row. Your lyrics stay in this browser and are never uploaded.`,lyrHelpAcct:n=>`Each line of lyrics goes under one row of chords (${n} rows in this song). Leave a line blank to skip a row. Lyrics are saved to your account, so they show up on all your devices. Nobody else can see them.`,lyrPh:'Line 1\nLine 2\n…',
   lyrSave:'Save Lyrics',lyrSaved:'Saved',lyrClose:'Close',lyrLine:n=>`Line ${n}`,
   editTitle:'Edit Sheet',newTitle:'New Sheet',fTitle:'Title',fArtist:'Artist',fKey:'Key (concert pitch)',fCapo:'Suggested capo',capoNo:'None',fFeel:'Feel',fTime:'Time',fStrum:'Strumming',
   fBody:'Lyrics and chords (write chords in concert pitch)',hint:'Put chords in brackets: <code>[G]lyric[D]lyric</code>. Mark sections with <code>{c: Chorus}</code> or <code># Chorus</code>, and leave a blank line between sections.',
@@ -403,7 +445,13 @@ const ICON={
   studio:'<path d="M4 6h16M4 10h16M4 14h16M4 18h16"/><circle cx="9" cy="10" r="1.6" fill="currentColor"/><circle cx="15" cy="14" r="1.6" fill="currentColor"/>',
   theme:'<path d="M12 4a8 8 0 1 0 0 16c1.2 0 1.6-.8 1.3-1.7-.4-1 .3-2.3 1.5-2.3H17a3 3 0 0 0 3-3c0-5-3.6-9-8-9z"/><circle cx="8" cy="11" r="1"/><circle cx="11" cy="7.5" r="1"/><circle cx="15" cy="8.5" r="1"/>',
   lang:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.6 2.5 14.4 0 17M12 3.5c-2.5 2.6-2.5 14.4 0 17"/>',
-  legal:'<circle cx="12" cy="12" r="8.5"/><path d="M14.5 9.5a3.5 3.5 0 1 0 0 5"/>'};
+  legal:'<circle cx="12" cy="12" r="8.5"/><path d="M14.5 9.5a3.5 3.5 0 1 0 0 5"/>',
+  ig:'<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/>',
+  yt:'<rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10 9.2l5 2.8-5 2.8z" fill="currentColor"/>',
+  bug:'<path d="M4 5h16v11H9l-5 4z"/><path d="M12 8v4M12 14.5v.01"/>',
+  admin:'<circle cx="8" cy="12" r="4"/><path d="M12 12h9M18 12v3M21 12v2"/>',
+  user:'<circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1-4 4-6 7-6s6 2 7 6"/>'};
+const IG_URL='https://www.instagram.com/pulipapa5986/',YT_URL='https://www.youtube.com/@pulipapa5986',IG_DM='https://ig.me/m/pulipapa5986';
 const ico=k=>`<svg class="i" viewBox="0 0 24 24">${ICON[k]}</svg>`;
 function renderRail(){
   $('#rail').setAttribute('aria-label',lang==='zh'?'主選單':'Main menu');
@@ -412,15 +460,22 @@ function renderRail(){
   <a href="#home" data-nav="home">${ico('home')}<span class="lbl">${t('home')}</span></a>
   <a href="#library" data-nav="library">${ico('library')}<span class="lbl">${t('library')}</span></a>
   <a href="#studio" data-nav="studio">${ico('studio')}<span class="lbl">Puli Studio <i class="pro">PRO</i></span></a>
-  <button class="rbtn sep" id="themebtn" aria-haspopup="true" aria-controls="themepop">${ico('theme')}<span class="lbl">${t('theme')}</span></button>
-  <button class="rbtn" id="langbtn" lang="${lang==='zh'?'en':'zh-Hant'}">${ico('lang')}<span class="lbl">${t('langSwitch')}</span></button>
-  <a class="small" href="#legal" data-nav="legal">${ico('legal')}<span class="lbl">${t('legal')}</span></a>
+  <a class="ig sep m-hide" href="${IG_URL}" target="_blank" rel="noopener">${ico('ig')}<span class="lbl">Instagram</span></a>
+  <a class="yt m-hide" href="${YT_URL}" target="_blank" rel="noopener">${ico('yt')}<span class="lbl">YouTube</span></a>
+  <div class="divider m-hide"></div>
+  ${sb?`<button class="rbtn bottom" id="acctbtn">${user?`<span class="avatar">${esc((user.email||'?')[0].toUpperCase())}</span><span class="lbl">${t('account')}<span class="sync" id="syncdot">${syncLabel()}</span></span>`:`${ico('user')}<span class="lbl">${t('login')}</span>`}</button>`:''}
+  <button class="rbtn bottom" id="themebtn" aria-haspopup="true" aria-controls="themepop">${ico('theme')}<span class="lbl">${t('theme')}</span></button>
+  <button class="rbtn bottom" id="langbtn" lang="${lang==='zh'?'en':'zh-Hant'}">${ico('lang')}<span class="lbl">${t('langSwitch')}</span></button>
+  <a class="bottom m-hide" href="#report" data-nav="report">${ico('bug')}<span class="lbl">${t('report')}</span></a>
+  <a class="bottom m-hide" href="#legal" data-nav="legal">${ico('legal')}<span class="lbl">${t('legal')}</span></a>
+  ${LS.get('admin',false)?`<a class="bottom m-hide" href="admin/" target="_blank" rel="noopener">${ico('admin')}<span class="lbl">${t('admin')}</span></a>`:''}
   <p class="foot">${t('foot')}</p>`;
+  if($('#acctbtn'))$('#acctbtn').onclick=openAccount;
   const sw={system:'linear-gradient(135deg,#F2F3EF 50%,#111413 50%)',light:'#F2F3EF',dark:'#111413',sepia:'#EEE5D0',amber:'radial-gradient(circle at 35% 35%,#F2B84B 30%,#0E0D0B 32%)'};
   $('#themepop').innerHTML=`<div class="h">${t('theme')}</div>`+Object.keys(sw).map(k=>`<button data-theme-opt="${k}"><span class="sw" style="background:${sw[k]}"></span>${t('th')[k]}</button>`).join('');
   markTheme();
   $('#themebtn').onclick=e=>{e.stopPropagation();$('#themepop').hidden=!$('#themepop').hidden};
-  $('#langbtn').onclick=()=>{lang=lang==='zh'?'en':'zh';LS.set('lang',lang);document.documentElement.lang=lang==='zh'?'zh-Hant':'en';renderRail();route(true)};
+  $('#langbtn').onclick=()=>{lang=lang==='zh'?'en':'zh';LS.set('lang',lang);document.documentElement.lang=lang==='zh'?'zh-Hant':'en';renderRail();renderFooter();route(true)};
 }
 const THEMES={system:['',''],light:['light',''],dark:['dark',''],sepia:['light','sepia'],amber:['dark','amber']};
 let curTheme=LS.get('theme','system');
@@ -550,7 +605,7 @@ function drawSheet(){
   $('#keyv').textContent=sounding;$('#bpmv').textContent=st.bpm;$('#capo').value=st.capo;
   let note=`<span>${st.capo?t('noteCapo')(sounding,st.capo,shape):t('noteKey')(sounding)+(st.shift?t('noteShift')(s.key,st.shift):'')}</span>`;
   if(s.capo&&!st.shift)note+=`<span>${t('noteEditor')(s.capo,tKey(s.key,-s.capo))}</span>`;
-  if(!st.isMine)note+=`<span>${t('notePub')}</span>`;
+  if(!st.isMine)note+=`<span>${user?t('notePubAcct'):t('notePub')}</span>`;
   $('#note').innerHTML=note;
   const T2=c=>tChord(c,total,flat);
   const strumNote=lang==='en'?(s.strumNoteEn||''):(s.strumNote||'');
@@ -573,7 +628,7 @@ function drawSheet(){
 function drawLyrPanel(){
   const p=$('#lyrpanel');if(!st.lyrOpen){p.innerHTML='';drawSheet();return}
   const rows=st.song.sections.reduce((n,s)=>n+s.rows.length,0);
-  p.innerHTML=`<div class="lyrpanel"><p>${t('lyrHelp')(rows)}</p>
+  p.innerHTML=`<div class="lyrpanel"><p>${user?t('lyrHelpAcct')(rows):t('lyrHelp')(rows)}</p>
   <textarea id="lyrtext" rows="8" placeholder="${esc(t('lyrPh'))}">${esc(LS.get('lyr_'+st.song.id,[]).join('\n'))}</textarea>
   <div class="btns"><button class="btn pri" id="lyrsave">${t('lyrSave')}</button><button class="btn" id="lyrclose">${t('lyrClose')}</button></div></div>`;
   $('#lyrtext').oninput=()=>{LS.set('lyr_'+st.song.id,$('#lyrtext').value.split('\n'));drawSheet()};
@@ -659,26 +714,115 @@ function viewStudio(){
 function viewLegal(){
   const zh=lang==='zh';
   $('#app').innerHTML=zh?`<article class="prose"><h1>版權聲明與侵權通報</h1>
-  <p class="draft">草稿範本：正式上線前請由熟悉台灣著作權法與美國數位千禧年著作權法的律師審閱，並補上方括號中的資料。</p>
   <h2>1. 本站提供的內容</h2><p>吉他普利公開提供的樂譜僅包含和弦進行、段落結構、律動與刷法等演奏資訊，不提供受著作權保護的歌詞全文、旋律或錄音。歌曲名稱與演出者名稱僅用於辨識曲目。</p>
-  <h2>2. 使用者自行輸入的內容</h2><p>「我的歌詞」與「自建譜」的內容只儲存在使用者自己的裝置瀏覽器中，本站不接收、不儲存、也不公開散布這些內容。使用者應自行確認其使用符合合理使用或已取得授權。</p>
-  <h2>3. 侵權通報</h2><p>如果您是著作權人或其代理人，認為本站內容侵害您的權利，請寄送通知至 [版權聯絡信箱]，內容請包含：</p>
+  <h2>2. 使用者自行輸入的內容</h2><p>「我的歌詞」與「自建譜」的內容，未登入時只儲存在使用者自己的裝置瀏覽器中；登入會員後會存放在該會員的私人帳號資料中，僅該會員本人可以讀取，本站不會公開或分享給其他人。使用者應自行確認其使用符合合理使用或已取得授權。</p>
+  <h2>3. 侵權通報</h2><p>如果您是著作權人或其代理人，認為本站內容侵害您的權利，請寄送通知至 <b>pulipapa5986@gmail.com</b>，內容請包含：</p>
   <ol><li>您的姓名、聯絡方式與身分（權利人或代理人）</li><li>被侵害的著作名稱及權利證明</li><li>涉嫌侵權內容的網址</li><li>您善意相信該使用未經授權的聲明</li><li>通知內容正確、且您有權代表權利人的聲明，以及簽名</li></ol>
-  <h2>4. 處理流程</h2><p>收到完整通知後，本站會在 [N] 個工作天內移除或限制存取相關內容，並通知上傳者（如有）。本站依台灣著作權法第六章之一「網路服務提供者之民事免責事由」及美國數位千禧年著作權法第 512 條辦理。</p>
+  <h2>4. 處理流程</h2><p>收到完整通知後，本站會在 5 個工作天內移除或限制存取相關內容，並通知上傳者（如有）。本站參照台灣著作權法第六章之一「網路服務提供者之民事免責事由」及美國數位千禧年著作權法第 512 條辦理。</p>
   <h2>5. 回復通知</h2><p>內容被移除的使用者若認為係誤判，可提出回復通知並附理由；本站將轉知通報人，並依法定程序處理。</p>
   <h2>6. 重複侵權</h2><p>經多次確認侵權的帳號，本站得終止其上傳或使用權限。</p>
-  <h2>7. 聯絡方式</h2><p>版權聯絡人：[姓名或單位]　信箱：[email]　地址：[通訊地址]</p></article>`
+  <h2>7. 聯絡方式</h2><p>版權聯絡人：pulipapa<br>信箱：pulipapa5986@gmail.com</p>
+  <p style="color:var(--muted);font-size:13px">網站錯誤或使用問題，請改用 <a href="#report" style="text-decoration:underline">回報問題</a>。</p></article>`
   :`<article class="prose"><h1>Copyright &amp; DMCA Policy</h1>
-  <p class="draft">Draft template: have a lawyer familiar with Taiwan’s Copyright Act and the U.S. DMCA review this before launch, and fill in the bracketed details.</p>
   <h2>1. What this site publishes</h2><p>Public sheets on Guitarpuli contain performance information only: chord progressions, song structure, feel and strumming patterns. We do not publish copyrighted lyrics, melodies or recordings. Song titles and artist names are used only to identify the music.</p>
-  <h2>2. Content you enter yourself</h2><p>Text added through My Lyrics and My Sheets is stored only in your own browser. We do not receive, store or distribute it. You are responsible for making sure your use is permitted.</p>
-  <h2>3. Reporting infringement</h2><p>If you own the copyright, or are authorized to act for the owner, and believe content on this site infringes it, send a notice to [copyright email] that includes:</p>
+  <h2>2. Content you enter yourself</h2><p>Text added through My Lyrics and My Sheets is stored in your own browser when you are signed out. When you are signed in, it is stored in your private account data, which only you can read. We never publish or share it. You are responsible for making sure your use is permitted.</p>
+  <h2>3. Reporting infringement</h2><p>If you own the copyright, or are authorized to act for the owner, and believe content on this site infringes it, send a notice to <b>pulipapa5986@gmail.com</b> that includes:</p>
   <ol><li>Your name, contact details and whether you are the owner or an agent</li><li>The copyrighted work and proof of ownership</li><li>The URL of the material you are reporting</li><li>A statement that you believe in good faith the use is not authorized</li><li>A statement that the notice is accurate and that you are authorized to act, with your signature</li></ol>
-  <h2>4. What happens next</h2><p>Once we receive a complete notice, we remove or disable the material within [N] business days and notify the uploader, if any. We follow Chapter VI-1 of Taiwan’s Copyright Act on internet service providers and 17 U.S.C. §512.</p>
+  <h2>4. What happens next</h2><p>Once we receive a complete notice, we remove or disable the material within 5 business days and notify the uploader, if any. We follow Chapter VI-1 of Taiwan’s Copyright Act on internet service providers and 17 U.S.C. §512.</p>
   <h2>5. Counter-notice</h2><p>If your content was removed by mistake, you may send a counter-notice explaining why. We will forward it to the reporting party and follow the statutory process.</p>
   <h2>6. Repeat infringers</h2><p>Accounts found to infringe repeatedly may lose upload or access privileges.</p>
-  <h2>7. Contact</h2><p>Copyright agent: [name or entity] · Email: [email] · Address: [mailing address]</p></article>`;
+  <h2>7. Contact</h2><p>Copyright contact: pulipapa<br>Email: pulipapa5986@gmail.com</p>
+  <p style="color:var(--muted);font-size:13px">For bugs or problems using the site, please use <a href="#report" style="text-decoration:underline">Report a Bug</a>.</p></article>`;
 }
+
+/* ---------- footer ---------- */
+function renderFooter(){
+  $('#sitefoot').innerHTML=`<div class="follow"><b>${t('follow')}</b>
+    <a class="sbtn ig" href="${IG_URL}" target="_blank" rel="noopener">${ico('ig')}Instagram</a>
+    <a class="sbtn yt" href="${YT_URL}" target="_blank" rel="noopener">${ico('yt')}YouTube</a></div>
+    <div class="links"><a href="#report">${t('report')}</a><a href="#legal">${t('legal')}</a><span>© Guitarpuli</span></div>`;
+}
+
+/* ---------- report a bug ---------- */
+let lastPage='';
+function deviceInfo(){const u=navigator.userAgent;
+  const os=/iPhone/.test(u)?'iPhone':/iPad/.test(u)?'iPad':/Android/.test(u)?'Android':/Windows/.test(u)?'Windows':/Mac OS X/.test(u)?'Mac':'—';
+  const br=/Edg\//.test(u)?'Edge':/Firefox\//.test(u)?'Firefox':/CriOS|Chrome\//.test(u)?'Chrome':/Safari\//.test(u)?'Safari':'—';
+  return `${os} / ${br}`}
+function viewReport(){
+  const page=location.origin+location.pathname+(lastPage?'#'+lastPage:'');
+  const tpl=t('rTpl')(page,deviceInfo());
+  $('#app').innerHTML=`<article class="prose report"><h1>${t('rTitle')}</h1><p>${t('rIntro')}</p>
+  <pre id="rtpl">${esc(tpl)}</pre>
+  <div class="btns"><button class="btn" id="rcopy">${t('rCopy')}</button><a class="sbtn ig" href="${IG_DM}" target="_blank" rel="noopener">${ico('ig')}${t('rOpen')}</a></div>
+  <p class="msg" id="rmsg" aria-live="polite"></p><p style="font-size:13px;color:var(--muted)">${t('rNote')}</p></article>`;
+  $('#rcopy').onclick=()=>{const done=()=>{$('#rmsg').textContent=t('rCopied')};
+    try{navigator.clipboard.writeText(tpl).then(done,()=>{selectTpl();done()})}catch(e){selectTpl();done()}};
+}
+function selectTpl(){const r=document.createRange();r.selectNodeContents($('#rtpl'));const s=getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy')}catch(e){}}
+
+/* ---------- account & sync (Supabase) ---------- */
+// 填入 Supabase 專案的 Project URL 和 Publishable（anon）key 後就會啟用會員同步；留空則不顯示登入。
+const SUPABASE_URL='https://lgavlxdgysrficiqbwyo.supabase.co';
+const SUPABASE_KEY='sb_publishable_UsEHwWKSO_nnE4LHRh2R9Q_NlsBwgtk';
+let sb=null,user=null,syncState='ok',pending=false,merged=false,pushT;
+const isSyncKey=k=>k==='fav'||k==='recent'||k==='mine'||k.startsWith('pref_')||k.startsWith('lyr_');
+const rawSet=LS.set.bind(LS);
+LS.set=(k,v)=>{rawSet(k,v);if(user&&isSyncKey(k))schedulePush()};
+function syncLabel(){return syncState==='syncing'?' · '+t('syncing'):syncState==='err'?' · !':''}
+function setSync(s){syncState=s;const d=$('#syncdot');if(d)d.textContent=syncLabel();const m=$('#acctsync');if(m)m.textContent=s==='syncing'?t('syncing'):s==='err'?t('syncErr'):t('synced')}
+function collectLocal(){const d={};try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('gp_')&&isSyncKey(k.slice(3)))d[k.slice(3)]=JSON.parse(localStorage.getItem(k))}}catch(e){}return d}
+function mergeData(local,remote){const out={...local,...remote};
+  out.fav=[...new Set([...(remote.fav||[]),...(local.fav||[])])];
+  out.recent=[...new Set([...(remote.recent||[]),...(local.recent||[])])].slice(0,20);
+  const m=new Map();[...(local.mine||[]),...(remote.mine||[])].forEach(x=>x&&m.set(x.id,x));out.mine=[...m.values()];
+  Object.keys(local).forEach(k=>{if(k.startsWith('lyr_')){const r=remote[k];if(!Array.isArray(r)||!r.some(l=>l&&l.trim()))out[k]=local[k]}});
+  return out}
+function schedulePush(){pending=true;setSync('syncing');clearTimeout(pushT);pushT=setTimeout(push,1200)}
+async function push(){if(!user)return;pending=false;
+  const {error}=await sb.from('user_data').upsert({user_id:user.id,data:collectLocal(),updated_at:new Date().toISOString()});
+  if(error){setSync('err');pending=true;pushT=setTimeout(push,15000)}else setSync('ok')}
+async function pull(merge){
+  const {data,error}=await sb.from('user_data').select('data').eq('user_id',user.id).maybeSingle();
+  if(error){setSync('err');return false}
+  const remote=(data&&data.data)||{},local=collectLocal(),next=merge?mergeData(local,remote):remote;
+  const changed=JSON.stringify(next)!==JSON.stringify(local);
+  if(!merge)Object.keys(local).forEach(k=>{if(!(k in next))try{localStorage.removeItem('gp_'+k)}catch(e){}});
+  Object.entries(next).forEach(([k,v])=>rawSet(k,v));
+  if(merge)await push();else setSync('ok');
+  return changed}
+const refresh=()=>{if(SONGS.length&&!(document.activeElement&&document.activeElement.matches('textarea,input')))route(true)};
+function initSync(){
+  if(!SUPABASE_URL||!SUPABASE_KEY||!window.supabase)return;
+  sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  sb.auth.onAuthStateChange((ev,session)=>{const u=session?session.user:null;const changedUser=(u&&u.id)!==(user&&user.id);user=u;
+    if(user&&!merged){merged=true;setTimeout(()=>pull(true).then(()=>{renderRail();refresh()}),0)}
+    if(!user)merged=false;
+    if(changedUser){renderRail();if($('#modal').dataset.kind==='acct')openAccount()}});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&user&&!pending)pull(false).then(ch=>{if(ch)refresh()})});
+  renderRail();
+}
+function closeModal(){$('#modal').hidden=true;$('#modal').dataset.kind=''}
+function openAccount(){
+  const m=$('#modal');m.dataset.kind='acct';m.hidden=false;
+  if(user){
+    m.innerHTML=`<div class="box" role="dialog" aria-modal="true"><h2>${t('account')}</h2><p>${t('signedIn')}：${esc(user.email||'')}</p><p class="msg" id="acctsync">${syncState==='err'?t('syncErr'):syncState==='syncing'?t('syncing'):t('synced')}</p>
+      <button class="btn wide" id="logout">${t('logout')}</button><button class="btn wide" id="mclose">${t('close')}</button></div>`;
+    $('#logout').onclick=async()=>{await sb.auth.signOut();closeModal();renderRail();refresh()};
+  }else{
+    m.innerHTML=`<div class="box" role="dialog" aria-modal="true"><h2>${t('loginTitle')}</h2><p>${t('loginWhy')}</p>
+      <button class="btn pri wide" id="google">${t('google')}</button><div class="or">${t('or')}</div>
+      <input type="email" id="lemail" placeholder="${t('emailPh')}" autocomplete="email"><button class="btn wide" id="lsend">${t('sendLink')}</button>
+      <p class="msg" id="lmsg" aria-live="polite"></p><button class="btn wide" id="mclose">${t('close')}</button></div>`;
+    const back=location.origin+location.pathname;
+    $('#google').onclick=()=>sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:back}});
+    $('#lsend').onclick=async()=>{const e=$('#lemail').value.trim();if(!/^\S+@\S+\.\S+$/.test(e)){$('#lmsg').textContent=t('badEmail');return}
+      const {error}=await sb.auth.signInWithOtp({email:e,options:{emailRedirectTo:back}});$('#lmsg').textContent=error?error.message:t('sent')};
+  }
+  $('#mclose').onclick=closeModal;
+}
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#modal').hidden)closeModal()});
 
 /* ---------- tooltip ---------- */
 document.addEventListener('mouseover',e=>{const c=e.target.closest('.ch');const tip=$('#tip');if(!c){tip.hidden=true;return}
@@ -689,6 +833,7 @@ window.addEventListener('scroll',()=>{$('#tip').hidden=true},{passive:true});
 /* ---------- router ---------- */
 function route(keep){
   let h=location.hash.slice(1)||'home';
+  if(h!=='report')lastPage=h;
   h={favorites:'library-saved',mine:'library-mine',recent:'library-recent'}[h]||h;
   let nav='home';
   if(h.startsWith('song-')){const s=SONGS.find(x=>x.id===h.slice(5));s?openSong(s,false,keep===true):viewHome()}
@@ -699,12 +844,13 @@ function route(keep){
     else if(h.startsWith('library')){viewLibrary(['library','library-saved','library-mine','library-recent'].includes(h)?h:'library');nav='library'}
     else if(h==='studio'){viewStudio();nav='studio'}
     else if(h==='legal'){viewLegal();nav='legal'}
+    else if(h==='report'){viewReport();nav='report'}
     else viewHome()}
   document.querySelectorAll('[data-nav]').forEach(a=>a.classList.toggle('on',a.dataset.nav===nav));
   if(keep!==true)window.scrollTo(0,0);$('#tip').hidden=true;
 }
 document.documentElement.lang=lang==='zh'?'zh-Hant':'en';
-applyTheme(curTheme);renderRail();
+applyTheme(curTheme);renderRail();renderFooter();initSync();
 window.addEventListener('hashchange',()=>route());
 $('#app').innerHTML='<p style="color:var(--muted)">…</p>';
 fetch('songs.json',{cache:'no-cache'}).then(r=>r.json()).then(d=>{SONGS=d;route()}).catch(()=>{$('#app').innerHTML='<div class="empty"><b>'+(lang==='zh'?'樂譜載入失敗':'Could not load sheets')+'</b>'+(lang==='zh'?'請重新整理頁面。':'Please reload the page.')+'</div>'});
