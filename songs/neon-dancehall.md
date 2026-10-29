@@ -11,6 +11,7 @@ strum: "↓↓↓↓ ↓↓↓↓"
 strum_note: "全部下刷"
 strum_note_en: "all downstrokes"
 level: 2
+language: zh
 genre: rock
 added: 2026-10-22
 ---

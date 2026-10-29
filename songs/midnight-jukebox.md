@@ -11,6 +11,7 @@ strum: "↓ ↓↑ ↓ ↓↑"
 strum_note: "後半拍稍微延後"
 strum_note_en: "lay back on the upbeat"
 level: 2
+language: en
 genre: blues
 added: 2026-10-24
 ---

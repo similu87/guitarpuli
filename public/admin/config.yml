@@ -43,6 +43,19 @@ collections:
       - { name: strum_note, label: 刷法補充（中文）, widget: string, required: false }
       - { name: strum_note_en, label: 刷法補充（英文）, widget: string, required: false }
       - { name: level, label: 難度, widget: select, options: [{ label: 初級, value: 1 }, { label: 中級, value: 2 }, { label: 進階, value: 3 }], default: 1 }
+      - name: language
+        label: 歌曲語言
+        widget: select
+        default: zh
+        options:
+          - { label: 華語, value: zh }
+          - { label: 台語, value: tw }
+          - { label: 粵語, value: yue }
+          - { label: 英文, value: en }
+          - { label: 日文, value: ja }
+          - { label: 韓文, value: ko }
+          - { label: 演奏曲（無歌詞）, value: inst }
+          - { label: 其他, value: other }
       - name: genre
         label: 曲風
         widget: select

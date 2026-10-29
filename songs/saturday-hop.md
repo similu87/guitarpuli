@@ -9,6 +9,7 @@ time: "12/8"
 feel: swing
 strum: "↓↓↓ ↓↓↓ ↓↓↓ ↓↓↓"
 level: 2
+language: en
 genre: oldies
 added: 2026-10-18
 ---

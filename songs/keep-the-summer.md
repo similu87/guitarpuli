@@ -9,6 +9,7 @@ time: "4/4"
 feel: straight16
 strum: "↓ ↓↑↓ ↑↓↑↓"
 level: 2
+language: zh
 genre: ballad
 added: 2026-10-21
 ---

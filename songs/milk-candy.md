@@ -9,6 +9,7 @@ time: "12/8"
 feel: triplet
 strum: "↓↓↓ ↓↓↓ ↓↓↓ ↓↓↓"
 level: 3
+language: zh
 genre: pop
 added: 2026-10-19
 ---

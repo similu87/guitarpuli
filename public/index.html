@@ -87,6 +87,9 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
 .tabs a{padding:8px 14px;font-size:14px;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
 .tabs a.on{color:var(--ink);border-bottom-color:var(--brass);font-weight:700}
+.tabs button{padding:8px 14px;font-size:14px;color:var(--muted);border:0;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;background:none}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--brass);font-weight:700}
+.tabs button span{font-size:12px;color:var(--muted);margin-left:4px;font-weight:400}
 .tabs a span{font-size:12px;color:var(--muted);margin-left:4px;font-weight:400}
 
 /* grid cards */
@@ -324,7 +327,7 @@ const LS={get(k,d){try{const v=localStorage.getItem('gp_'+k);return v?JSON.parse
 /* ---------- i18n ---------- */
 let lang=LS.get('lang','zh');
 const I={
-zh:{admin:'後台',report:'回報問題',follow:'追蹤 pulipapa',login:'登入',account:'我的帳號',
+zh:{langs:{zh:'華語',tw:'台語',yue:'粵語',en:'英文',ja:'日文',ko:'韓文',inst:'演奏曲',other:'其他'},allLang:'全部',admin:'後台',report:'回報問題',follow:'追蹤 pulipapa',login:'登入',account:'我的帳號',
   loginTitle:'登入吉他普利',loginWhy:'登入後，收藏、自建譜、歌詞和每首歌的移調設定，會在你的手機和電腦之間同步。',google:'用 Google 登入',or:'或',emailPh:'你的 Email',sendLink:'寄登入連結給我',sent:'已寄出。請到信箱點信裡的連結完成登入。',badEmail:'請輸入正確的 Email',
   signedIn:'已登入',synced:'已同步',syncing:'同步中…',syncErr:'同步失敗，稍後會自動重試',logout:'登出',close:'關閉',
   rTitle:'回報問題',rIntro:'發現和弦寫錯、畫面跑掉或功能壞掉，請到 Instagram 私訊告訴我。照下面的範本寫，我能比較快找到問題。',
@@ -356,7 +359,7 @@ home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲明',l
   capoHint:(c,s,b)=>`讀者打開時會${c?`自動夾 Capo ${c}，看到 <code>${s}</code> 調指型`:'看到原調指型'}。依這首的和弦，開放和弦最多的夾法是 <code>${b}</code>。`,
   bestLabel:(c,s)=>c?`Capo ${c}（${s} 指型）`:'不夾',
   sample:`{c: 主歌}\n[G]這是一段示[D]範歌詞\n[Em]把你自己的[C]歌詞貼在這裡\n[G]和弦寫在方[D]括號裡面\n[C]它就會浮在[D]字的上方\n\n{c: 副歌}\n[C]移調的時[D]候\n[G]括號裡的和[Em]弦會一起變\n[C]夾上 Capo [D]也會自動換指型\n[G]`},
-en:{admin:'Admin',report:'Report a Bug',follow:'Follow pulipapa',login:'Sign in',account:'My Account',
+en:{langs:{zh:'Mandarin',tw:'Taiwanese',yue:'Cantonese',en:'English',ja:'Japanese',ko:'Korean',inst:'Instrumental',other:'Other'},allLang:'All',admin:'Admin',report:'Report a Bug',follow:'Follow pulipapa',login:'Sign in',account:'My Account',
   loginTitle:'Sign in to Guitarpuli',loginWhy:'Once you sign in, your saved sheets, your own sheets, lyrics and key settings sync between your phone and computer.',google:'Continue with Google',or:'or',emailPh:'Your email',sendLink:'Email me a sign-in link',sent:'Sent. Open the link in your email to finish signing in.',badEmail:'Enter a valid email address',
   signedIn:'Signed in',synced:'Synced',syncing:'Syncing…',syncErr:'Sync failed. Retrying shortly.',logout:'Sign out',close:'Close',
   rTitle:'Report a Bug',rIntro:'Found a wrong chord, a broken layout or a feature that doesn’t work? Send me a message on Instagram. Using the template below helps me find the problem faster.',
@@ -430,7 +433,7 @@ function diagram(sh){const f=[...sh].map(x=>x==='x'?-1:+x);const pos=f.filter(n=
   return s+'</svg>'}
 
 /* ---------- state ---------- */
-const st={layout:LS.get('layout','grid'),f:{q:'',key:'',diff:'',genre:'',sort:'new'},cols:LS.get('cols',true),size:LS.get('size',16),
+const st={layout:LS.get('layout','grid'),f:{q:'',key:'',diff:'',genre:'',sort:'new',language:''},cols:LS.get('cols',true),size:LS.get('size',16),
   practice:LS.get('practice',true),sub:LS.get('sub',true),shift:0,capo:0,bpm:90,metro:false,song:null,lyrOpen:false};
 const favs=()=>LS.get('fav',[]),mine=()=>LS.get('mine',[]);
 function toggleFav(id){const f=favs();const i=f.indexOf(id);i<0?f.unshift(id):f.splice(i,1);LS.set('fav',f);return i<0}
@@ -456,19 +459,19 @@ const ico=k=>`<svg class="i" viewBox="0 0 24 24">${ICON[k]}</svg>`;
 function renderRail(){
   $('#rail').setAttribute('aria-label',lang==='zh'?'主選單':'Main menu');
   $('#rail').innerHTML=`
-  <a class="brand" href="#home"><svg class="i" viewBox="0 0 24 24"><path d="M12 3c5 0 8 2 8 5 0 5-5 11-8 13-3-2-8-8-8-13 0-3 3-5 8-5z"/></svg><span class="lbl brandtxt">${lang==='zh'?'<b>吉他普利</b><small>GUITARPULI</small>':'<b class="en">Guitarpuli</b>'}</span></a>
-  <a href="#home" data-nav="home">${ico('home')}<span class="lbl">${t('home')}</span></a>
-  <a href="#library" data-nav="library">${ico('library')}<span class="lbl">${t('library')}</span></a>
-  <a href="#studio" data-nav="studio">${ico('studio')}<span class="lbl">Puli Studio <i class="pro">PRO</i></span></a>
+  <a class="brand" href="/#home"><svg class="i" viewBox="0 0 24 24"><path d="M12 3c5 0 8 2 8 5 0 5-5 11-8 13-3-2-8-8-8-13 0-3 3-5 8-5z"/></svg><span class="lbl brandtxt">${lang==='zh'?'<b>吉他普利</b><small>GUITARPULI</small>':'<b class="en">Guitarpuli</b>'}</span></a>
+  <a href="/#home" data-nav="home">${ico('home')}<span class="lbl">${t('home')}</span></a>
+  <a href="/#library" data-nav="library">${ico('library')}<span class="lbl">${t('library')}</span></a>
+  <a href="/#studio" data-nav="studio">${ico('studio')}<span class="lbl">Puli Studio <i class="pro">PRO</i></span></a>
   <a class="ig sep m-hide" href="${IG_URL}" target="_blank" rel="noopener">${ico('ig')}<span class="lbl">Instagram</span></a>
   <a class="yt m-hide" href="${YT_URL}" target="_blank" rel="noopener">${ico('yt')}<span class="lbl">YouTube</span></a>
   <div class="divider m-hide"></div>
   ${sb?`<button class="rbtn bottom" id="acctbtn">${user?`<span class="avatar">${esc((user.email||'?')[0].toUpperCase())}</span><span class="lbl">${t('account')}<span class="sync" id="syncdot">${syncLabel()}</span></span>`:`${ico('user')}<span class="lbl">${t('login')}</span>`}</button>`:''}
   <button class="rbtn bottom" id="themebtn" aria-haspopup="true" aria-controls="themepop">${ico('theme')}<span class="lbl">${t('theme')}</span></button>
   <button class="rbtn bottom" id="langbtn" lang="${lang==='zh'?'en':'zh-Hant'}">${ico('lang')}<span class="lbl">${t('langSwitch')}</span></button>
-  <a class="bottom m-hide" href="#report" data-nav="report">${ico('bug')}<span class="lbl">${t('report')}</span></a>
-  <a class="bottom m-hide" href="#legal" data-nav="legal">${ico('legal')}<span class="lbl">${t('legal')}</span></a>
-  ${LS.get('admin',false)?`<a class="bottom m-hide" href="admin/" target="_blank" rel="noopener">${ico('admin')}<span class="lbl">${t('admin')}</span></a>`:''}
+  <a class="bottom m-hide" href="/#report" data-nav="report">${ico('bug')}<span class="lbl">${t('report')}</span></a>
+  <a class="bottom m-hide" href="/#legal" data-nav="legal">${ico('legal')}<span class="lbl">${t('legal')}</span></a>
+  ${LS.get('admin',false)?`<a class="bottom m-hide" href="/admin/" target="_blank" rel="noopener">${ico('admin')}<span class="lbl">${t('admin')}</span></a>`:''}
   <p class="foot">${t('foot')}</p>`;
   if($('#acctbtn'))$('#acctbtn').onclick=openAccount;
   const sw={system:'linear-gradient(135deg,#F2F3EF 50%,#111413 50%)',light:'#F2F3EF',dark:'#111413',sepia:'#EEE5D0',amber:'radial-gradient(circle at 35% 35%,#F2B84B 30%,#0E0D0B 32%)'};
@@ -485,8 +488,8 @@ $('#themepop').onclick=e=>{const b=e.target.closest('[data-theme-opt]');if(b){ap
 document.addEventListener('click',e=>{if(!e.target.closest('#themepop'))$('#themepop').hidden=true});
 
 /* ---------- cards & lists ---------- */
-const pubItem=s=>({href:'#song-'+s.id,title:s.title,artist:s.artist,key:s.key,color:`var(${GCOL[s.genre]})`,tag:t('genre')[s.genre],diff:s.diff,bpm:s.bpm,favId:s.id});
-const myItem=s=>({href:'#my-'+s.id,title:s.title,artist:s.artist,key:s.key,color:'var(--g-mine)',tag:t('mineTag'),diff:0,bpm:s.bpm,favId:null,edit:'#edit-'+s.id});
+const pubItem=s=>({href:'/song/'+s.id+'/',title:s.title,artist:s.artist,key:s.key,color:`var(${GCOL[s.genre]})`,tag:t('genre')[s.genre],diff:s.diff,bpm:s.bpm,favId:s.id});
+const myItem=s=>({href:'/#my-'+s.id,title:s.title,artist:s.artist,key:s.key,color:'var(--g-mine)',tag:t('mineTag'),diff:0,bpm:s.bpm,favId:null,edit:'/#edit-'+s.id});
 function renderItems(box,items,onFavChange){
   const f=favs();
   if(st.layout==='grid'){
@@ -511,6 +514,7 @@ function viewHome(){
   <header class="pagehead"><h1>${t('allSheets')}</h1><span class="count" id="count"></span>
     <label class="search"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg>
     <input id="q" placeholder="${t('search')}" value="${esc(st.f.q)}" aria-label="${t('search')}"></label></header>
+  <nav class="tabs langtabs" id="langtabs"></nav>
   <div class="filters">
     <select id="f-key" aria-label="${t('colKey')}"><option value="">${t('allKeys')}</option>${keys.map(k=>`<option ${st.f.key===k?'selected':''}>${k}</option>`).join('')}</select>
     <select id="f-diff" aria-label="${t('colLevel')}"><option value="">${t('allDiff')}</option>${[1,2,3].map(d=>`<option value="${d}" ${st.f.diff==d?'selected':''}>${t('diff')[d]}</option>`).join('')}</select>
@@ -519,7 +523,7 @@ function viewHome(){
     ${layoutToggle()}
   </div><div class="homecols"><div id="results"></div><aside class="aside" id="aside"></aside></div>`;
   const draw=()=>{const q=st.f.q.trim().toLowerCase();
-    let list=SONGS.filter(s=>(!q||(s.title+s.artist).toLowerCase().includes(q))&&(!st.f.key||s.key===st.f.key)&&(!st.f.diff||s.diff==st.f.diff)&&(!st.f.genre||s.genre===st.f.genre));
+    let list=SONGS.filter(s=>(!q||(s.title+s.artist).toLowerCase().includes(q))&&(!st.f.key||s.key===st.f.key)&&(!st.f.diff||s.diff==st.f.diff)&&(!st.f.genre||s.genre===st.f.genre)&&(!st.f.language||s.language===st.f.language));
     if(st.f.sort==='new')list.sort((a,b)=>b.added.localeCompare(a.added));if(st.f.sort==='title')list.sort((a,b)=>a.title.localeCompare(b.title,lang==='zh'?'zh-Hant':'en'));if(st.f.sort==='easy')list.sort((a,b)=>a.diff-b.diff);
     $('#count').textContent=t('count')(list.length);
     if(!list.length){$('#results').innerHTML=`<div class="empty"><b>${t('noMatch')[0]}</b>${t('noMatch')[1]}</div>`;return}
@@ -530,14 +534,18 @@ function viewHome(){
     const g=cnt(s=>s.genre),k=cnt(s=>s.key),d=cnt(s=>s.diff);
     const chip=(type,val,label,n)=>`<button data-chip="${type}" data-v="${esc(val)}" class="${String(st.f[type])===String(val)?'on':''}">${esc(label)}<span>${n}</span></button>`;
     $('#aside').innerHTML=`<section><h4>${t('cont')}</h4>${rec.length?`<div class="cont">${rec.map(s=>{const p=LS.get('pref_'+s.id,null);const cp=p?p.capo:s.capo;const sk=tKey(s.key,p?p.shift:0);
-      return `<a href="#song-${s.id}"><span class="sq" style="--c:var(${GCOL[s.genre]})">${sk}</span><span style="min-width:0"><b>${esc(s.title)}</b><small>${esc(s.artist)}</small></span><span class="cp">${cp?'Capo '+cp:''}</span></a>`}).join('')}</div>`:`<p style="margin:0;font-size:13px;color:var(--muted)">${t('contEmpty')}</p>`}</section>
+      return `<a href="/song/${s.id}/"><span class="sq" style="--c:var(${GCOL[s.genre]})">${sk}</span><span style="min-width:0"><b>${esc(s.title)}</b><small>${esc(s.artist)}</small></span><span class="cp">${cp?'Capo '+cp:''}</span></a>`}).join('')}</div>`:`<p style="margin:0;font-size:13px;color:var(--muted)">${t('contEmpty')}</p>`}</section>
     <section><h4>${t('byLevel')}</h4><div class="chips">${[1,2,3].map(n=>chip('diff',n,t('diff')[n],d[n]||0)).join('')}</div></section>
     <section><h4>${t('byGenre')}</h4><div class="chips">${Object.keys(GCOL).map(x=>chip('genre',x,t('genre')[x],g[x]||0)).join('')}</div></section>
     <section><h4>${t('byKey')}</h4><div class="chips">${Object.keys(k).sort().map(x=>chip('key',x,x,k[x])).join('')}</div></section>`;
     $('#aside').querySelectorAll('[data-chip]').forEach(b=>b.onclick=()=>{const ty=b.dataset.chip,v=b.dataset.v;st.f[ty]=String(st.f[ty])===v?'':v;$('#f-'+ty).value=st.f[ty];draw();drawAside()})};
   const upd=()=>{st.f.q=$('#q').value;st.f.key=$('#f-key').value;st.f.diff=$('#f-diff').value;st.f.genre=$('#f-genre').value;st.f.sort=$('#f-sort').value;draw();drawAside()};
   ['#q','#f-key','#f-diff','#f-genre','#f-sort'].forEach(s=>$(s).addEventListener('input',upd));
-  bindLayout(viewHome);draw();drawAside();
+  const drawLangs=()=>{const c={};SONGS.forEach(s=>{c[s.language]=(c[s.language]||0)+1});
+    const order=Object.keys(t('langs')).filter(k=>c[k]);
+    $('#langtabs').innerHTML=[['',t('allLang'),SONGS.length],...order.map(k=>[k,t('langs')[k],c[k]])].map(([k,l,n])=>`<button data-lt="${k}" class="${st.f.language===k?'on':''}">${l}<span>${n}</span></button>`).join('');
+    $('#langtabs').querySelectorAll('[data-lt]').forEach(b=>b.onclick=()=>{st.f.language=b.dataset.lt;drawLangs();draw()})};
+  bindLayout(viewHome);drawLangs();draw();drawAside();
 }
 
 /* ---------- library ---------- */
@@ -546,8 +554,8 @@ function viewLibrary(tab){
   const my=mine().map(myItem);
   const rec=LS.get('recent',[]).map(id=>SONGS.find(s=>s.id===id)).filter(Boolean).map(pubItem);
   const n={library:fav.length+my.length,'library-saved':fav.length,'library-mine':my.length,'library-recent':rec.length};
-  $('#app').innerHTML=`<header class="pagehead"><h1>${t('library')}</h1><span style="margin-left:auto;display:flex;gap:8px;align-items:center">${layoutToggle()}<a class="btn pri" href="#new">${t('newSheet')}</a></span></header>
-  <nav class="tabs">${Object.keys(n).map(h=>`<a href="#${h}" class="${tab===h?'on':''}">${t('tabs')[h]}<span>${n[h]}</span></a>`).join('')}</nav><div id="results"></div>`;
+  $('#app').innerHTML=`<header class="pagehead"><h1>${t('library')}</h1><span style="margin-left:auto;display:flex;gap:8px;align-items:center">${layoutToggle()}<a class="btn pri" href="/#new">${t('newSheet')}</a></span></header>
+  <nav class="tabs">${Object.keys(n).map(h=>`<a href="/#${h}" class="${tab===h?'on':''}">${t('tabs')[h]}<span>${n[h]}</span></a>`).join('')}</nav><div id="results"></div>`;
   bindLayout(()=>viewLibrary(tab));
   const items=tab==='library-saved'?fav:tab==='library-mine'?my:tab==='library-recent'?rec:[...my,...fav];
   if(!items.length){const e=t('empty')[tab];$('#results').innerHTML=`<div class="empty"><b>${e[0]}</b>${e[1]}</div>`;return}
@@ -568,9 +576,9 @@ function openSong(song,isMine,keepState){
   if(!isMine&&!keepState){const r=LS.get('recent',[]).filter(x=>x!==song.id);r.unshift(song.id);LS.set('recent',r.slice(0,20))}
   const isFav=favs().includes(song.id);
   $('#app').innerHTML=`
-  <div class="songhead"><a class="back" href="${isMine?'#library-mine':'#home'}" aria-label="${t('back')}">←</a>
-    <div class="grow"><h1>${esc(song.title)}</h1><p>${esc(song.artist||'')}${song.artist?' · ':''}${t('origKey')} <span class="k">${song.key}</span> · ${st.bpm} BPM · ${song.time||'4/4'} · ${t('feels')[song.feel]||t('feels').straight8}${song.diff?' · '+t('diff')[song.diff]:''}</p></div>
-    ${isMine?`<a class="hbtn" href="#edit-${song.id}">${t('edit')}</a>`:`<button class="hbtn ${isFav?'on':''}" id="favbtn">${heart}<span>${isFav?t('saved'):t('save')}</span></button>`}
+  <div class="songhead"><a class="back" href="${isMine?'/#library-mine':'/#home'}" aria-label="${t('back')}">←</a>
+    <div class="grow"><h1>${esc(song.title)}</h1><p>${esc(song.artist||'')}${song.artist?' · ':''}${t('origKey')} <span class="k">${song.key}</span> · ${st.bpm} BPM · ${song.time||'4/4'} · ${t('feels')[song.feel]||t('feels').straight8}${song.language?' · '+(t('langs')[song.language]||''):''}${song.diff?' · '+t('diff')[song.diff]:''}</p></div>
+    ${isMine?`<a class="hbtn" href="/#edit-${song.id}">${t('edit')}</a>`:`<button class="hbtn ${isFav?'on':''}" id="favbtn">${heart}<span>${isFav?t('saved'):t('save')}</span></button>`}
   </div>
   <div class="toolwrap"><div class="tools" role="toolbar">
     <div class="tg"><span class="tl">${t('transpose')}</span><div class="tc"><button class="tb" data-act="key-" aria-label="−1">−</button><span class="tv" id="keyv"></span><button class="tb" data-act="key+" aria-label="+1">+</button><button class="tb" data-act="key0" title="${t('resetTip')}">${t('reset')}</button></div></div>
@@ -676,7 +684,7 @@ function viewEdit(id){
     <div class="hint" id="capohint"></div>
     <label>${t('fBody')}<textarea id="ed-body" spellcheck="false">${esc(s.body)}</textarea></label>
     <div class="hint">${t('hint')}</div>
-    <div class="btns"><button class="btn pri" id="ed-save">${t('btnSave')}</button><a class="btn" href="${s.id?'#my-'+s.id:'#library-mine'}">${t('btnCancel')}</a>${s.id?`<button class="btn warn" id="ed-del">${t('btnDel')}</button>`:''}</div>
+    <div class="btns"><button class="btn pri" id="ed-save">${t('btnSave')}</button><a class="btn" href="${s.id?'/#my-'+s.id:'/#library-mine'}">${t('btnCancel')}</a>${s.id?`<button class="btn warn" id="ed-del">${t('btnDel')}</button>`:''}</div>
   </div><div class="preview"><div class="sheet" id="pv"></div></div></div>`;
   const pv=()=>{const key=$('#ed-key').value,capo=+$('#ed-capo').value,body=$('#ed-body').value;const shape=tKey(key,-capo),flat=keyFlat(shape);
     const best=bestCapo({key,body},0);
@@ -722,7 +730,7 @@ function viewLegal(){
   <h2>5. 回復通知</h2><p>內容被移除的使用者若認為係誤判，可提出回復通知並附理由；本站將轉知通報人，並依法定程序處理。</p>
   <h2>6. 重複侵權</h2><p>經多次確認侵權的帳號，本站得終止其上傳或使用權限。</p>
   <h2>7. 聯絡方式</h2><p>版權聯絡人：pulipapa<br>信箱：pulipapa5986@gmail.com</p>
-  <p style="color:var(--muted);font-size:13px">網站錯誤或使用問題，請改用 <a href="#report" style="text-decoration:underline">回報問題</a>。</p></article>`
+  <p style="color:var(--muted);font-size:13px">網站錯誤或使用問題，請改用 <a href="/#report" style="text-decoration:underline">回報問題</a>。</p></article>`
   :`<article class="prose"><h1>Copyright &amp; DMCA Policy</h1>
   <h2>1. What this site publishes</h2><p>Public sheets on Guitarpuli contain performance information only: chord progressions, song structure, feel and strumming patterns. We do not publish copyrighted lyrics, melodies or recordings. Song titles and artist names are used only to identify the music.</p>
   <h2>2. Content you enter yourself</h2><p>Text added through My Lyrics and My Sheets is stored in your own browser when you are signed out. When you are signed in, it is stored in your private account data, which only you can read. We never publish or share it. You are responsible for making sure your use is permitted.</p>
@@ -732,7 +740,7 @@ function viewLegal(){
   <h2>5. Counter-notice</h2><p>If your content was removed by mistake, you may send a counter-notice explaining why. We will forward it to the reporting party and follow the statutory process.</p>
   <h2>6. Repeat infringers</h2><p>Accounts found to infringe repeatedly may lose upload or access privileges.</p>
   <h2>7. Contact</h2><p>Copyright contact: pulipapa<br>Email: pulipapa5986@gmail.com</p>
-  <p style="color:var(--muted);font-size:13px">For bugs or problems using the site, please use <a href="#report" style="text-decoration:underline">Report a Bug</a>.</p></article>`;
+  <p style="color:var(--muted);font-size:13px">For bugs or problems using the site, please use <a href="/#report" style="text-decoration:underline">Report a Bug</a>.</p></article>`;
 }
 
 /* ---------- footer ---------- */
@@ -740,17 +748,17 @@ function renderFooter(){
   $('#sitefoot').innerHTML=`<div class="follow"><b>${t('follow')}</b>
     <a class="sbtn ig" href="${IG_URL}" target="_blank" rel="noopener">${ico('ig')}Instagram</a>
     <a class="sbtn yt" href="${YT_URL}" target="_blank" rel="noopener">${ico('yt')}YouTube</a></div>
-    <div class="links"><a href="#report">${t('report')}</a><a href="#legal">${t('legal')}</a><span>© Guitarpuli</span></div>`;
+    <div class="links"><a href="/#report">${t('report')}</a><a href="/#legal">${t('legal')}</a><span>© Guitarpuli</span></div>`;
 }
 
 /* ---------- report a bug ---------- */
-let lastPage='';
+const lastPageKey='gp_lastpage';
 function deviceInfo(){const u=navigator.userAgent;
   const os=/iPhone/.test(u)?'iPhone':/iPad/.test(u)?'iPad':/Android/.test(u)?'Android':/Windows/.test(u)?'Windows':/Mac OS X/.test(u)?'Mac':'—';
   const br=/Edg\//.test(u)?'Edge':/Firefox\//.test(u)?'Firefox':/CriOS|Chrome\//.test(u)?'Chrome':/Safari\//.test(u)?'Safari':'—';
   return `${os} / ${br}`}
 function viewReport(){
-  const page=location.origin+location.pathname+(lastPage?'#'+lastPage:'');
+  let page=location.origin+'/';try{page=sessionStorage.getItem(lastPageKey)||page}catch(e){}
   const tpl=t('rTpl')(page,deviceInfo());
   $('#app').innerHTML=`<article class="prose report"><h1>${t('rTitle')}</h1><p>${t('rIntro')}</p>
   <pre id="rtpl">${esc(tpl)}</pre>
@@ -832,8 +840,11 @@ window.addEventListener('scroll',()=>{$('#tip').hidden=true},{passive:true});
 
 /* ---------- router ---------- */
 function route(keep){
-  let h=location.hash.slice(1)||'home';
-  if(h!=='report')lastPage=h;
+  let h=location.hash.slice(1);
+  if(h.startsWith('song-')){location.replace('/song/'+h.slice(5)+'/');return}
+  if(!h&&window.PAGE_SONG)h='song-'+window.PAGE_SONG;
+  h=h||'home';
+  if(h!=='report')try{sessionStorage.setItem(lastPageKey,location.href)}catch(e){}
   h={favorites:'library-saved',mine:'library-mine',recent:'library-recent'}[h]||h;
   let nav='home';
   if(h.startsWith('song-')){const s=SONGS.find(x=>x.id===h.slice(5));s?openSong(s,false,keep===true):viewHome()}
@@ -852,8 +863,8 @@ function route(keep){
 document.documentElement.lang=lang==='zh'?'zh-Hant':'en';
 applyTheme(curTheme);renderRail();renderFooter();initSync();
 window.addEventListener('hashchange',()=>route());
-$('#app').innerHTML='<p style="color:var(--muted)">…</p>';
-fetch('songs.json',{cache:'no-cache'}).then(r=>r.json()).then(d=>{SONGS=d;route()}).catch(()=>{$('#app').innerHTML='<div class="empty"><b>'+(lang==='zh'?'樂譜載入失敗':'Could not load sheets')+'</b>'+(lang==='zh'?'請重新整理頁面。':'Please reload the page.')+'</div>'});
+if(!window.PAGE_SONG)$('#app').innerHTML='<p style="color:var(--muted)">…</p>';
+fetch('/songs.json',{cache:'no-cache'}).then(r=>r.json()).then(d=>{SONGS=d;route()}).catch(()=>{$('#app').innerHTML='<div class="empty"><b>'+(lang==='zh'?'樂譜載入失敗':'Could not load sheets')+'</b>'+(lang==='zh'?'請重新整理頁面。':'Please reload the page.')+'</div>'});
 </script>
 </body>
 </html>

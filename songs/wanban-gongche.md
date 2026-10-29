@@ -9,6 +9,7 @@ time: "4/4"
 feel: straight8
 strum: "↓ ↓↑ ↑↓↑"
 level: 1
+language: zh
 genre: pop
 added: 2026-10-27
 ---
