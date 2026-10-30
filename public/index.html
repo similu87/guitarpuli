@@ -215,9 +215,9 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .ch{font-family:var(--f-mono);font-weight:700;color:var(--chord);cursor:help}
 .ch:hover{text-decoration:underline;text-underline-offset:3px}
 .row{margin-bottom:.55em}
-.bars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-left:2px solid var(--muted)}
-.bar{border-right:1px solid var(--muted);padding:.15em .6em;display:flex;gap:.8em;min-height:1.9em;align-items:center}
-.bar:last-child{border-right-width:2px}
+.bars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));row-gap:.45em}
+.bar{border-right:2px solid var(--muted);padding:.15em .6em;display:flex;gap:.8em;min-height:1.9em;align-items:center}
+.bar:nth-child(4n+1){border-left:2px solid var(--muted)}
 .lyr{padding:.12em .6em 0;color:var(--ink);display:flex;gap:.5em;border-radius:4px;transition:background .2s}
 .lyr .n{color:var(--brass);font-family:var(--f-mono);font-weight:700;font-size:.9em;min-width:1.7em;display:flex;align-items:center;flex:none}
 .lyr .n:empty{display:none}
@@ -226,7 +226,7 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .lyr.hl{background:var(--brass-soft)}
 .rowline{display:flex;align-items:stretch;gap:8px}
 .rowline .bars{flex:1;min-width:0}
-.rep{align-self:center;font-family:var(--f-mono);font-weight:700;font-size:.82em;color:var(--brass)}
+.rep{align-self:center;flex:none;width:2.4em;font-family:var(--f-mono);font-weight:700;font-size:.82em;color:var(--brass)}
 .only{display:inline-block;font-size:11.5px;color:var(--on-brass);background:var(--brass);border-radius:4px;padding:0 6px;margin-bottom:3px;letter-spacing:0}
 .nb{display:inline-grid;place-items:center;min-width:1.5em;height:1.5em;padding:0 .2em;border-radius:999px;background:var(--brass);color:var(--on-brass);font-family:var(--f-mono);font-weight:700;font-size:.8em;line-height:1;letter-spacing:0}
 .chip .nb,.sec h3 .nb,.only .nb,.lbox label .nb{font-size:11px;min-width:17px;height:17px;margin-left:2px}
@@ -712,7 +712,7 @@ function getLyr(s){const raw=LS.get('lyr_'+s.id,null);
   return out}
 function setLyr(s,l){const keys=secKeys(s);s.sections.forEach((sec,k)=>{if(!(keys[k] in l.fp))l.fp[keys[k]]=secFp(sec)});LS.set('lyr_'+s.id,l)}
 function lyrChangedKeys(s,l){const keys=secKeys(s);return s.sections.map((sec,k)=>({sec,key:keys[k]})).filter(x=>!isInst(x.sec)&&l.L[x.key]&&Object.values(l.L[x.key]).some(a=>a&&a.some(y=>y&&y.trim()))&&l.fp[x.key]&&l.fp[x.key]!==secFp(x.sec))}
-function barsHtml(r,C){return `<div class="rowline"><div class="bars">${r.b.map(bar=>`<div class="bar">${bar.map(C).join('')}</div>`).join('')}</div>${r.x?`<span class="rep">×${r.x}</span>`:''}</div>`}
+function barsHtml(r,C){return `<div class="rowline"><div class="bars">${r.b.map(bar=>`<div class="bar">${bar.map(C).join('')}</div>`).join('')}</div><span class="rep">${r.x?`×${r.x}`:''}</span></div>`}
 function lyrLine(label,text,occ){if(!text&&!st.lyrOpen)return '';return `<div class="lyr${text?'':' ph'}" data-occ="${occ}"><span class="n">${label}</span><span class="lt">${text?esc(text):t('lyrEmpty')}</span></div>`}
 function drawStructured(s,C){
   const occs=songOccs(s),tot=occTotals(s),lyr=getLyr(s),changed=lyrChangedKeys(s,lyr),warnKeys=new Set(changed.map(x=>x.key));
