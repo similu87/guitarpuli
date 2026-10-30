@@ -3,7 +3,7 @@ url_id: the-town
 title: "The Town"
 artist: "박준하 (JUNHA PARK)"
 key: "Eb"
-capo: 0
+capo: 3
 bpm: 51
 time: "6/8"
 feel: triplet
