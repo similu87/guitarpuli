@@ -455,10 +455,12 @@ const SHAPES={C:'x32010',D:'xx0232',E:'022100',G:'320003',A:'x02220',Am:'x02210'
  Gm:'355333',Cm:'x35543',Fm:'133111',Eb:'x68886',Ab:'466544',Db:'x46664','G#m':'466444',Bbm:'x13321',Fmaj7:'xx3210',Cmaj7:'x32000',
  Gmaj7:'320002',Dmaj7:'xx0222',Amaj7:'x02120',Am7:'x02010',Em7:'020000',Dm7:'xx0211',Bm7:'x20202','F#7':'242322','C#7':'x46464',
  Eb7:'x68686',Ab7:'464544',Db7:'x46464','F#':'244322',B:'x24442',Gb:'244322','D#m':'x68876',Ebm:'x68876',Abm:'466444','A#m':'x13321',
- 'G#':'466544','C#':'x46664','D#':'x68886','A#':'x13331','G#7':'464544','D#7':'x68686','A#7':'x13131',Gm7:'353333',Cm7:'x35343',Fm7:'131111',Dsus4:'xx0233',Dsus2:'xx0230',Asus4:'x02230',Asus2:'x02200',Esus4:'022200',Csus2:'x30013',Gsus4:'330013',Cadd9:'x32033',Ebmaj7:'x65333',Bbmaj7:'x13231'};
+ 'G#':'466544','C#':'x46664','D#':'x68886','A#':'x13331','G#7':'464544','D#7':'x68686','A#7':'x13131',Gm7:'353333',Cm7:'x35343',Fm7:'131111',Dsus4:'xx0233',Dsus2:'xx0230',Asus4:'x02230',Asus2:'x02200',Esus4:'022200',Csus2:'x30013',Gsus4:'330013',Cadd9:'x32033',Ebmaj7:'x65333',Bbmaj7:'x13231',
+ /* 使用者提供的指法 */ Gm11:'3x331x',Fsus4:'1x331x',Gsus4:'3x0013',
+ /* 斜線和弦：一定要畫出低音，沒有登錄的斜線和弦顯示「指法圖待補」 */ 'F/A':'x0321x','G/B':'x2000x','Am/G#':'4x255x','Am7/G':'3x2010','Dadd9/F#':'2x2230'};
 const OPEN=new Set(['C','D','E','G','A','Am','Em','Dm','E7','A7','D7','G7','B7','C7','Cmaj7','Fmaj7','Gmaj7','Dmaj7','Amaj7','Am7','Em7','Dm7','Bm7']);
 const ENH={'C#':'Db','Db':'C#','D#':'Eb','Eb':'D#','F#':'Gb','Gb':'F#','G#':'Ab','Ab':'G#','A#':'Bb','Bb':'A#'};
-function shapeOf(c){c=c.split('/')[0];if(SHAPES[c])return SHAPES[c];const m=c.match(/^([A-G][#b]?)(.*)$/);if(m&&ENH[m[1]]&&SHAPES[ENH[m[1]]+m[2]])return SHAPES[ENH[m[1]]+m[2]];return null}
+function shapeOf(c){if(SHAPES[c])return SHAPES[c];const[h,b]=c.split('/');const alt=r=>{const m=r.match(/^([A-G][#b]?)(.*)$/);return m&&ENH[m[1]]?ENH[m[1]]+m[2]:null};for(const x of [h,alt(h)].filter(Boolean))for(const y of (b?[b,ENH[b]].filter(Boolean):['']))if(SHAPES[b?x+'/'+y:x])return SHAPES[b?x+'/'+y:x];return null}
 function diagram(sh){const f=[...sh].map(x=>x==='x'?-1:+x);const pos=f.filter(n=>n>0);const max=Math.max(0,...pos);const base=max>4?Math.min(...pos):1;
   let s=`<svg width="96" height="112" viewBox="0 0 96 112">`;const X=i=>16+i*13,Y=r=>26+r*17;
   s+=base===1?`<line x1="16" y1="26" x2="81" y2="26" stroke="currentColor" stroke-width="4"/>`:`<text x="92" y="${Y(.5)+4}" font-size="10" fill="currentColor" text-anchor="end">${base}fr</text>`;
