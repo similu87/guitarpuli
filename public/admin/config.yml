@@ -4,6 +4,8 @@ backend:
   name: github
   repo: similu87/guitarpuli
   branch: main
+  # 網站搬到 Cloudflare Pages，後台登入仍借用 Netlify 的 GitHub 登入服務
+  site_domain: guitarpuli.netlify.app
 
 locale: zh_Hant
 media_folder: public/uploads
