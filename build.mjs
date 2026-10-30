@@ -7,7 +7,7 @@ import path from 'node:path';
 import matter from 'gray-matter';
 
 const SRC = 'songs', PUB = 'public';
-const SITE = (process.env.URL || 'https://guitarpuli.netlify.app').replace(/\/$/, '');
+const SITE = (process.env.SITE_URL || 'https://guitarpuli.pages.dev').replace(/\/$/, '');
 const SECTION = {
   '前奏':'intro','主歌':'verse','導歌':'prechorus','副歌':'chorus','橋段':'bridge','間奏':'solo','尾奏':'outro',
   '主歌（12 小節）':'verse12','間奏（12 小節）':'solo12',
