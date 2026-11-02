@@ -169,6 +169,29 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 /* wide-screen side columns */
 .homecols{display:grid;grid-template-columns:minmax(0,1fr);gap:32px}
 .aside{display:none}
+.hotbar{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;margin:0 0 24px}
+@media (min-width:860px){.hotbar{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr) minmax(0,1fr)}}
+.hotbar section{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.hotbar h4{margin:0 0 10px;font-size:10.5px;letter-spacing:.14em;color:var(--muted);display:flex;align-items:center;gap:8px}
+.hotbar h4 .hseg{margin-left:auto;display:flex;flex-direction:row;gap:2px}
+.hotbar h4 .hseg button{border:0;background:none;color:var(--muted);font-size:11px;letter-spacing:0;padding:2px 6px;border-radius:5px;cursor:pointer}
+.hotbar h4 .hseg button.on{background:var(--sunk);color:var(--ink)}
+.nums{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px;margin:0}
+@media (max-width:859px){.hotbar .nums{grid-template-columns:repeat(4,minmax(0,1fr))}.hotbar .nums dd{font-size:15px}.hotbar section{padding:12px 14px}}
+.nums div{min-width:0}.nums dt{font-size:11.5px;color:var(--muted)}.nums dd{margin:0;font-family:var(--f-mono);font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.hotlist{list-style:none;margin:0;padding:0;display:grid;gap:2px;counter-reset:h}
+.hotlist li{counter-increment:h}
+.hotlist a{display:grid;grid-template-columns:18px minmax(0,1fr) auto;gap:8px;align-items:baseline;padding:4px 6px;margin:0 -6px;border-radius:6px;font-size:13.5px}
+.hotlist a::before{content:counter(h);font-family:var(--f-mono);font-size:12px;color:var(--brass);font-weight:700}
+.hotlist a:hover{background:var(--sunk)}.hotlist b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hotlist small{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums}
+.hotbar .chips button{cursor:pointer}
+.hotbar .none{margin:0;font-size:13px;color:var(--muted)}
+.stattbl{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0 4px}
+.stattbl th,.stattbl td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+.stattbl th{font-size:11.5px;color:var(--muted);font-weight:600}
+.stattbl td.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.stattbl .miss{color:var(--brass);font-weight:600}
+.statnav{display:flex;gap:6px;margin:8px 0 4px}
 @media (min-width:1400px){.homecols{grid-template-columns:minmax(0,1fr) 288px}.aside{display:grid;gap:16px;align-content:start;position:sticky;top:24px}}
 .aside section{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
 .aside h4{margin:0 0 10px;font-size:10.5px;letter-spacing:.14em;color:var(--muted)}
@@ -333,6 +356,15 @@ body.perform .exitperf{display:inline-flex;position:fixed;top:calc(12px + env(sa
 .sbtn.yt{background:#E00000}
 .sbtn:hover{filter:brightness(1.08)}
 .sitefoot .links{display:flex;gap:16px;margin-left:auto;flex-wrap:wrap}
+.sitefoot .ver{font-variant-numeric:tabular-nums;text-decoration:underline;text-underline-offset:3px}
+.clog .ver{border-top:1px solid var(--line);padding-top:18px;margin-top:22px}
+.clog .ver:first-of-type{border-top:0;margin-top:8px;padding-top:0}
+.clog .ver h2{margin:0 0 2px;font-size:18px;font-variant-numeric:tabular-nums}
+.clog .ver time{color:var(--muted);font-size:13px}
+.clog h3{font-size:13px;color:var(--muted);margin:14px 0 4px;font-weight:600;letter-spacing:.04em}
+.clog ul{margin:0}
+.clog li a{text-decoration:underline;text-underline-offset:3px}
+.clog li small{color:var(--muted);margin-left:6px}
 .sitefoot .links a:hover{color:var(--ink)}
 .modal{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px}
 .modal .box{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;width:min(420px,100%);display:grid;gap:12px}
@@ -370,7 +402,7 @@ zh:{langs:{zh:'華語',tw:'台語',yue:'粵語',en:'英文',ja:'日文',ko:'韓�
   rTitle:'回報問題',rIntro:'發現和弦寫錯、畫面跑掉或功能壞掉，請到 Instagram 私訊告訴我。照下面的範本寫，我能比較快找到問題。',
   rCopy:'複製範本',rCopied:'已複製，貼到 Instagram 私訊就好',rOpen:'到 Instagram 私訊我',rNote:'需要登入 Instagram。手機會直接打開 Instagram App。截圖可以直接傳在私訊裡。',
   rTpl:(u,d)=>`【吉他普利 問題回報】\n頁面：${u}\n裝置／瀏覽器：${d}\n發生了什麼事：\n我做了哪些步驟：\n（附上截圖會更清楚）`,
-home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲明',langSwitch:'English',foot:'© 吉他普利 Guitarpuli',
+home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲明',changelog:'更新紀錄',clSite:'網站修改',clSongs:'新增歌曲',clEmpty:'目前還沒有更新紀錄。',stSite:'網站數據',stToday:'今日瀏覽',stTotal:'累計瀏覽',stVisitors:'今日訪客',stMembers:'會員人數',stHot:'熱門歌曲',stWeek:'本週',stMonth:'本月',stSearch:'熱門搜尋',stNone:'累積一些數據後就會出現。',stViews:n=>`${n} 次`,stAdmin:'數據',stAdminTitle:'網站數據（只有你看得到）',stDays:n=>`最近 ${n} 天`,stDaily:'每日瀏覽',stDate:'日期',stV:'瀏覽',stU:'訪客',stSongCol:'歌曲',stCount:'次數',stKw:'搜尋字',stOnSite:'網站上',stHas:'有',stMiss:'沒有 → 可加歌',stNoAccess:'這一頁只有管理者帳號登入後才看得到。',stErr:'數據載入失敗，請稍後再試。',langSwitch:'English',foot:'© 吉他普利 Guitarpuli',
   th:{system:'跟隨系統',light:'淺色',dark:'深色',sepia:'復古紙',amber:'夜間琥珀'},
   allSheets:'全部樂譜',count:n=>`${n} 首`,search:'搜尋歌名或歌手',allKeys:'所有調性',allDiff:'所有難度',allGenre:'所有曲風',
   sortNew:'最新上架',sortTitle:'依歌名',sortEasy:'由易到難',grid:'卡片',list:'列表',noMatch:['找不到符合的譜','換個關鍵字或清除篩選條件。'],
@@ -402,7 +434,7 @@ en:{langs:{zh:'Mandarin',tw:'Taiwanese',yue:'Cantonese',en:'English',ja:'Japanes
   rTitle:'Report a Bug',rIntro:'Found a wrong chord, a broken layout or a feature that doesn’t work? Send me a message on Instagram. Using the template below helps me find the problem faster.',
   rCopy:'Copy template',rCopied:'Copied. Paste it into your Instagram message.',rOpen:'Message me on Instagram',rNote:'You need to be signed in to Instagram. On a phone this opens the Instagram app. You can attach screenshots in the message.',
   rTpl:(u,d)=>`[Guitarpuli bug report]\nPage: ${u}\nDevice / browser: ${d}\nWhat happened:\nSteps I took:\n(Screenshots help a lot)`,
-home:'Home',library:'My Library',theme:'Theme',legal:'Copyright',langSwitch:'中文',foot:'© Guitarpuli',
+home:'Home',library:'My Library',theme:'Theme',legal:'Copyright',changelog:'Changelog',clSite:'Site changes',clSongs:'New songs',clEmpty:'No updates yet.',stSite:'Site Stats',stToday:'Views today',stTotal:'Total views',stVisitors:'Visitors today',stMembers:'Members',stHot:'Popular Songs',stWeek:'Week',stMonth:'Month',stSearch:'Popular Searches',stNone:'Shows up once there is some data.',stViews:n=>`${n} views`,stAdmin:'Stats',stAdminTitle:'Site Stats (admin only)',stDays:n=>`Last ${n} days`,stDaily:'Daily views',stDate:'Date',stV:'Views',stU:'Visitors',stSongCol:'Song',stCount:'Count',stKw:'Search',stOnSite:'On site',stHas:'Yes',stMiss:'No → add it',stNoAccess:'Only the admin account can see this page after signing in.',stErr:'Could not load stats. Please try again later.',langSwitch:'中文',foot:'© Guitarpuli',
   th:{system:'System',light:'Light',dark:'Dark',sepia:'Vintage Paper',amber:'Night Amber'},
   allSheets:'All Sheets',count:n=>`${n} ${n===1?'song':'songs'}`,search:'Search songs or artists',allKeys:'All keys',allDiff:'All levels',allGenre:'All genres',
   sortNew:'Newest',sortTitle:'Title',sortEasy:'Easiest first',grid:'Grid',list:'List',noMatch:['No matching sheets','Try another keyword or clear the filters.'],
@@ -456,8 +488,8 @@ const SHAPES={C:'x32010',D:'xx0232',E:'022100',G:'320003',A:'x02220',Am:'x02210'
  Gmaj7:'320002',Dmaj7:'xx0222',Amaj7:'x02120',Am7:'x02010',Em7:'020000',Dm7:'xx0211',Bm7:'x20202','F#7':'242322','C#7':'x46464',
  Eb7:'x68686',Ab7:'464544',Db7:'x46464','F#':'244322',B:'x24442',Gb:'244322','D#m':'x68876',Ebm:'x68876',Abm:'466444','A#m':'x13321',
  'G#':'466544','C#':'x46664','D#':'x68886','A#':'x13331','G#7':'464544','D#7':'x68686','A#7':'x13131',Gm7:'353333',Cm7:'x35343',Fm7:'131111',Dsus4:'xx0233',Dsus2:'xx0230',Asus4:'x02230',Asus2:'x02200',Esus4:'022200',Csus2:'x30013',Gsus4:'330013',Cadd9:'x32033',Ebmaj7:'x65333',Bbmaj7:'x13231',
- /* 使用者提供的指法 */ Gm11:'3x331x',Fsus4:'1x331x',Gsus4:'3x0013',
- /* 斜線和弦：一定要畫出低音，沒有登錄的斜線和弦顯示「指法圖待補」 */ 'F/A':'x0321x','G/B':'x2000x','Am/G#':'4x255x','Am7/G':'3x2010','Dadd9/F#':'2x2230','Gm/Bb':'6x878x'};
+ /* 使用者提供的指法 */ Gm11:'3x331x',Fsus4:'1x331x',Gsus4:'3x0013',A7sus4:'x02033',Dm11:'xx0213',Am6:'x02212','G#maj7':'4x554x',
+ /* 斜線和弦：一定要畫出低音，沒有登錄的斜線和弦顯示「指法圖待補」 */ 'F/A':'x0321x','G/B':'x2000x','Am/G#':'4x255x','Am7/G':'3x2010','Dadd9/F#':'2x2230','Gm/Bb':'6x878x','Dadd4/F#':'2x0030','Em7/D':'xx0033','D/F#':'2x0232','G/Bb':'x10030','D7/F#':'2x453x'};
 const OPEN=new Set(['C','D','E','G','A','Am','Em','Dm','E7','A7','D7','G7','B7','C7','Cmaj7','Fmaj7','Gmaj7','Dmaj7','Amaj7','Am7','Em7','Dm7','Bm7']);
 const ENH={'C#':'Db','Db':'C#','D#':'Eb','Eb':'D#','F#':'Gb','Gb':'F#','G#':'Ab','Ab':'G#','A#':'Bb','Bb':'A#'};
 function shapeOf(c){if(SHAPES[c])return SHAPES[c];const[h,b]=c.split('/');const alt=r=>{const m=r.match(/^([A-G][#b]?)(.*)$/);return m&&ENH[m[1]]?ENH[m[1]]+m[2]:null};for(const x of [h,alt(h)].filter(Boolean))for(const y of (b?[b,ENH[b]].filter(Boolean):['']))if(SHAPES[b?x+'/'+y:x])return SHAPES[b?x+'/'+y:x];return null}
@@ -491,6 +523,8 @@ const ICON={
   ig:'<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/>',
   yt:'<rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10 9.2l5 2.8-5 2.8z" fill="currentColor"/>',
   bug:'<path d="M4 5h16v11H9l-5 4z"/><path d="M12 8v4M12 14.5v.01"/>',
+  log:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  stats:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
   admin:'<circle cx="8" cy="12" r="4"/><path d="M12 12h9M18 12v3M21 12v2"/>',
   user:'<circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1-4 4-6 7-6s6 2 7 6"/>'};
 const IG_URL='https://www.instagram.com/pulipapa5986/',YT_URL='https://www.youtube.com/@pulipapa5986',IG_DM='https://ig.me/m/pulipapa5986';
@@ -509,7 +543,9 @@ function renderRail(){
   <button class="rbtn bottom" id="themebtn" aria-haspopup="true" aria-controls="themepop">${ico('theme')}<span class="lbl">${t('theme')}</span></button>
   <button class="rbtn bottom" id="langbtn" lang="${lang==='zh'?'en':'zh-Hant'}">${ico('lang')}<span class="lbl">${t('langSwitch')}</span></button>
   <a class="bottom m-hide" href="/#report" data-nav="report">${ico('bug')}<span class="lbl">${t('report')}</span></a>
+  <a class="bottom m-hide" href="/#changelog" data-nav="changelog">${ico('log')}<span class="lbl">${t('changelog')}</span></a>
   <a class="bottom m-hide" href="/#legal" data-nav="legal">${ico('legal')}<span class="lbl">${t('legal')}</span></a>
+  ${isAdmin()?`<a class="bottom m-hide" href="/#stats" data-nav="stats">${ico('stats')}<span class="lbl">${t('stAdmin')}</span></a>`:''}
   ${LS.get('admin',false)?`<a class="bottom m-hide" href="/admin/" target="_blank" rel="noopener">${ico('admin')}<span class="lbl">${t('admin')}</span></a>`:''}
   <p class="foot">${t('foot')}</p>`;
   if($('#acctbtn'))$('#acctbtn').onclick=openAccount;
@@ -560,7 +596,7 @@ function viewHome(){
     <select id="f-genre" aria-label="${t('byGenre')}"><option value="">${t('allGenre')}</option>${Object.keys(GCOL).map(g=>`<option value="${g}" ${st.f.genre===g?'selected':''}>${t('genre')[g]}</option>`).join('')}</select>
     <select id="f-sort"><option value="new" ${st.f.sort==='new'?'selected':''}>${t('sortNew')}</option><option value="title" ${st.f.sort==='title'?'selected':''}>${t('sortTitle')}</option><option value="easy" ${st.f.sort==='easy'?'selected':''}>${t('sortEasy')}</option></select>
     ${layoutToggle()}
-  </div><div class="homecols"><div id="results"></div><aside class="aside" id="aside"></aside></div>`;
+  </div><div class="hotbar" id="hotbar" hidden></div><div class="homecols"><div id="results"></div><aside class="aside" id="aside"></aside></div>`;
   const draw=()=>{const q=st.f.q.trim().toLowerCase();
     let list=SONGS.filter(s=>(!q||(s.title+s.artist).toLowerCase().includes(q))&&(!st.f.key||s.key===st.f.key)&&(!st.f.diff||s.diff==st.f.diff)&&(!st.f.genre||s.genre===st.f.genre)&&(!st.f.language||s.language===st.f.language));
     if(st.f.sort==='new')list.sort((a,b)=>b.added.localeCompare(a.added));if(st.f.sort==='title')list.sort((a,b)=>a.title.localeCompare(b.title,lang==='zh'?'zh-Hant':'en'));if(st.f.sort==='easy')list.sort((a,b)=>a.diff-b.diff);
@@ -584,7 +620,16 @@ function viewHome(){
     const order=Object.keys(t('langs')).filter(k=>c[k]);
     $('#langtabs').innerHTML=[['',t('allLang'),SONGS.length],...order.map(k=>[k,t('langs')[k],c[k]])].map(([k,l,n])=>`<button data-lt="${k}" class="${st.f.language===k?'on':''}">${l}<span>${n}</span></button>`).join('');
     $('#langtabs').querySelectorAll('[data-lt]').forEach(b=>b.onclick=()=>{st.f.language=b.dataset.lt;drawLangs();draw()})};
-  bindLayout(viewHome);drawLangs();draw();drawAside();
+  let kwT;$('#q').addEventListener('input',()=>{clearTimeout(kwT);const v=$('#q').value;$('#hotbar').hidden=!!v.trim()||!STATS;kwT=setTimeout(()=>statSearch(v),1500)});
+  const drawHot=()=>{const hb=$('#hotbar');if(!hb)return;if(!STATS||st.f.q.trim()){hb.hidden=true;return}hb.hidden=false;
+    const S=STATS,list=(S[hotTab==='month'?'songs_month':'songs_week']||[]).map(x=>({...x,s:SONGS.find(y=>y.id===x.key)})).filter(x=>x.s).slice(0,5);
+    const num=v=>Number(v||0).toLocaleString();
+    hb.innerHTML=`<section><h4>${t('stSite')}</h4><dl class="nums"><div><dt>${t('stToday')}</dt><dd>${num(S.today_views)}</dd></div><div><dt>${t('stTotal')}</dt><dd>${num(S.total_views)}</dd></div><div><dt>${t('stVisitors')}</dt><dd>${num(S.today_visitors)}</dd></div><div><dt>${t('stMembers')}</dt><dd>${num(S.members)}</dd></div></dl></section>
+    <section><h4>${t('stHot')}<span class="hseg"><button data-ht="week" class="${hotTab==='week'?'on':''}">${t('stWeek')}</button><button data-ht="month" class="${hotTab==='month'?'on':''}">${t('stMonth')}</button></span></h4>${list.length?`<ol class="hotlist">${list.map(x=>`<li><a href="/song/${x.s.id}/"><b>${esc(x.s.title)}</b><small>${esc(x.s.artist)}</small></a></li>`).join('')}</ol>`:`<p class="none">${t('stNone')}</p>`}</section>
+    <section><h4>${t('stSearch')}</h4>${(S.search_week||[]).length?`<div class="chips">${S.search_week.slice(0,10).map(x=>`<button data-kw="${esc(x.key)}">${esc(x.key)}</button>`).join('')}</div>`:`<p class="none">${t('stNone')}</p>`}</section>`;
+    hb.querySelectorAll('[data-ht]').forEach(b=>b.onclick=()=>{hotTab=b.dataset.ht;drawHot()});
+    hb.querySelectorAll('[data-kw]').forEach(b=>b.onclick=()=>{$('#q').value=b.dataset.kw;upd();hb.hidden=true;statSearch(b.dataset.kw)})};
+  bindLayout(viewHome);drawLangs();draw();drawAside();drawHot();loadStats().then(()=>{if($('#hotbar')&&$('#hotbar').hidden&&!st.f.q.trim())drawHot()});
 }
 
 /* ---------- library ---------- */
@@ -612,6 +657,7 @@ function bestCapo(song,shift){let best=0,bs=-1e9;for(let c=0;c<=7;c++){const v=c
 function openSong(song,isMine,keepState){
   stopAll();st.song=song;st.isMine=isMine;if(!keepState)st.lyrOpen=false;
   const p=LS.get('pref_'+song.id,null);st.shift=p?p.shift:0;st.capo=p?p.capo:(song.capo||0);if(!keepState)st.bpm=song.bpm||90;
+  if(!isMine)statSong(song.id);
   if(!isMine&&!keepState){const r=LS.get('recent',[]).filter(x=>x!==song.id);r.unshift(song.id);LS.set('recent',r.slice(0,20))}
   const isFav=favs().includes(song.id);
   $('#app').innerHTML=`
@@ -854,12 +900,54 @@ function viewLegal(){
   <p style="color:var(--muted);font-size:13px">For bugs or problems using the site, please use <a href="/#report" style="text-decoration:underline">Report a Bug</a>.</p></article>`;
 }
 
+/* ---------- site stats (Supabase: stat_hit / stat_public / stat_admin，見 supabase-stats.sql) ---------- */
+const ADMIN_EMAILS=['similu87@gmail.com','pulipapa5986@gmail.com'];
+const isAdmin=()=>!!(typeof user!=='undefined'&&user&&ADMIN_EMAILS.includes((user.email||'').toLowerCase()));
+let STATS=null,statsAt=0,hotTab='week',statsDays=30;
+const hitDone=new Set();
+function statHit(kind,key){if(!sb)return;sb.rpc('stat_hit',{p_kind:kind,p_key:key||''}).then(()=>{},()=>{})}
+function statSong(id){if(hitDone.has('s:'+id))return;hitDone.add('s:'+id);statHit('song',id)}
+function statSearch(q){q=String(q||'').trim().toLowerCase().replace(/\s+/g,' ');if(!q||hitDone.has('q:'+q))return;
+  if([...hitDone].some(k=>k.startsWith('q:')&&k.slice(2).startsWith(q)))return; // 刪字回頭的半截不算
+  hitDone.add('q:'+q);statHit('search',q)}
+function statVisit(){if(!sb)return;statHit('view');
+  const d=new Date(Date.now()+8*3600e3).toISOString().slice(0,10);if(LS.get('vday','')!==d){LS.set('vday',d);statHit('visitor')}}
+async function loadStats(){if(!sb||!SONGS.length)return;if(STATS&&Date.now()-statsAt<60e3)return;
+  const terms=[...new Set(SONGS.flatMap(s=>[s.title,s.artist]).map(x=>String(x||'').trim().toLowerCase()).filter(Boolean))];
+  const {data,error}=await sb.rpc('stat_public',{p_terms:terms});if(!error&&data){STATS=data;statsAt=Date.now()}}
+async function viewStats(){
+  const box=$('#app');box.innerHTML=`<article class="prose"><h1>${t('stAdminTitle')}</h1><p>…</p></article>`;
+  if(!sb||!isAdmin()){box.innerHTML=`<article class="prose"><h1>${t('stAdminTitle')}</h1><p>${t('stNoAccess')}</p></article>`;return}
+  const {data:D,error}=await sb.rpc('stat_admin',{p_days:statsDays});
+  if(location.hash!=='#stats')return;
+  if(error||!D){box.innerHTML=`<article class="prose"><h1>${t('stAdminTitle')}</h1><p>${t('stErr')}</p></article>`;return}
+  const norm=x=>String(x||'').toLowerCase();
+  const onSite=k=>SONGS.some(s=>norm(s.title).includes(k)||norm(s.artist).includes(k)||k.includes(norm(s.title)));
+  const sum=f=>(D.daily||[]).reduce((a,x)=>a+(x[f]||0),0);
+  box.innerHTML=`<article class="prose" style="max-width:860px"><h1>${t('stAdminTitle')}</h1>
+  <div class="statnav">${[7,30,90,365].map(n=>`<button class="btn ${n===statsDays?'on':''}" data-days="${n}">${t('stDays')(n)}</button>`).join('')}</div>
+  <dl class="nums" style="grid-template-columns:repeat(3,minmax(0,1fr));margin:16px 0"><div><dt>${t('stV')}</dt><dd>${sum('views').toLocaleString()}</dd></div><div><dt>${t('stU')}</dt><dd>${sum('visitors').toLocaleString()}</dd></div><div><dt>${t('stMembers')}</dt><dd>${Number(D.members||0).toLocaleString()}</dd></div></dl>
+  <h2>${t('stKw')}</h2><table class="stattbl"><thead><tr><th>${t('stKw')}</th><th>${t('stOnSite')}</th><th style="text-align:right">${t('stCount')}</th></tr></thead><tbody>${(D.searches||[]).map(x=>{const ok=onSite(x.key);return `<tr><td>${esc(x.key)}</td><td class="${ok?'':'miss'}">${ok?t('stHas'):t('stMiss')}</td><td class="n">${x.n}</td></tr>`}).join('')||`<tr><td colspan="3">${t('stNone')}</td></tr>`}</tbody></table>
+  <h2>${t('stHot')}</h2><table class="stattbl"><thead><tr><th>${t('stSongCol')}</th><th style="text-align:right">${t('stCount')}</th></tr></thead><tbody>${(D.songs||[]).map(x=>{const s=SONGS.find(y=>y.id===x.key);return `<tr><td>${s?`<a href="/song/${s.id}/" style="text-decoration:underline">${esc(s.title)}</a> <small style="color:var(--muted)">${esc(s.artist)}</small>`:esc(x.key)}</td><td class="n">${x.n}</td></tr>`}).join('')||`<tr><td colspan="2">${t('stNone')}</td></tr>`}</tbody></table>
+  <h2>${t('stDaily')}</h2><table class="stattbl"><thead><tr><th>${t('stDate')}</th><th style="text-align:right">${t('stV')}</th><th style="text-align:right">${t('stU')}</th></tr></thead><tbody>${(D.daily||[]).map(x=>`<tr><td>${esc(x.day)}</td><td class="n">${x.views||0}</td><td class="n">${x.visitors||0}</td></tr>`).join('')||`<tr><td colspan="3">${t('stNone')}</td></tr>`}</tbody></table></article>`;
+  box.querySelectorAll('[data-days]').forEach(b=>b.onclick=()=>{statsDays=Number(b.dataset.days);viewStats()});
+}
+
 /* ---------- footer ---------- */
 function renderFooter(){
   $('#sitefoot').innerHTML=`<div class="follow"><b>${t('follow')}</b>
     <a class="sbtn ig" href="${IG_URL}" target="_blank" rel="noopener">${ico('ig')}Instagram</a>
     <a class="sbtn yt" href="${YT_URL}" target="_blank" rel="noopener">${ico('yt')}YouTube</a></div>
-    <div class="links"><a href="/#report">${t('report')}</a><a href="/#legal">${t('legal')}</a><span>© Guitarpuli</span></div>`;
+    <div class="links"><a href="/#report">${t('report')}</a><a href="/#legal">${t('legal')}</a>${CLOG.length?`<a class="ver" href="/#changelog" title="${t('changelog')}">${esc(CLOG[0].v)}</a>`:''}<span>© Guitarpuli</span></div>`;
+}
+
+/* ---------- changelog ---------- */
+let CLOG=[];
+fetch('/changelog.json',{cache:'no-cache'}).then(r=>r.json()).then(d=>{CLOG=Array.isArray(d)?d:[];renderFooter();if(location.hash==='#changelog')viewChangelog()}).catch(()=>{});
+function viewChangelog(){
+  $('#app').innerHTML=`<article class="prose clog"><h1>${t('changelog')}</h1>${CLOG.length?CLOG.map(v=>`<section class="ver"><h2>${esc(v.v)}</h2><time>${esc(v.date)}</time>
+    ${v.site.length?`<h3>${t('clSite')}</h3><ul>${v.site.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}
+    ${v.songs.length?`<h3>${t('clSongs')}</h3><ul>${v.songs.map(x=>`<li><a href="/song/${esc(x.id)}/">${esc(x.title)}</a>${x.artist?`<small>${esc(x.artist)}</small>`:''}</li>`).join('')}</ul>`:''}</section>`).join(''):`<p>${t('clEmpty')}</p>`}</article>`;
 }
 
 /* ---------- report a bug ---------- */
@@ -918,7 +1006,7 @@ function initSync(){
   sb.auth.onAuthStateChange((ev,session)=>{const u=session?session.user:null;const changedUser=(u&&u.id)!==(user&&user.id);user=u;
     if(user&&!merged){merged=true;setTimeout(()=>pull(true).then(()=>{renderRail();refresh()}),0)}
     if(!user)merged=false;
-    if(changedUser){renderRail();if($('#modal').dataset.kind==='acct')openAccount()}});
+    if(changedUser){renderRail();if($('#modal').dataset.kind==='acct')openAccount();if(location.hash==='#stats'&&SONGS.length)viewStats()}});
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&user&&!pending)pull(false).then(ch=>{if(ch)refresh()})});
   renderRail();
 }
@@ -967,13 +1055,15 @@ function route(keep){
     else if(h.startsWith('library')){viewLibrary(['library','library-saved','library-mine','library-recent'].includes(h)?h:'library');nav='library'}
     else if(h==='studio'){viewStudio();nav='studio'}
     else if(h==='legal'){viewLegal();nav='legal'}
+    else if(h==='changelog'){viewChangelog();nav='changelog'}
+    else if(h==='stats'){viewStats();nav='stats'}
     else if(h==='report'){viewReport();nav='report'}
     else viewHome()}
   document.querySelectorAll('[data-nav]').forEach(a=>a.classList.toggle('on',a.dataset.nav===nav));
   if(keep!==true)window.scrollTo(0,0);$('#tip').hidden=true;
 }
 document.documentElement.lang=lang==='zh'?'zh-Hant':'en';
-applyTheme(curTheme);renderRail();renderFooter();initSync();
+applyTheme(curTheme);renderRail();renderFooter();initSync();statVisit();
 window.addEventListener('hashchange',()=>route());
 if(!window.PAGE_SONG)$('#app').innerHTML='<p style="color:var(--muted)">…</p>';
 fetch('/songs.json',{cache:'no-cache'}).then(r=>r.json()).then(d=>{SONGS=d;route()}).catch(()=>{$('#app').innerHTML='<div class="empty"><b>'+(lang==='zh'?'樂譜載入失敗':'Could not load sheets')+'</b>'+(lang==='zh'?'請重新整理頁面。':'Please reload the page.')+'</div>'});
