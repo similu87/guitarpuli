@@ -2,6 +2,7 @@
 //   public/songs.json          網站讀取的樂譜資料
 //   public/song/<網址代稱>/     每首歌自己的網頁（給 Google 搜尋用）
 //   public/sitemap.xml、robots.txt
+//   public/changelog.json      更新紀錄（從 changelog.md 轉）
 import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
@@ -19,8 +20,8 @@ const GENRES = ['pop','folk','blues','rock','ballad','oldies'];
 const LANGS = {zh:'華語',tw:'台語',yue:'粵語',en:'英文',ja:'日文',ko:'韓文',inst:'演奏曲',other:'其他'};
 const CHORD = /^[A-G][#b]?[^\s/|]*(\/[A-G][#b]?)?$/;
 const ORDER_NAMES = ['順序', 'order', 'Order', 'ORDER'];
-// Obsidian 習慣寫法 → 網站寫法：♯→#、♭→b、△→maj7、—→-
-const normChord = c => c.replace(/♯/g, '#').replace(/♭/g, 'b').replace(/△7?/g, 'maj7').replace(/^[—–]$/, '-');
+// Obsidian 習慣寫法 → 網站寫法：♯→#、♭→b、△7→maj7、單獨的 △（大三和弦）拿掉、—→-
+const normChord = c => c.replace(/♯/g, '#').replace(/♭/g, 'b').replace(/△7/g, 'maj7').replace(/△/g, '').replace(/^[—–]$/, '-');
 const ONLY = /^(?:第\s*(\d+)\s*次[^:：|]*|末次|最後一次)\s*[:：]\s*/;
 const REPEAT = /^[×xX*]\s*(\d+)$/;
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -103,6 +104,27 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
 
 if (errors.length) { console.error('樂譜檔有問題：\n- ' + errors.join('\n- ')); process.exit(1); }
 
+/* 更新紀錄：changelog.md → public/changelog.json */
+const changelog = [];
+if (fs.existsSync('changelog.md')) {
+  let ver = null, part = null;
+  fs.readFileSync('changelog.md', 'utf8').split(/\r?\n/).forEach((raw, i) => {
+    const line = raw.trim(), where = `changelog.md 第 ${i + 1} 行`;
+    let m;
+    if ((m = line.match(/^##\s+(v\d+\.\d+\.\d+)\s*[·・\-–—]\s*(\d{4}-\d{2}-\d{2})\s*$/))) { ver = { v: m[1], date: m[2], site: [], songs: [] }; changelog.push(ver); part = null; return; }
+    if (/^##\s/.test(line) && !/^###/.test(line)) { errors.push(`${where}：版本要寫成「## v1.2.3 · 2026-11-01」`); return; }
+    if ((m = line.match(/^###\s+(.+)$/))) { part = /歌/.test(m[1]) ? 'songs' : 'site'; return; }
+    if (!(m = line.match(/^[-*]\s+(.+)$/))) return;
+    if (!ver || !part) { errors.push(`${where}：項目要寫在某個版本的「### 網站」或「### 新增歌曲」底下`); return; }
+    if (part === 'songs') {
+      const id = m[1].trim(), s = songs.find(x => x.id === id);
+      if (!s) errors.push(`${where}：找不到歌曲「${id}」（要寫 songs/ 裡的檔名）`); else ver.songs.push({ id, title: s.title, artist: s.artist });
+    } else ver.site.push(m[1].trim());
+  });
+  if (errors.length) { console.error('更新紀錄有問題：\n- ' + errors.join('\n- ')); process.exit(1); }
+}
+fs.writeFileSync(path.join(PUB, 'changelog.json'), JSON.stringify(changelog));
+
 /* 1. songs.json */
 fs.writeFileSync(path.join(PUB, 'songs.json'), JSON.stringify(songs));
 
@@ -150,4 +172,4 @@ ${songs.map(s => `  <url><loc>${SITE}/song/${s.id}/</loc>${s.added ? `<lastmod>$
 `);
 fs.writeFileSync(path.join(PUB, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /admin/\nSitemap: ${SITE}/sitemap.xml\n`);
 
-console.log(`完成：${songs.length} 首 → songs.json、${songs.length} 個歌曲頁、sitemap.xml`);
+console.log(`完成：${songs.length} 首 → songs.json、${songs.length} 個歌曲頁、sitemap.xml；更新紀錄 ${changelog.length} 版（最新 ${changelog[0]?.v || '—'}）`);
