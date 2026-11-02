@@ -168,31 +168,49 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 
 /* wide-screen side columns */
 .homecols{display:grid;grid-template-columns:minmax(0,1fr);gap:32px}
-.aside{display:none}
-.hotbar{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;margin:0 0 24px}
-@media (min-width:860px){.hotbar{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr) minmax(0,1fr)}}
-.hotbar section{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
-.hotbar h4{margin:0 0 10px;font-size:10.5px;letter-spacing:.14em;color:var(--muted);display:flex;align-items:center;gap:8px}
-.hotbar h4 .hseg{margin-left:auto;display:flex;flex-direction:row;gap:2px}
-.hotbar h4 .hseg button{border:0;background:none;color:var(--muted);font-size:11px;letter-spacing:0;padding:2px 6px;border-radius:5px;cursor:pointer}
-.hotbar h4 .hseg button.on{background:var(--sunk);color:var(--ink)}
-.nums{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px;margin:0}
-@media (max-width:859px){.hotbar .nums{grid-template-columns:repeat(4,minmax(0,1fr))}.hotbar .nums dd{font-size:15px}.hotbar section{padding:12px 14px}}
-.nums div{min-width:0}.nums dt{font-size:11.5px;color:var(--muted)}.nums dd{margin:0;font-family:var(--f-mono);font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
-.hotlist{list-style:none;margin:0;padding:0;display:grid;gap:2px;counter-reset:h}
-.hotlist li{counter-increment:h}
-.hotlist a{display:grid;grid-template-columns:18px minmax(0,1fr) auto;gap:8px;align-items:baseline;padding:4px 6px;margin:0 -6px;border-radius:6px;font-size:13.5px}
-.hotlist a::before{content:counter(h);font-family:var(--f-mono);font-size:12px;color:var(--brass);font-weight:700}
-.hotlist a:hover{background:var(--sunk)}.hotlist b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hotlist small{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums}
-.hotbar .chips button{cursor:pointer}
-.hotbar .none{margin:0;font-size:13px;color:var(--muted)}
+.aside{display:grid;gap:16px;align-content:start;min-width:0}
+.aside-more{display:none}
+@media (min-width:900px){.homecols{grid-template-columns:minmax(0,1fr) 260px}.aside{position:sticky;top:24px}}
+.hotc{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.hotc .hh{display:flex;align-items:center;gap:4px;margin-bottom:8px}
+.hotc h4{margin:0 auto 0 0;font-size:10.5px;letter-spacing:.14em;color:var(--muted)}
+.hseg{display:flex;gap:2px}
+.hseg button{border:0;background:none;color:var(--muted);font-size:12px;padding:3px 8px;border-radius:6px;cursor:pointer}
+.hseg button.on{background:var(--sunk);color:var(--ink)}
+.hotlist{list-style:none;margin:0;padding:0;display:grid;gap:1px}
+.hotlist a,.hotlist button{display:grid;grid-template-columns:16px minmax(0,1fr);column-gap:8px;row-gap:3px;align-items:baseline;padding:6px;margin:0 -6px;border-radius:6px;font-size:13.5px;width:calc(100% + 12px);text-align:left;border:0;background:none;color:inherit;cursor:pointer}
+.hotlist a:hover,.hotlist button:hover{background:var(--sunk)}
+.hotlist i{font-style:normal;font-family:var(--f-mono);font-size:12px;color:var(--brass);font-weight:700}
+.hotlist .t{display:flex;gap:6px;align-items:baseline;min-width:0}
+.hotlist b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hotlist small{color:var(--muted);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hotlist .hb{grid-column:2;height:3px;border-radius:2px;background:var(--line);overflow:hidden}
+.hotlist .hb span{display:block;height:100%;background:var(--chord);border-radius:2px}
+.hotc .none{margin:0;font-size:13px;color:var(--muted)}
+.statline{margin:0;padding:0 4px;color:var(--muted);font-size:12px;line-height:1.9}
+.statline b{color:var(--ink);font-family:var(--f-mono);font-weight:700;font-variant-numeric:tabular-nums}
 .stattbl{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0 4px}
 .stattbl th,.stattbl td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
 .stattbl th{font-size:11.5px;color:var(--muted);font-weight:600}
 .stattbl td.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 .stattbl .miss{color:var(--brass);font-weight:600}
-.statnav{display:flex;gap:6px;margin:8px 0 4px}
-@media (min-width:1400px){.homecols{grid-template-columns:minmax(0,1fr) 288px}.aside{display:grid;gap:16px;align-content:start;position:sticky;top:24px}}
+.statnav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.statnav button{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:8px;padding:5px 10px;font-size:12.5px}
+.statnav button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.sthead{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.sthead h1{margin:0}.sthead span{color:var(--muted);font-size:12px;padding-bottom:4px}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 22px}
+.kpis div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.kpis dt{font-size:12px;color:var(--muted)}.kpis dd{margin:4px 0 0;font-family:var(--f-mono);font-weight:700;font-size:22px;font-variant-numeric:tabular-nums}
+.sth{margin:0 0 8px;font-size:12px;letter-spacing:.12em;color:var(--muted);font-weight:700}
+.dcols{display:flex;align-items:flex-end;gap:3px;height:110px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.dcols span{flex:1;min-width:2px;background:var(--chord);opacity:.8;border-radius:3px 3px 0 0}
+.daxis{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-family:var(--f-mono);margin-bottom:22px}
+.st2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+@media (max-width:700px){.st2{grid-template-columns:minmax(0,1fr)}.kpis dd{font-size:18px}}
+.tag-miss{display:inline-block;padding:1px 8px;border-radius:999px;background:var(--brass-soft);color:var(--brass);font-size:12px;font-weight:600}
+.tag-has{color:var(--muted);font-size:12px}
+@media (min-width:1400px){.homecols{grid-template-columns:minmax(0,1fr) 288px}.aside-more{display:grid;gap:16px}}
 .aside section{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
 .aside h4{margin:0 0 10px;font-size:10.5px;letter-spacing:.14em;color:var(--muted)}
 .cont{display:grid;gap:2px}
@@ -239,7 +257,8 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .ch:hover{text-decoration:underline;text-underline-offset:3px}
 .row{margin-bottom:.55em}
 .bars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));row-gap:.45em}
-.bar{border-right:2px solid var(--muted);padding:.15em .6em;display:flex;gap:.8em;min-height:1.9em;align-items:center}
+.bar{border-right:2px solid var(--muted);padding:.15em .55em;display:grid;column-gap:.35em;min-height:1.9em;align-items:center}
+.bt{font-family:var(--f-mono);font-weight:700;color:var(--muted);opacity:.75}
 .bar:nth-child(4n+1){border-left:2px solid var(--muted)}
 .lyr{padding:.12em .6em 0;color:var(--ink);display:flex;gap:.5em;border-radius:4px;transition:background .2s}
 .lyr .n{color:var(--brass);font-family:var(--f-mono);font-weight:700;font-size:.9em;min-width:1.7em;display:flex;align-items:center;flex:none}
@@ -357,14 +376,20 @@ body.perform .exitperf{display:inline-flex;position:fixed;top:calc(12px + env(sa
 .sbtn:hover{filter:brightness(1.08)}
 .sitefoot .links{display:flex;gap:16px;margin-left:auto;flex-wrap:wrap}
 .sitefoot .ver{font-variant-numeric:tabular-nums;text-decoration:underline;text-underline-offset:3px}
-.clog .ver{border-top:1px solid var(--line);padding-top:18px;margin-top:22px}
-.clog .ver:first-of-type{border-top:0;margin-top:8px;padding-top:0}
-.clog .ver h2{margin:0 0 2px;font-size:18px;font-variant-numeric:tabular-nums}
-.clog .ver time{color:var(--muted);font-size:13px}
-.clog h3{font-size:13px;color:var(--muted);margin:14px 0 4px;font-weight:600;letter-spacing:.04em}
-.clog ul{margin:0}
-.clog li a{text-decoration:underline;text-underline-offset:3px}
-.clog li small{color:var(--muted);margin-left:6px}
+.clog .lead{margin:0 0 26px;color:var(--muted);font-size:13px}
+.clog .ver{display:grid;grid-template-columns:96px minmax(0,1fr);gap:20px}
+.clog .vv{font-family:var(--f-mono);font-weight:700;font-size:15px;color:var(--brass)}
+.clog .ver time{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.clog .line{border-left:2px solid var(--line);padding:0 0 26px 22px;position:relative;min-width:0}
+.clog .ver:last-child .line{border-left-color:transparent}
+.clog .line::before{content:"";position:absolute;left:-8px;top:3px;width:10px;height:10px;border-radius:50%;background:var(--bg);border:2px solid var(--brass)}
+.clog h3{margin:0 0 6px;font-size:12px;letter-spacing:.12em;color:var(--muted);font-weight:700}
+.clog ul{margin:0 0 12px;padding-left:1.1em}
+.clog .songs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
+.clog .songs a{padding:4px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line);color:var(--chord);font-size:13px}
+.clog .songs a:hover{border-color:var(--chord)}
+.clog .songs small{color:var(--muted);margin-left:4px;font-size:11.5px}
+@media (max-width:560px){.clog .ver{grid-template-columns:minmax(0,1fr);gap:6px}.clog .line{margin-left:4px}}
 .sitefoot .links a:hover{color:var(--ink)}
 .modal{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:16px}
 .modal .box{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;width:min(420px,100%);display:grid;gap:12px}
@@ -402,7 +427,7 @@ zh:{langs:{zh:'華語',tw:'台語',yue:'粵語',en:'英文',ja:'日文',ko:'韓�
   rTitle:'回報問題',rIntro:'發現和弦寫錯、畫面跑掉或功能壞掉，請到 Instagram 私訊告訴我。照下面的範本寫，我能比較快找到問題。',
   rCopy:'複製範本',rCopied:'已複製，貼到 Instagram 私訊就好',rOpen:'到 Instagram 私訊我',rNote:'需要登入 Instagram。手機會直接打開 Instagram App。截圖可以直接傳在私訊裡。',
   rTpl:(u,d)=>`【吉他普利 問題回報】\n頁面：${u}\n裝置／瀏覽器：${d}\n發生了什麼事：\n我做了哪些步驟：\n（附上截圖會更清楚）`,
-home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲明',changelog:'更新紀錄',clSite:'網站修改',clSongs:'新增歌曲',clEmpty:'目前還沒有更新紀錄。',stSite:'網站數據',stToday:'今日瀏覽',stTotal:'累計瀏覽',stVisitors:'今日訪客',stMembers:'會員人數',stHot:'熱門歌曲',stWeek:'本週',stMonth:'本月',stSearch:'熱門搜尋',stNone:'累積一些數據後就會出現。',stViews:n=>`${n} 次`,stAdmin:'數據',stAdminTitle:'網站數據（只有你看得到）',stDays:n=>`最近 ${n} 天`,stDaily:'每日瀏覽',stDate:'日期',stV:'瀏覽',stU:'訪客',stSongCol:'歌曲',stCount:'次數',stKw:'搜尋字',stOnSite:'網站上',stHas:'有',stMiss:'沒有 → 可加歌',stNoAccess:'這一頁只有管理者帳號登入後才看得到。',stErr:'數據載入失敗，請稍後再試。',langSwitch:'English',foot:'© 吉他普利 Guitarpuli',
+home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲明',changelog:'更新紀錄',clSite:'網站修改',clSongs:'新增歌曲',clEmpty:'目前還沒有更新紀錄。',clLead:'每次更新改了什麼、加了哪些歌，最新的在最上面。',stSite:'網站數據',stToday:'今日瀏覽',stTotal:'累計瀏覽',stVisitors:'今日訪客',stMembers:'會員人數',stHot:'熱門歌曲',stHotWeek:'本週熱門',stSongs:'歌曲',stSearchTab:'搜尋',stVisitorsShort:'訪客',stWeek:'本週',stMonth:'本月',stSearch:'熱門搜尋',stNone:'累積一些數據後就會出現。',stViews:n=>`${n} 次`,stAdmin:'數據',stAdminTitle:'網站數據（只有你看得到）',stDays:n=>`最近 ${n} 天`,stDaily:'每日瀏覽',stDate:'日期',stV:'瀏覽',stU:'訪客',stSongCol:'歌曲',stCount:'次數',stKw:'搜尋字',stOnSite:'網站上',stHas:'有',stMiss:'可加歌',stOnlyYou:'只有你看得到',stD7:'7 天',stD30:'30 天',stD90:'90 天',stD365:'1 年',stNoAccess:'這一頁只有管理者帳號登入後才看得到。',stErr:'數據載入失敗，請稍後再試。',langSwitch:'English',foot:'© 吉他普利 Guitarpuli',
   th:{system:'跟隨系統',light:'淺色',dark:'深色',sepia:'復古紙',amber:'夜間琥珀'},
   allSheets:'全部樂譜',count:n=>`${n} 首`,search:'搜尋歌名或歌手',allKeys:'所有調性',allDiff:'所有難度',allGenre:'所有曲風',
   sortNew:'最新上架',sortTitle:'依歌名',sortEasy:'由易到難',grid:'卡片',list:'列表',noMatch:['找不到符合的譜','換個關鍵字或清除篩選條件。'],
@@ -434,7 +459,7 @@ en:{langs:{zh:'Mandarin',tw:'Taiwanese',yue:'Cantonese',en:'English',ja:'Japanes
   rTitle:'Report a Bug',rIntro:'Found a wrong chord, a broken layout or a feature that doesn’t work? Send me a message on Instagram. Using the template below helps me find the problem faster.',
   rCopy:'Copy template',rCopied:'Copied. Paste it into your Instagram message.',rOpen:'Message me on Instagram',rNote:'You need to be signed in to Instagram. On a phone this opens the Instagram app. You can attach screenshots in the message.',
   rTpl:(u,d)=>`[Guitarpuli bug report]\nPage: ${u}\nDevice / browser: ${d}\nWhat happened:\nSteps I took:\n(Screenshots help a lot)`,
-home:'Home',library:'My Library',theme:'Theme',legal:'Copyright',changelog:'Changelog',clSite:'Site changes',clSongs:'New songs',clEmpty:'No updates yet.',stSite:'Site Stats',stToday:'Views today',stTotal:'Total views',stVisitors:'Visitors today',stMembers:'Members',stHot:'Popular Songs',stWeek:'Week',stMonth:'Month',stSearch:'Popular Searches',stNone:'Shows up once there is some data.',stViews:n=>`${n} views`,stAdmin:'Stats',stAdminTitle:'Site Stats (admin only)',stDays:n=>`Last ${n} days`,stDaily:'Daily views',stDate:'Date',stV:'Views',stU:'Visitors',stSongCol:'Song',stCount:'Count',stKw:'Search',stOnSite:'On site',stHas:'Yes',stMiss:'No → add it',stNoAccess:'Only the admin account can see this page after signing in.',stErr:'Could not load stats. Please try again later.',langSwitch:'中文',foot:'© Guitarpuli',
+home:'Home',library:'My Library',theme:'Theme',legal:'Copyright',changelog:'Changelog',clSite:'Site changes',clSongs:'New songs',clEmpty:'No updates yet.',clLead:'What changed and which songs were added in each update, newest first.',stSite:'Site Stats',stToday:'Views today',stTotal:'Total views',stVisitors:'Visitors today',stMembers:'Members',stHot:'Popular Songs',stHotWeek:'Trending this week',stSongs:'Songs',stSearchTab:'Searches',stVisitorsShort:'Visitors',stWeek:'Week',stMonth:'Month',stSearch:'Popular Searches',stNone:'Shows up once there is some data.',stViews:n=>`${n} views`,stAdmin:'Stats',stAdminTitle:'Site Stats (admin only)',stDays:n=>`Last ${n} days`,stDaily:'Daily views',stDate:'Date',stV:'Views',stU:'Visitors',stSongCol:'Song',stCount:'Count',stKw:'Search',stOnSite:'On site',stHas:'Yes',stMiss:'Add it',stOnlyYou:'Only you can see this',stD7:'7 days',stD30:'30 days',stD90:'90 days',stD365:'1 year',stNoAccess:'Only the admin account can see this page after signing in.',stErr:'Could not load stats. Please try again later.',langSwitch:'中文',foot:'© Guitarpuli',
   th:{system:'System',light:'Light',dark:'Dark',sepia:'Vintage Paper',amber:'Night Amber'},
   allSheets:'All Sheets',count:n=>`${n} ${n===1?'song':'songs'}`,search:'Search songs or artists',allKeys:'All keys',allDiff:'All levels',allGenre:'All genres',
   sortNew:'Newest',sortTitle:'Title',sortEasy:'Easiest first',grid:'Grid',list:'List',noMatch:['No matching sheets','Try another keyword or clear the filters.'],
@@ -596,7 +621,7 @@ function viewHome(){
     <select id="f-genre" aria-label="${t('byGenre')}"><option value="">${t('allGenre')}</option>${Object.keys(GCOL).map(g=>`<option value="${g}" ${st.f.genre===g?'selected':''}>${t('genre')[g]}</option>`).join('')}</select>
     <select id="f-sort"><option value="new" ${st.f.sort==='new'?'selected':''}>${t('sortNew')}</option><option value="title" ${st.f.sort==='title'?'selected':''}>${t('sortTitle')}</option><option value="easy" ${st.f.sort==='easy'?'selected':''}>${t('sortEasy')}</option></select>
     ${layoutToggle()}
-  </div><div class="hotbar" id="hotbar" hidden></div><div class="homecols"><div id="results"></div><aside class="aside" id="aside"></aside></div>`;
+  </div><div class="homecols"><div id="results"></div><aside class="aside"><div id="hotbar" hidden></div><div class="aside-more" id="aside"></div></aside></div>`;
   const draw=()=>{const q=st.f.q.trim().toLowerCase();
     let list=SONGS.filter(s=>(!q||(s.title+s.artist).toLowerCase().includes(q))&&(!st.f.key||s.key===st.f.key)&&(!st.f.diff||s.diff==st.f.diff)&&(!st.f.genre||s.genre===st.f.genre)&&(!st.f.language||s.language===st.f.language));
     if(st.f.sort==='new')list.sort((a,b)=>b.added.localeCompare(a.added));if(st.f.sort==='title')list.sort((a,b)=>a.title.localeCompare(b.title,lang==='zh'?'zh-Hant':'en'));if(st.f.sort==='easy')list.sort((a,b)=>a.diff-b.diff);
@@ -620,16 +645,19 @@ function viewHome(){
     const order=Object.keys(t('langs')).filter(k=>c[k]);
     $('#langtabs').innerHTML=[['',t('allLang'),SONGS.length],...order.map(k=>[k,t('langs')[k],c[k]])].map(([k,l,n])=>`<button data-lt="${k}" class="${st.f.language===k?'on':''}">${l}<span>${n}</span></button>`).join('');
     $('#langtabs').querySelectorAll('[data-lt]').forEach(b=>b.onclick=()=>{st.f.language=b.dataset.lt;drawLangs();draw()})};
-  let kwT;$('#q').addEventListener('input',()=>{clearTimeout(kwT);const v=$('#q').value;$('#hotbar').hidden=!!v.trim()||!STATS;kwT=setTimeout(()=>statSearch(v),1500)});
-  const drawHot=()=>{const hb=$('#hotbar');if(!hb)return;if(!STATS||st.f.q.trim()){hb.hidden=true;return}hb.hidden=false;
-    const S=STATS,list=(S[hotTab==='month'?'songs_month':'songs_week']||[]).map(x=>({...x,s:SONGS.find(y=>y.id===x.key)})).filter(x=>x.s).slice(0,5);
-    const num=v=>Number(v||0).toLocaleString();
-    hb.innerHTML=`<section><h4>${t('stSite')}</h4><dl class="nums"><div><dt>${t('stToday')}</dt><dd>${num(S.today_views)}</dd></div><div><dt>${t('stTotal')}</dt><dd>${num(S.total_views)}</dd></div><div><dt>${t('stVisitors')}</dt><dd>${num(S.today_visitors)}</dd></div><div><dt>${t('stMembers')}</dt><dd>${num(S.members)}</dd></div></dl></section>
-    <section><h4>${t('stHot')}<span class="hseg"><button data-ht="week" class="${hotTab==='week'?'on':''}">${t('stWeek')}</button><button data-ht="month" class="${hotTab==='month'?'on':''}">${t('stMonth')}</button></span></h4>${list.length?`<ol class="hotlist">${list.map(x=>`<li><a href="/song/${x.s.id}/"><b>${esc(x.s.title)}</b><small>${esc(x.s.artist)}</small></a></li>`).join('')}</ol>`:`<p class="none">${t('stNone')}</p>`}</section>
-    <section><h4>${t('stSearch')}</h4>${(S.search_week||[]).length?`<div class="chips">${S.search_week.slice(0,10).map(x=>`<button data-kw="${esc(x.key)}">${esc(x.key)}</button>`).join('')}</div>`:`<p class="none">${t('stNone')}</p>`}</section>`;
+  let kwT;$('#q').addEventListener('input',()=>{clearTimeout(kwT);const v=$('#q').value;kwT=setTimeout(()=>statSearch(v),1500)});
+  const drawHot=()=>{const hb=$('#hotbar');if(!hb)return;if(!STATS){hb.hidden=true;return}hb.hidden=false;
+    const S=STATS,num=v=>Number(v||0).toLocaleString();
+    const rows=hotTab==='search'?(S.search_week||[]).slice(0,5).map(x=>({n:x.n,kw:x.key,label:x.key})):(S.songs_week||[]).map(x=>({n:x.n,s:SONGS.find(y=>y.id===x.key)})).filter(x=>x.s).slice(0,5);
+    const max=Math.max(1,...rows.map(x=>x.n));
+    const item=(x,k)=>{const inner=`<i>${k+1}</i><span class="t"><b>${esc(x.s?x.s.title:x.label)}</b>${x.s?`<small>${esc(x.s.artist)}</small>`:''}</span><span class="hb" aria-hidden="true"><span style="width:${Math.max(6,Math.round(x.n/max*100))}%"></span></span>`;
+      return `<li>${x.s?`<a href="/song/${x.s.id}/">${inner}</a>`:`<button type="button" data-kw="${esc(x.kw)}">${inner}</button>`}</li>`};
+    hb.innerHTML=`<section class="hotc"><div class="hh"><h4>${t('stHotWeek')}</h4><span class="hseg" role="group"><button data-ht="song" class="${hotTab!=='search'?'on':''}">${t('stSongs')}</button><button data-ht="search" class="${hotTab==='search'?'on':''}">${t('stSearchTab')}</button></span></div>
+      ${rows.length?`<ol class="hotlist">${rows.map(item).join('')}</ol>`:`<p class="none">${t('stNone')}</p>`}</section>
+      <p class="statline">${t('stToday')} <b>${num(S.today_views)}</b>　${t('stVisitorsShort')} <b>${num(S.today_visitors)}</b><br>${t('stTotal')} <b>${num(S.total_views)}</b>　${t('stMembers')} <b>${num(S.members)}</b></p>`;
     hb.querySelectorAll('[data-ht]').forEach(b=>b.onclick=()=>{hotTab=b.dataset.ht;drawHot()});
-    hb.querySelectorAll('[data-kw]').forEach(b=>b.onclick=()=>{$('#q').value=b.dataset.kw;upd();hb.hidden=true;statSearch(b.dataset.kw)})};
-  bindLayout(viewHome);drawLangs();draw();drawAside();drawHot();loadStats().then(()=>{if($('#hotbar')&&$('#hotbar').hidden&&!st.f.q.trim())drawHot()});
+    hb.querySelectorAll('[data-kw]').forEach(b=>b.onclick=()=>{$('#q').value=b.dataset.kw;upd();statSearch(b.dataset.kw);$('#q').scrollIntoView({block:'center'})})};
+  bindLayout(viewHome);drawLangs();draw();drawAside();drawHot();loadStats().then(()=>{if($('#hotbar'))drawHot()});
 }
 
 /* ---------- library ---------- */
@@ -758,7 +786,17 @@ function getLyr(s){const raw=LS.get('lyr_'+s.id,null);
   return out}
 function setLyr(s,l){const keys=secKeys(s);s.sections.forEach((sec,k)=>{if(!(keys[k] in l.fp))l.fp[keys[k]]=secFp(sec)});LS.set('lyr_'+s.id,l)}
 function lyrChangedKeys(s,l){const keys=secKeys(s);return s.sections.map((sec,k)=>({sec,key:keys[k]})).filter(x=>!isInst(x.sec)&&l.L[x.key]&&Object.values(l.L[x.key]).some(a=>a&&a.some(y=>y&&y.trim()))&&l.fp[x.key]&&l.fp[x.key]!==secFp(x.sec))}
-function barsHtml(r,C){return `<div class="rowline"><div class="bars">${r.b.map(bar=>`<div class="bar">${bar.map(C).join('')}</div>`).join('')}</div><span class="rep">${r.x?`×${r.x}`:''}</span></div>`}
+/* 小節內依拍數排開：一個和弦佔一格或幾格，空拍顯示「·」 */
+function beatsOf(time){return {'4/4':4,'3/4':3,'2/4':2,'6/8':2,'12/8':4}[time]||4}
+function barSlots(bar,beats){
+  const real=bar.filter(c=>c!=='-');
+  if(bar.length===1)return bar;
+  if(bar.includes('-')||bar.length===beats)return bar;
+  if(beats%bar.length===0){const k=beats/bar.length;return real.flatMap(c=>[c,...Array(k-1).fill('-')])}
+  return bar}
+function barsHtml(r,C){const beats=beatsOf(st.song&&st.song.time);
+  return `<div class="rowline"><div class="bars">${r.b.map(bar=>{const sl=barSlots(bar,beats);
+    return `<div class="bar" style="grid-template-columns:${sl.map(c=>c==='-'?'minmax(0,1fr)':'minmax(max-content,1fr)').join(' ')}">${sl.map(c=>c==='-'?'<span class="bt" aria-hidden="true">·</span>':C(c)).join('')}</div>`}).join('')}</div><span class="rep">${r.x?`×${r.x}`:''}</span></div>`}
 function lyrLine(label,text,occ){if(!text&&!st.lyrOpen)return '';return `<div class="lyr${text?'':' ph'}" data-occ="${occ}"><span class="n">${label}</span><span class="lt">${text?esc(text):t('lyrEmpty')}</span></div>`}
 function drawStructured(s,C){
   const occs=songOccs(s),tot=occTotals(s),lyr=getLyr(s),changed=lyrChangedKeys(s,lyr),warnKeys=new Set(changed.map(x=>x.key));
@@ -903,7 +941,7 @@ function viewLegal(){
 /* ---------- site stats (Supabase: stat_hit / stat_public / stat_admin，見 supabase-stats.sql) ---------- */
 const ADMIN_EMAILS=['similu87@gmail.com','pulipapa5986@gmail.com'];
 const isAdmin=()=>!!(typeof user!=='undefined'&&user&&ADMIN_EMAILS.includes((user.email||'').toLowerCase()));
-let STATS=null,statsAt=0,hotTab='week',statsDays=30;
+let STATS=null,statsAt=0,hotTab='song',statsDays=30;
 const hitDone=new Set();
 function statHit(kind,key){if(!sb)return;sb.rpc('stat_hit',{p_kind:kind,p_key:key||''}).then(()=>{},()=>{})}
 function statSong(id){if(hitDone.has('s:'+id))return;hitDone.add('s:'+id);statHit('song',id)}
@@ -924,12 +962,15 @@ async function viewStats(){
   const norm=x=>String(x||'').toLowerCase();
   const onSite=k=>SONGS.some(s=>norm(s.title).includes(k)||norm(s.artist).includes(k)||k.includes(norm(s.title)));
   const sum=f=>(D.daily||[]).reduce((a,x)=>a+(x[f]||0),0);
-  box.innerHTML=`<article class="prose" style="max-width:860px"><h1>${t('stAdminTitle')}</h1>
-  <div class="statnav">${[7,30,90,365].map(n=>`<button class="btn ${n===statsDays?'on':''}" data-days="${n}">${t('stDays')(n)}</button>`).join('')}</div>
-  <dl class="nums" style="grid-template-columns:repeat(3,minmax(0,1fr));margin:16px 0"><div><dt>${t('stV')}</dt><dd>${sum('views').toLocaleString()}</dd></div><div><dt>${t('stU')}</dt><dd>${sum('visitors').toLocaleString()}</dd></div><div><dt>${t('stMembers')}</dt><dd>${Number(D.members||0).toLocaleString()}</dd></div></dl>
-  <h2>${t('stKw')}</h2><table class="stattbl"><thead><tr><th>${t('stKw')}</th><th>${t('stOnSite')}</th><th style="text-align:right">${t('stCount')}</th></tr></thead><tbody>${(D.searches||[]).map(x=>{const ok=onSite(x.key);return `<tr><td>${esc(x.key)}</td><td class="${ok?'':'miss'}">${ok?t('stHas'):t('stMiss')}</td><td class="n">${x.n}</td></tr>`}).join('')||`<tr><td colspan="3">${t('stNone')}</td></tr>`}</tbody></table>
-  <h2>${t('stHot')}</h2><table class="stattbl"><thead><tr><th>${t('stSongCol')}</th><th style="text-align:right">${t('stCount')}</th></tr></thead><tbody>${(D.songs||[]).map(x=>{const s=SONGS.find(y=>y.id===x.key);return `<tr><td>${s?`<a href="/song/${s.id}/" style="text-decoration:underline">${esc(s.title)}</a> <small style="color:var(--muted)">${esc(s.artist)}</small>`:esc(x.key)}</td><td class="n">${x.n}</td></tr>`}).join('')||`<tr><td colspan="2">${t('stNone')}</td></tr>`}</tbody></table>
-  <h2>${t('stDaily')}</h2><table class="stattbl"><thead><tr><th>${t('stDate')}</th><th style="text-align:right">${t('stV')}</th><th style="text-align:right">${t('stU')}</th></tr></thead><tbody>${(D.daily||[]).map(x=>`<tr><td>${esc(x.day)}</td><td class="n">${x.views||0}</td><td class="n">${x.visitors||0}</td></tr>`).join('')||`<tr><td colspan="3">${t('stNone')}</td></tr>`}</tbody></table></article>`;
+  const days=[];{const today=new Date(Date.now()+8*3600e3);for(let k=statsDays-1;k>=0;k--){const d=new Date(today-k*864e5).toISOString().slice(0,10);const r=(D.daily||[]).find(x=>x.day===d);days.push({d,v:r?r.views||0:0})}}
+  const dmax=Math.max(1,...days.map(x=>x.v));
+  box.innerHTML=`<article class="prose" style="max-width:920px"><div class="sthead"><h1>${t('stSite')}</h1><span>${t('stOnlyYou')}</span>
+  <div class="statnav">${[[7,'stD7'],[30,'stD30'],[90,'stD90'],[365,'stD365']].map(([n,k])=>`<button class="${n===statsDays?'on':''}" data-days="${n}">${t(k)}</button>`).join('')}</div></div>
+  <dl class="kpis"><div><dt>${t('stV')}</dt><dd>${sum('views').toLocaleString()}</dd></div><div><dt>${t('stU')}</dt><dd>${sum('visitors').toLocaleString()}</dd></div><div><dt>${t('stMembers')}</dt><dd>${Number(D.members||0).toLocaleString()}</dd></div></dl>
+  <h2 class="sth">${t('stDaily')}</h2><div class="dcols" role="img" aria-label="${t('stDaily')}">${days.map(x=>`<span title="${x.d}：${x.v}" style="height:${x.v?Math.max(3,Math.round(x.v/dmax*100)):0}%"></span>`).join('')}</div>
+  <div class="daxis"><span>${days[0].d.slice(5)}</span><span>${days[days.length-1].d.slice(5)}</span></div>
+  <div class="st2"><div><h2 class="sth">${t('stKw')}</h2><table class="stattbl"><thead><tr><th>${t('stKw')}</th><th>${t('stOnSite')}</th><th style="text-align:right">${t('stCount')}</th></tr></thead><tbody>${(D.searches||[]).map(x=>{const ok=onSite(x.key);return `<tr><td>${esc(x.key)}</td><td>${ok?`<span class="tag-has">${t('stHas')}</span>`:`<span class="tag-miss">${t('stMiss')}</span>`}</td><td class="n">${x.n}</td></tr>`}).join('')||`<tr><td colspan="3">${t('stNone')}</td></tr>`}</tbody></table></div>
+  <div><h2 class="sth">${t('stHot')}</h2><table class="stattbl"><thead><tr><th>${t('stSongCol')}</th><th style="text-align:right">${t('stCount')}</th></tr></thead><tbody>${(D.songs||[]).map(x=>{const s=SONGS.find(y=>y.id===x.key);return `<tr><td>${s?`<a href="/song/${s.id}/" style="text-decoration:underline">${esc(s.title)}</a> <small style="color:var(--muted)">${esc(s.artist)}</small>`:esc(x.key)}</td><td class="n">${x.n}</td></tr>`}).join('')||`<tr><td colspan="2">${t('stNone')}</td></tr>`}</tbody></table></div></div></article>`;
   box.querySelectorAll('[data-days]').forEach(b=>b.onclick=()=>{statsDays=Number(b.dataset.days);viewStats()});
 }
 
@@ -945,9 +986,9 @@ function renderFooter(){
 let CLOG=[];
 fetch('/changelog.json',{cache:'no-cache'}).then(r=>r.json()).then(d=>{CLOG=Array.isArray(d)?d:[];renderFooter();if(location.hash==='#changelog')viewChangelog()}).catch(()=>{});
 function viewChangelog(){
-  $('#app').innerHTML=`<article class="prose clog"><h1>${t('changelog')}</h1>${CLOG.length?CLOG.map(v=>`<section class="ver"><h2>${esc(v.v)}</h2><time>${esc(v.date)}</time>
+  $('#app').innerHTML=`<article class="prose clog" style="max-width:820px"><h1>${t('changelog')}</h1><p class="lead">${t('clLead')}</p>${CLOG.length?`<div>${CLOG.map(v=>`<section class="ver"><div><span class="vv">${esc(v.v)}</span><time>${esc(v.date)}</time></div><div class="line">
     ${v.site.length?`<h3>${t('clSite')}</h3><ul>${v.site.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}
-    ${v.songs.length?`<h3>${t('clSongs')}</h3><ul>${v.songs.map(x=>`<li><a href="/song/${esc(x.id)}/">${esc(x.title)}</a>${x.artist?`<small>${esc(x.artist)}</small>`:''}</li>`).join('')}</ul>`:''}</section>`).join(''):`<p>${t('clEmpty')}</p>`}</article>`;
+    ${v.songs.length?`<h3>${t('clSongs')}</h3><div class="songs">${v.songs.map(x=>`<a href="/song/${esc(x.id)}/">${esc(x.title)}${x.artist?`<small>${esc(x.artist)}</small>`:''}</a>`).join('')}</div>`:''}</div></section>`).join('')}</div>`:`<p>${t('clEmpty')}</p>`}</article>`;
 }
 
 /* ---------- report a bug ---------- */
