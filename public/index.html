@@ -13,7 +13,7 @@
 :root{
   --bg:#F2F3EF; --surface:#FFFFFF; --sunk:#E8EAE4; --ink:#1B2220; --muted:#5D6762; --line:#D8DCD5;
   --chord:#0D6A64; --brass:#9C6A12; --brass-soft:#F3E6CC; --on-brass:#FFFFFF; --panel:#E3E7E0; --panel-line:#C6CCC3;
-  --g-pop:#2E7383; --g-folk:#52703C; --g-blues:#24476F; --g-rock:#97392C; --g-ballad:#715887; --g-oldies:#A6731A; --g-mine:#46504C;
+  --g-ballad:#715887; --g-upbeat:#2E7383; --g-folk:#52703C; --g-rock:#97392C; --g-jazz:#A6731A; --g-blues:#24476F; --g-rnb:#8C4466; --g-rap:#5E6A1F; --g-ost:#2F6B60; --g-mine:#46504C;
   --f-body:"Noto Sans TC",system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
   --f-disp:"Noto Serif TC","Songti TC","PMingLiU",serif;
   --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
@@ -81,6 +81,59 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .search input{border:0;background:none;outline:none;flex:1;min-width:0;color:var(--ink)}
 .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:20px}
 .filters select{height:32px;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:0 8px;font-size:13px}
+.filters #f-sort{margin-left:auto}.filters .seg-toggle{margin-left:0}
+/* 篩選：4A-4 和弦卡風（方格標籤＋勾選） */
+.fbtn{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);font-size:13.5px}
+.fbtn svg.i{width:15px;height:15px}
+.fbtn .n{font-family:var(--f-mono);font-size:12px}
+.fbtn.act,.fbtn[aria-expanded="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.pills{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:4px;height:30px;padding:0 6px 0 12px;border-radius:999px;border:0;background:var(--brass-soft);font-size:13px}
+.pill b{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-weight:500;color:var(--brass)}
+.pill:hover b{background:var(--surface)}
+.flink{border:0;background:none;padding:4px 2px;color:var(--brass);font-size:13px;text-decoration:underline;text-underline-offset:3px}
+.fwrap{margin:-6px 0 20px}
+.fscrim,.fgrab,.fhead{display:none}
+.fpanel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 22px;display:flex;flex-direction:column;gap:16px;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.fbody{display:flex;flex-direction:column;gap:16px}
+.fgrp h3{margin:0 0 8px;font-size:12.5px;letter-spacing:.12em;color:var(--muted);font-weight:700;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.fgrp h3 small{letter-spacing:0;font-weight:400;font-size:12px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px}
+.tile{position:relative;min-height:62px;border-radius:10px;border:1px solid var(--line);background:var(--bg);display:flex;flex-direction:column;justify-content:center;padding:8px 30px 8px 14px;text-align:left;box-shadow:inset 3px 0 0 var(--c)}
+.tile b{font-size:15px;display:flex;align-items:baseline;gap:6px}
+.tile b span{font-family:var(--f-mono);font-size:11px;font-weight:500;color:var(--muted)}
+.tile small{font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.35}
+.tile:hover{border-color:var(--muted)}
+.tile.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tile.on small,.tile.on b span{color:inherit;opacity:.72}
+.tile .ck{position:absolute;right:9px;top:9px;width:18px;height:18px;border-radius:50%;background:var(--brass);display:grid;place-items:center}
+.tile .ck svg{width:11px;height:11px;fill:none;stroke:var(--on-brass);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+.tile.off,.k.off{opacity:.42}
+.frow{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1.6fr);gap:24px}
+.segs{display:flex;flex-wrap:wrap;gap:8px}
+.k{height:40px;min-width:56px;padding:0 12px;border-radius:8px;border:1px solid var(--line);background:var(--bg);font-size:14px;display:inline-flex;align-items:center;justify-content:center;gap:5px}
+.k span{font-family:var(--f-mono);font-size:10.5px;color:var(--muted)}
+.k:hover{border-color:var(--muted)}
+.keys .k{font-family:var(--f-mono);font-weight:700;color:var(--chord);min-width:48px}
+.k.on,.keys .k.on{background:var(--ink);color:var(--bg);border-color:var(--ink);font-weight:700}
+.k.on span{color:inherit;opacity:.7}
+.ffoot{display:flex;justify-content:flex-end;align-items:center;gap:10px}
+.ffoot .flink{margin-right:auto}
+.fshow{height:40px;padding:0 22px;border-radius:10px;border:0;background:var(--brass);color:var(--on-brass);font-size:14.5px;font-weight:700}
+@media (max-width:980px){.frow{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:720px){
+  .fwrap{position:fixed;inset:0;z-index:60;margin:0}
+  .fscrim{display:block;position:absolute;inset:0;background:rgba(0,0,0,.38)}
+  .fpanel{position:absolute;left:0;right:0;bottom:0;max-height:86vh;border-radius:18px 18px 0 0;padding:10px 16px 0;gap:12px;border:0}
+  .fgrab{display:block;width:40px;height:4px;border-radius:2px;background:var(--line);margin:0 auto}
+  .fhead{display:flex;align-items:center}.fhead h2{margin:0;font-size:18px}.fhead .flink{margin-left:auto;font-size:14px}
+  .fbody{overflow:auto;flex:1;min-height:0;padding-bottom:4px}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ffoot{padding:12px 0 calc(16px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
+  .ffoot .flink{display:none}
+  .fshow{width:100%;height:48px;font-size:16px;border-radius:12px}
+  body.fsheet{overflow:hidden}
+}
 .seg-toggle{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-left:auto}
 .seg-toggle button{border:0;background:var(--surface);height:30px;padding:0 10px;font-size:13px;color:var(--muted)}
 .seg-toggle button.on{background:var(--ink);color:var(--bg)}
@@ -259,6 +312,16 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .bars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));row-gap:.45em}
 .bar{border-right:2px solid var(--muted);padding:.15em .55em;display:grid;column-gap:.35em;min-height:1.9em;align-items:center}
 .bt{font-family:var(--f-mono);font-weight:700;color:var(--muted);opacity:.75}
+.bar{position:relative}.bars .bar.hasts{padding-left:1.45em}
+.tsig{position:absolute;left:.35em;top:50%;transform:translateY(-50%);width:.75em;height:1.4em;overflow:visible}.tsig text{font-family:var(--f-mono);font-weight:700;font-size:11px;fill:var(--brass)}
+.bar.rest{display:flex;justify-content:center}
+.bars.tight{font-size:.84em}.bars.tight .bar{column-gap:.2em;padding:.15em .4em}
+.bars.dense{grid-template-columns:repeat(2,minmax(0,1fr))}
+.sheet .bar,.sheet .rowline{break-inside:avoid}
+.restm{display:inline-block;width:1.1em;height:.5em;background:var(--muted);border-top:2px solid var(--muted);box-shadow:0 -.18em 0 -1px var(--muted);margin-top:.15em;opacity:.8}
+.cd.ed{cursor:default}.cd[data-alts]{cursor:pointer}
+.cd .edtag{display:block;height:auto;font-size:10.5px;color:var(--brass);margin-top:2px}.cd .edtag span{font-family:var(--f-mono)}
+.cd .hp{display:block;height:auto;margin-top:1px;font-size:10px;color:var(--muted);line-height:1.3}
 .bar:nth-child(4n+1){border-left:2px solid var(--muted)}
 .lyr{padding:.12em .6em 0;color:var(--ink);display:flex;gap:.5em;border-radius:4px;transition:background .2s}
 .lyr .n{color:var(--brass);font-family:var(--f-mono);font-weight:700;font-size:.9em;min-width:1.7em;display:flex;align-items:center;flex:none}
@@ -432,7 +495,8 @@ home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲明',c
   allSheets:'全部樂譜',count:n=>`${n} 首`,search:'搜尋歌名或歌手',allKeys:'所有調性',allDiff:'所有難度',allGenre:'所有曲風',
   sortNew:'最新上架',sortTitle:'依歌名',sortEasy:'由易到難',grid:'卡片',list:'列表',noMatch:['找不到符合的譜','換個關鍵字或清除篩選條件。'],
   colTitle:'歌名',colArtist:'歌手',colKey:'調性',colLevel:'難度',colType:'類別',edit:'編輯',save:'收藏',saved:'已收藏',
-  diff:['','初級','中級','進階'],genre:{pop:'流行',folk:'民謠',blues:'藍調',rock:'搖滾',ballad:'抒情',oldies:'老搖滾'},mineTag:'自建譜',
+  diff:['','初級','中級','進階'],genre:{ballad:'抒情',upbeat:'輕快',folk:'民謠',rock:'搖滾',jazz:'爵士',blues:'藍調',rnb:'R&B',rap:'饒舌',ost:'影視歌曲'},gsub:{ballad:'慢歌、情歌',upbeat:'好跟著唱',folk:'木吉他彈唱',rock:'電吉他、有力',jazz:'慵懶、和弦花',blues:'老派、鬱悶',rnb:'律動、轉音',rap:'有念唱',ost:'劇、電影、動畫'},mineTag:'自建譜',
+  flt:'篩選',fltLang:'語言',fltGenre:'曲風',fltDiff:'難度',fltKey:'調性',fltReset:'全部重設',fltClear:'清除全部',fltShow:n=>`顯示 ${n} 首`,fltRemove:'移除',fltGenreHint:'可以複選，符合任一個就會列出',editorShape:'編者按法',altShape:n=>`還有 ${n} 種按法，點圖切換`,hammer:'搥弦',pull:'勾弦',restBar:'整小節休止',
   cont:'繼續練習',contEmpty:'打開任一首譜後，會在這裡接著上次的調性和 Capo 繼續練。',byLevel:'依難度',byGenre:'依曲風',byKey:'依調性',
   tabs:{library:'全部','library-saved':'收藏','library-mine':'自建譜','library-recent':'最近瀏覽'},newSheet:'新增譜',
   empty:{library:['曲庫是空的','在任何一首譜按「收藏」，或按右上角「新增譜」抄寫自己的版本，都會集中在這裡。'],'library-saved':['還沒有收藏','在卡片上按愛心，或在譜面頁按「收藏」。'],
@@ -464,7 +528,8 @@ home:'Home',library:'My Library',theme:'Theme',legal:'Copyright',changelog:'Chan
   allSheets:'All Sheets',count:n=>`${n} ${n===1?'song':'songs'}`,search:'Search songs or artists',allKeys:'All keys',allDiff:'All levels',allGenre:'All genres',
   sortNew:'Newest',sortTitle:'Title',sortEasy:'Easiest first',grid:'Grid',list:'List',noMatch:['No matching sheets','Try another keyword or clear the filters.'],
   colTitle:'Title',colArtist:'Artist',colKey:'Key',colLevel:'Level',colType:'Type',edit:'Edit',save:'Save',saved:'Saved',
-  diff:['','Beginner','Intermediate','Advanced'],genre:{pop:'Pop',folk:'Folk',blues:'Blues',rock:'Rock',ballad:'Ballad',oldies:'Oldies'},mineTag:'My Sheet',
+  diff:['','Beginner','Intermediate','Advanced'],genre:{ballad:'Ballad',upbeat:'Upbeat',folk:'Folk',rock:'Rock',jazz:'Jazz',blues:'Blues',rnb:'R&B',rap:'Rap',ost:'Soundtrack'},gsub:{ballad:'Slow, love songs',upbeat:'Easy to sing along',folk:'Acoustic, storytelling',rock:'Electric, powerful',jazz:'Laid-back, rich chords',blues:'Old-school, moody',rnb:'Groove, runs',rap:'Has rap parts',ost:'TV, film, anime'},mineTag:'My Sheet',
+  flt:'Filter',fltLang:'Language',fltGenre:'Genre',fltDiff:'Level',fltKey:'Key',fltReset:'Reset all',fltClear:'Clear all',fltShow:n=>`Show ${n} ${n===1?'song':'songs'}`,fltRemove:'Remove',fltGenreHint:'Pick several; songs matching any are shown',editorShape:'Editor’s voicing',altShape:n=>`${n} more voicing${n>1?'s':''} — tap to switch`,hammer:'hammer-on',pull:'pull-off',restBar:'Rest (whole bar)',
   cont:'Continue Practicing',contEmpty:'Open any sheet and it will show up here with your last key and capo.',byLevel:'By Level',byGenre:'By Genre',byKey:'By Key',
   tabs:{library:'All','library-saved':'Saved','library-mine':'My Sheets','library-recent':'Recent'},newSheet:'New Sheet',
   empty:{library:['Your library is empty','Save any sheet, or use New Sheet to write your own arrangement.'],'library-saved':['Nothing saved yet','Tap the heart on a card or Save on a sheet.'],
@@ -503,7 +568,10 @@ function deg(tok,key){const m=tok.match(/^(b?)(VII|VI|V|IV|III|II|I|vii|vi|v|iv|
 const SUB={straight8:[.5],swing:[2/3],shuffle:[2/3],straight16:[.25,.5,.75],triplet:[1/3,2/3]};
 
 /* ---------- songs (built from songs/*.md into songs.json) ---------- */
-const GCOL={pop:'--g-pop',folk:'--g-folk',blues:'--g-blues',rock:'--g-rock',ballad:'--g-ballad',oldies:'--g-oldies'};
+const GCOL={ballad:'--g-ballad',upbeat:'--g-upbeat',folk:'--g-folk',rock:'--g-rock',jazz:'--g-jazz',blues:'--g-blues',rnb:'--g-rnb',rap:'--g-rap',ost:'--g-ost'};
+const gOf=s=>(s.genres&&s.genres.length?s.genres:[s.genre]).filter(g=>GCOL[g]);
+const gColor=s=>`var(${GCOL[gOf(s)[0]]||'--g-mine'})`;
+const gTag=s=>gOf(s).map(g=>t('genre')[g]).join(' · ');
 let SONGS=[];
 
 /* ---------- chord shapes ---------- */
@@ -514,22 +582,35 @@ const SHAPES={C:'x32010',D:'xx0232',E:'022100',G:'320003',A:'x02220',Am:'x02210'
  Eb7:'x68686',Ab7:'464544',Db7:'x46464','F#':'244322',B:'x24442',Gb:'244322','D#m':'x68876',Ebm:'x68876',Abm:'466444','A#m':'x13321',
  'G#':'466544','C#':'x46664','D#':'x68886','A#':'x13331','G#7':'464544','D#7':'x68686','A#7':'x13131',Gm7:'353333',Cm7:'x35343',Fm7:'131111',Dsus4:'xx0233',Dsus2:'xx0230',Asus4:'x02230',Asus2:'x02200',Esus4:'022200',Csus2:'x30013',Gsus4:'330013',Cadd9:'x32033',Ebmaj7:'x65333',Bbmaj7:'x13231',
  /* 使用者提供的指法 */ Gm11:'3x331x',Fsus4:'1x331x',Gsus4:'3x0013',A7sus4:'x02033',Dm11:'xx0213',Am6:'x02212','G#maj7':'4x554x',
- /* 斜線和弦：一定要畫出低音，沒有登錄的斜線和弦顯示「指法圖待補」 */ 'F/A':'x0321x','G/B':'x2000x','Am/G#':'4x255x','Am7/G':'3x2010','Dadd9/F#':'2x2230','Gm/Bb':'6x878x','Dadd4/F#':'2x0030','Em7/D':'xx0033','D/F#':'2x0232','G/Bb':'x10030','D7/F#':'2x453x'};
+ /* 斜線和弦：一定要畫出低音，沒有登錄的斜線和弦顯示「指法圖待補」 */ 'F/A':'x0321x','G/B':'x2000x','Am/G#':'4x255x','Am7/G':'3x2010','Dadd9/F#':'2x2230','Gm/Bb':'6x878x','Dadd4/F#':'2x0030','Em7/D':'xx0033','D/F#':'2x0232','G/Bb':'x10030','D7/F#':'2x453x',
+ /* 強力和弦 */ E5:'022xxx',A5:'x022xx',D5:'xx023x',G5:'355xxx',C5:'x355xx',F5:'133xxx',B5:'x244xx'};
 const OPEN=new Set(['C','D','E','G','A','Am','Em','Dm','E7','A7','D7','G7','B7','C7','Cmaj7','Fmaj7','Gmaj7','Dmaj7','Amaj7','Am7','Em7','Dm7','Bm7']);
 const ENH={'C#':'Db','Db':'C#','D#':'Eb','Eb':'D#','F#':'Gb','Gb':'F#','G#':'Ab','Ab':'G#','A#':'Bb','Bb':'A#'};
 function shapeOf(c){if(SHAPES[c])return SHAPES[c];const[h,b]=c.split('/');const alt=r=>{const m=r.match(/^([A-G][#b]?)(.*)$/);return m&&ENH[m[1]]?ENH[m[1]]+m[2]:null};for(const x of [h,alt(h)].filter(Boolean))for(const y of (b?[b,ENH[b]].filter(Boolean):['']))if(SHAPES[b?x+'/'+y:x])return SHAPES[b?x+'/'+y:x];return null}
-function diagram(sh){const f=[...sh].map(x=>x==='x'?-1:+x);const pos=f.filter(n=>n>0);const max=Math.max(0,...pos);const base=max>4?Math.min(...pos):1;
-  let s=`<svg width="96" height="112" viewBox="0 0 96 112">`;const X=i=>16+i*13,Y=r=>26+r*17;
+/* 指法：6 碼；(2h3) 搥弦、(3p2) 勾弦：先按前一格，再搥／勾到後一格 */
+function frets(sh){return (String(sh).match(/\(\d{1,2}[hp]\d{1,2}\)|x|\d/g)||[]).map(t=>{if(t==='x')return {v:-1};const m=t.match(/^\((\d+)([hp])(\d+)\)$/);return m?{v:+m[3],a:+m[1],h:m[2]}:{v:+t}})}
+function diagram(sh){const f=frets(sh);const pos=f.flatMap(x=>[x.v,x.a]).filter(n=>n>0);const max=Math.max(0,...pos);const base=max>4?Math.min(...pos):1;
+  let s=`<svg width="96" height="112" viewBox="0 0 96 112" role="img" aria-label="${esc(sh)}">`;const X=i=>16+i*13,Y=r=>26+r*17;
   s+=base===1?`<line x1="16" y1="26" x2="81" y2="26" stroke="currentColor" stroke-width="4"/>`:`<text x="92" y="${Y(.5)+4}" font-size="10" fill="currentColor" text-anchor="end">${base}fr</text>`;
   for(let r=0;r<=5;r++)s+=`<line x1="16" y1="${Y(r)}" x2="81" y2="${Y(r)}" stroke="currentColor" stroke-width="1" opacity=".5"/>`;
   for(let i=0;i<6;i++)s+=`<line x1="${X(i)}" y1="26" x2="${X(i)}" y2="${Y(5)}" stroke="currentColor" stroke-width="1"/>`;
-  f.forEach((v,i)=>{if(v<0)s+=`<text x="${X(i)}" y="18" font-size="11" text-anchor="middle" fill="currentColor">×</text>`;
+  const yOf=v=>v===0?14:Y(v-base+.5);
+  f.forEach((x,i)=>{const v=x.v;
+    if(x.h){const y1=yOf(x.a),y2=yOf(v),top=Math.min(y1,y2),bot=Math.max(y1,y2),cx=X(i)+7;
+      s+=x.a===0?`<circle cx="${X(i)}" cy="14" r="3.5" fill="none" stroke="currentColor"/>`:`<circle cx="${X(i)}" cy="${y1}" r="4.4" fill="var(--surface,#fff)" stroke="currentColor" stroke-width="1.6"/>`;
+      s+=`<path d="M${X(i)+4} ${top+1} Q${cx+5} ${(top+bot)/2} ${X(i)+4} ${bot-1}" fill="none" stroke="var(--brass,currentColor)" stroke-width="1.6"/><text x="${cx+6}" y="${(top+bot)/2+4}" font-size="10" font-weight="700" fill="var(--brass,currentColor)">${x.h}</text>`;
+      s+=v===0?`<circle cx="${X(i)}" cy="14" r="3.5" fill="none" stroke="currentColor"/>`:`<circle cx="${X(i)}" cy="${y2}" r="5" fill="currentColor"/>`;return}
+    if(v<0)s+=`<text x="${X(i)}" y="18" font-size="11" text-anchor="middle" fill="currentColor">×</text>`;
     else if(v===0)s+=`<circle cx="${X(i)}" cy="14" r="3.5" fill="none" stroke="currentColor"/>`;
     else s+=`<circle cx="${X(i)}" cy="${Y(v-base+.5)}" r="5" fill="currentColor"/>`});
   return s+'</svg>'}
+let CUR={};const shapeFor=c=>(CUR[c]&&CUR[c][0])||shapeOf(c);
+const hpNote=sh=>{const f=frets(sh).filter(x=>x.h);return f.length?f.map(x=>`${x.a}→${x.v} ${x.h==='h'?t('hammer'):t('pull')}`).join('、'):''};
+function chordCard(c){const alts=CUR[c],sh=alts?alts[0]:shapeOf(c),hp=sh?hpNote(sh):'';
+  return `<div class="cd${alts?' ed':''}"${alts&&alts.length>1?` data-alts="${esc(alts.join('|'))}" data-i="0" role="button" tabindex="0" title="${esc(t('altShape')(alts.length-1))}"`:''}><b>${esc(c)}</b>${sh?diagram(sh):`<small>${t('noDiagram')}</small>`}${alts?`<small class="edtag">${t('editorShape')}${alts.length>1?` <span>1/${alts.length}</span>`:''}</small>`:''}${hp?`<small class="hp">${esc(hp)}</small>`:''}</div>`}
 
 /* ---------- state ---------- */
-const st={layout:LS.get('layout','grid'),f:{q:'',key:'',diff:'',genre:'',sort:'new',language:''},cols:LS.get('cols',true),size:LS.get('size',16),
+const st={layout:LS.get('layout','grid'),f:{q:'',sort:'new',lang:[],genre:[],diff:[],key:[]},cols:LS.get('cols',true),size:LS.get('size',16),
   practice:LS.get('practice',true),sub:LS.get('sub',true),view:LS.get('view','full'),shift:0,capo:0,bpm:90,metro:false,song:null,lyrOpen:false};
 const favs=()=>LS.get('fav',[]),mine=()=>LS.get('mine',[]);
 function toggleFav(id){const f=favs();const i=f.indexOf(id);i<0?f.unshift(id):f.splice(i,1);LS.set('fav',f);return i<0}
@@ -588,7 +669,7 @@ $('#themepop').onclick=e=>{const b=e.target.closest('[data-theme-opt]');if(b){ap
 document.addEventListener('click',e=>{if(!e.target.closest('#themepop'))$('#themepop').hidden=true});
 
 /* ---------- cards & lists ---------- */
-const pubItem=s=>({href:'/song/'+s.id+'/',title:s.title,artist:s.artist,key:s.key,color:`var(${GCOL[s.genre]})`,tag:t('genre')[s.genre],diff:s.diff,bpm:s.bpm,favId:s.id});
+const pubItem=s=>({href:'/song/'+s.id+'/',title:s.title,artist:s.artist,key:s.key,color:gColor(s),tag:gTag(s),diff:s.diff,bpm:s.bpm,favId:s.id});
 const myItem=s=>({href:'/#my-'+s.id,title:s.title,artist:s.artist,key:s.key,color:'var(--g-mine)',tag:t('mineTag'),diff:0,bpm:s.bpm,favId:null,edit:'/#edit-'+s.id});
 function renderItems(box,items,onFavChange){
   const f=favs();
@@ -610,41 +691,63 @@ const bindLayout=re=>document.querySelectorAll('[data-layout]').forEach(b=>b.onc
 /* ---------- home ---------- */
 function viewHome(){
   const keys=[...new Set(SONGS.map(s=>s.key))].sort();
+  const F=['lang','genre','diff','key'];
+  const OPTS={lang:Object.keys(t('langs')).filter(k=>SONGS.some(s=>s.language===k)),genre:Object.keys(GCOL),diff:['1','2','3'],key:keys};
+  const VAL={lang:s=>[s.language],genre:s=>gOf(s),diff:s=>[String(s.diff)],key:s=>[s.key]};
+  const LBL={lang:v=>t('langs')[v],genre:v=>t('genre')[v],diff:v=>t('diff')[v],key:v=>v};
+  const HEAD={lang:'fltLang',genre:'fltGenre',diff:'fltDiff',key:'fltKey'};
+  F.forEach(f=>{if(!Array.isArray(st.f[f]))st.f[f]=[]});
+  const qOk=s=>{const q=st.f.q.trim().toLowerCase();return !q||(s.title+s.artist).toLowerCase().includes(q)};
+  const match=(s,skip)=>F.every(f=>f===skip||!st.f[f].length||VAL[f](s).some(v=>st.f[f].includes(v)));
+  const nOpt=(f,v)=>SONGS.filter(s=>qOk(s)&&match(s,f)&&VAL[f](s).includes(v)).length;
+  const nSel=()=>F.reduce((n,f)=>n+st.f[f].length,0);
+  const ck='<span class="ck" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span>';
   $('#app').innerHTML=`
   <header class="pagehead"><h1>${t('allSheets')}</h1><span class="count" id="count"></span>
     <label class="search"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg>
     <input id="q" placeholder="${t('search')}" value="${esc(st.f.q)}" aria-label="${t('search')}"></label></header>
-  <nav class="tabs langtabs" id="langtabs"></nav>
   <div class="filters">
-    <select id="f-key" aria-label="${t('colKey')}"><option value="">${t('allKeys')}</option>${keys.map(k=>`<option ${st.f.key===k?'selected':''}>${k}</option>`).join('')}</select>
-    <select id="f-diff" aria-label="${t('colLevel')}"><option value="">${t('allDiff')}</option>${[1,2,3].map(d=>`<option value="${d}" ${st.f.diff==d?'selected':''}>${t('diff')[d]}</option>`).join('')}</select>
-    <select id="f-genre" aria-label="${t('byGenre')}"><option value="">${t('allGenre')}</option>${Object.keys(GCOL).map(g=>`<option value="${g}" ${st.f.genre===g?'selected':''}>${t('genre')[g]}</option>`).join('')}</select>
-    <select id="f-sort"><option value="new" ${st.f.sort==='new'?'selected':''}>${t('sortNew')}</option><option value="title" ${st.f.sort==='title'?'selected':''}>${t('sortTitle')}</option><option value="easy" ${st.f.sort==='easy'?'selected':''}>${t('sortEasy')}</option></select>
+    <button class="fbtn" id="fbtn" aria-expanded="false" aria-controls="fwrap"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>${t('flt')}<span class="n" id="fn"></span></button>
+    <div class="pills" id="pills"></div>
+    <select id="f-sort" aria-label="${t('sortNew')}"><option value="new" ${st.f.sort==='new'?'selected':''}>${t('sortNew')}</option><option value="title" ${st.f.sort==='title'?'selected':''}>${t('sortTitle')}</option><option value="easy" ${st.f.sort==='easy'?'selected':''}>${t('sortEasy')}</option></select>
     ${layoutToggle()}
-  </div><div class="homecols"><div id="results"></div><aside class="aside"><div id="hotbar" hidden></div><div class="aside-more" id="aside"></div></aside></div>`;
-  const draw=()=>{const q=st.f.q.trim().toLowerCase();
-    let list=SONGS.filter(s=>(!q||(s.title+s.artist).toLowerCase().includes(q))&&(!st.f.key||s.key===st.f.key)&&(!st.f.diff||s.diff==st.f.diff)&&(!st.f.genre||s.genre===st.f.genre)&&(!st.f.language||s.language===st.f.language));
+  </div>
+  <div class="fwrap" id="fwrap" hidden><div class="fscrim" id="fscrim"></div><section class="fpanel" role="dialog" aria-label="${t('flt')}"><div class="fgrab" aria-hidden="true"></div><div class="fhead"><h2>${t('flt')}</h2><button type="button" class="flink" data-freset>${t('fltReset')}</button></div><div class="fbody" id="fbody"></div><div class="ffoot"><button type="button" class="flink" data-freset>${t('fltReset')}</button><button type="button" class="fshow" id="fshow"></button></div></section></div>
+  <div class="homecols"><div id="results"></div><aside class="aside"><div id="hotbar" hidden></div><div class="aside-more" id="aside"></div></aside></div>`;
+  const toggle=(f,v)=>{const a=st.f[f],i=a.indexOf(v);i<0?a.push(v):a.splice(i,1);refresh()};
+  const drawPanel=()=>{const seg=f=>`<div class="fgrp"><h3>${t(HEAD[f])}</h3><div class="segs${f==='key'?' keys':''}">${OPTS[f].map(v=>{const on=st.f[f].includes(v),n=nOpt(f,v);
+      return `<button type="button" class="k ${on?'on':''} ${!n&&!on?'off':''}" data-f="${f}" data-v="${esc(v)}" aria-pressed="${on}">${esc(LBL[f](v))}<span>${n}</span></button>`}).join('')}</div></div>`;
+    $('#fbody').innerHTML=`<div class="fgrp"><h3>${t('fltGenre')}<small>${t('fltGenreHint')}</small></h3><div class="tiles">${OPTS.genre.map(g=>{const on=st.f.genre.includes(g),n=nOpt('genre',g);
+      return `<button type="button" class="tile ${on?'on':''} ${!n&&!on?'off':''}" style="--c:var(${GCOL[g]})" data-f="genre" data-v="${g}" aria-pressed="${on}"><b>${esc(t('genre')[g])}<span>${n}</span></b><small>${esc(t('gsub')[g])}</small>${on?ck:''}</button>`}).join('')}</div></div>
+      <div class="frow">${seg('lang')}${seg('diff')}${seg('key')}</div>`;
+    $('#fshow').textContent=t('fltShow')(SONGS.filter(s=>qOk(s)&&match(s)).length)};
+  const drawPills=()=>{const n=nSel();$('#fn').textContent=n||'';$('#fbtn').classList.toggle('act',n>0);
+    $('#pills').innerHTML=F.flatMap(f=>st.f[f].map(v=>`<button type="button" class="pill" data-f="${f}" data-v="${esc(v)}" aria-label="${t('fltRemove')} ${esc(LBL[f](v))}">${esc(LBL[f](v))}<b aria-hidden="true">×</b></button>`)).join('')+(n>1?`<button type="button" class="flink" data-freset>${t('fltClear')}</button>`:'')};
+  const draw=()=>{
+    let list=SONGS.filter(s=>qOk(s)&&match(s));
     if(st.f.sort==='new')list.sort((a,b)=>b.added.localeCompare(a.added));if(st.f.sort==='title')list.sort((a,b)=>a.title.localeCompare(b.title,lang==='zh'?'zh-Hant':'en'));if(st.f.sort==='easy')list.sort((a,b)=>a.diff-b.diff);
     $('#count').textContent=t('count')(list.length);
     if(!list.length){$('#results').innerHTML=`<div class="empty"><b>${t('noMatch')[0]}</b>${t('noMatch')[1]}</div>`;return}
     renderItems($('#results'),list.map(pubItem))};
   const drawAside=()=>{
     const rec=LS.get('recent',[]).map(id=>SONGS.find(s=>s.id===id)).filter(Boolean).slice(0,5);
-    const cnt=f=>{const m={};SONGS.forEach(s=>{const k=f(s);m[k]=(m[k]||0)+1});return m};
-    const g=cnt(s=>s.genre),k=cnt(s=>s.key),d=cnt(s=>s.diff);
-    const chip=(type,val,label,n)=>`<button data-chip="${type}" data-v="${esc(val)}" class="${String(st.f[type])===String(val)?'on':''}">${esc(label)}<span>${n}</span></button>`;
+    const chip=(type,val)=>{const v=String(val),on=st.f[type].includes(v);return `<button data-f="${type}" data-v="${esc(v)}" class="${on?'on':''}" aria-pressed="${on}">${esc(LBL[type](v))}<span>${nOpt(type,v)}</span></button>`};
     $('#aside').innerHTML=`<section><h4>${t('cont')}</h4>${rec.length?`<div class="cont">${rec.map(s=>{const p=LS.get('pref_'+s.id,null);const cp=p?p.capo:s.capo;const sk=tKey(s.key,p?p.shift:0);
-      return `<a href="/song/${s.id}/"><span class="sq" style="--c:var(${GCOL[s.genre]})">${sk}</span><span style="min-width:0"><b>${esc(s.title)}</b><small>${esc(s.artist)}</small></span><span class="cp">${cp?'Capo '+cp:''}</span></a>`}).join('')}</div>`:`<p style="margin:0;font-size:13px;color:var(--muted)">${t('contEmpty')}</p>`}</section>
-    <section><h4>${t('byLevel')}</h4><div class="chips">${[1,2,3].map(n=>chip('diff',n,t('diff')[n],d[n]||0)).join('')}</div></section>
-    <section><h4>${t('byGenre')}</h4><div class="chips">${Object.keys(GCOL).map(x=>chip('genre',x,t('genre')[x],g[x]||0)).join('')}</div></section>
-    <section><h4>${t('byKey')}</h4><div class="chips">${Object.keys(k).sort().map(x=>chip('key',x,x,k[x])).join('')}</div></section>`;
-    $('#aside').querySelectorAll('[data-chip]').forEach(b=>b.onclick=()=>{const ty=b.dataset.chip,v=b.dataset.v;st.f[ty]=String(st.f[ty])===v?'':v;$('#f-'+ty).value=st.f[ty];draw();drawAside()})};
-  const upd=()=>{st.f.q=$('#q').value;st.f.key=$('#f-key').value;st.f.diff=$('#f-diff').value;st.f.genre=$('#f-genre').value;st.f.sort=$('#f-sort').value;draw();drawAside()};
-  ['#q','#f-key','#f-diff','#f-genre','#f-sort'].forEach(s=>$(s).addEventListener('input',upd));
-  const drawLangs=()=>{const c={};SONGS.forEach(s=>{c[s.language]=(c[s.language]||0)+1});
-    const order=Object.keys(t('langs')).filter(k=>c[k]);
-    $('#langtabs').innerHTML=[['',t('allLang'),SONGS.length],...order.map(k=>[k,t('langs')[k],c[k]])].map(([k,l,n])=>`<button data-lt="${k}" class="${st.f.language===k?'on':''}">${l}<span>${n}</span></button>`).join('');
-    $('#langtabs').querySelectorAll('[data-lt]').forEach(b=>b.onclick=()=>{st.f.language=b.dataset.lt;drawLangs();draw()})};
+      return `<a href="/song/${s.id}/"><span class="sq" style="--c:${gColor(s)}">${sk}</span><span style="min-width:0"><b>${esc(s.title)}</b><small>${esc(s.artist)}</small></span><span class="cp">${cp?'Capo '+cp:''}</span></a>`}).join('')}</div>`:`<p style="margin:0;font-size:13px;color:var(--muted)">${t('contEmpty')}</p>`}</section>
+    <section><h4>${t('byLevel')}</h4><div class="chips">${OPTS.diff.map(n=>chip('diff',n)).join('')}</div></section>
+    <section><h4>${t('byGenre')}</h4><div class="chips">${OPTS.genre.filter(g=>SONGS.some(s=>gOf(s).includes(g))).map(x=>chip('genre',x)).join('')}</div></section>
+    <section><h4>${t('byKey')}</h4><div class="chips">${OPTS.key.map(x=>chip('key',x)).join('')}</div></section>`};
+  const refresh=()=>{draw();drawPills();drawAside();if(!$('#fwrap').hidden)drawPanel()};
+  const setOpen=o=>{$('#fwrap').hidden=!o;$('#fbtn').setAttribute('aria-expanded',o);document.body.classList.toggle('fsheet',o);if(o)drawPanel()};
+  $('#fbtn').onclick=()=>setOpen($('#fwrap').hidden);
+  $('#fscrim').onclick=()=>setOpen(false);
+  $('#fshow').onclick=()=>{setOpen(false);if(matchMedia('(max-width:720px)').matches)$('#results').scrollIntoView({block:'start'})};
+  const onF=e=>{const r=e.target.closest('[data-freset]');if(r){F.forEach(f=>st.f[f]=[]);refresh();return}
+    const b=e.target.closest('[data-f]');if(b)toggle(b.dataset.f,b.dataset.v)};
+  ['.filters','#fwrap','#aside'].forEach(x=>$(x).onclick=onF);
+  document.onkeydown=e=>{if(e.key==='Escape'&&$('#fwrap')&&!$('#fwrap').hidden)setOpen(false)};
+  const upd=()=>{st.f.q=$('#q').value;st.f.sort=$('#f-sort').value;refresh()};
+  ['#q','#f-sort'].forEach(s=>$(s).addEventListener('input',upd));
   let kwT;$('#q').addEventListener('input',()=>{clearTimeout(kwT);const v=$('#q').value;kwT=setTimeout(()=>statSearch(v),1500)});
   const drawHot=()=>{const hb=$('#hotbar');if(!hb)return;if(!STATS){hb.hidden=true;return}hb.hidden=false;
     const S=STATS,num=v=>Number(v||0).toLocaleString();
@@ -657,7 +760,7 @@ function viewHome(){
       <p class="statline">${t('stToday')} <b>${num(S.today_views)}</b>　${t('stVisitorsShort')} <b>${num(S.today_visitors)}</b><br>${t('stTotal')} <b>${num(S.total_views)}</b>　${t('stMembers')} <b>${num(S.members)}</b></p>`;
     hb.querySelectorAll('[data-ht]').forEach(b=>b.onclick=()=>{hotTab=b.dataset.ht;drawHot()});
     hb.querySelectorAll('[data-kw]').forEach(b=>b.onclick=()=>{$('#q').value=b.dataset.kw;upd();statSearch(b.dataset.kw);$('#q').scrollIntoView({block:'center'})})};
-  bindLayout(viewHome);drawLangs();draw();drawAside();drawHot();loadStats().then(()=>{if($('#hotbar'))drawHot()});
+  bindLayout(viewHome);refresh();drawHot();loadStats().then(()=>{if($('#hotbar'))drawHot()});
 }
 
 /* ---------- library ---------- */
@@ -714,8 +817,8 @@ function act(a){
   if(a==='key-'||a==='key+'){st.shift=mod(st.shift+(a==='key+'?1:-1)+6)-6;savePref();drawSheet()}
   if(a==='key0'){st.shift=0;st.capo=st.song.capo||0;savePref();drawSheet()}
   if(a==='bestcapo'){st.capo=bestCapo(st.song,st.shift);savePref();drawSheet()}
-  if(a==='size-'||a==='size+'){st.size=Math.min(26,Math.max(12,st.size+(a==='size+'?1:-1)));LS.set('size',st.size);document.documentElement.style.setProperty('--sheet-size',st.size+'px')}
-  if(a==='cols'){st.cols=!st.cols;LS.set('cols',st.cols);$('#colsbtn').classList.toggle('on',st.cols);$('#sheet').classList.toggle('cols2',st.cols)}
+  if(a==='size-'||a==='size+'){st.size=Math.min(26,Math.max(12,st.size+(a==='size+'?1:-1)));LS.set('size',st.size);document.documentElement.style.setProperty('--sheet-size',st.size+'px');fitBars()}
+  if(a==='cols'){st.cols=!st.cols;LS.set('cols',st.cols);$('#colsbtn').classList.toggle('on',st.cols);$('#sheet').classList.toggle('cols2',st.cols);fitBars()}
   if(a==='bpm-'||a==='bpm+'){st.bpm=Math.min(240,Math.max(40,st.bpm+(a==='bpm+'?2:-2)));$('#bpmv').textContent=st.bpm;if(st.metro){metroStop();metroStart()}}
   if(a==='metro')st.metro?metroStop():metroStart();
   if(a==='sub'){st.sub=!st.sub;LS.set('sub',st.sub);$('#subbtn').classList.toggle('on',st.sub)}
@@ -732,10 +835,14 @@ function drawSheet(){
   if(!st.isMine)note+=`<span>${user?t('notePubAcct'):t('notePub')}</span>`;
   $('#note').innerHTML=note;
   const T2=c=>tChord(c,total,flat);
+  CUR={};if(!st.isMine&&!st.shift)(s.shapes||[]).forEach(e=>{if(e.capo===st.capo)CUR[T2(e.c)]=e.f});
   const strumNote=lang==='en'?(s.strumNoteEn||''):(s.strumNote||'');
-  $('#practice').innerHTML=st.practice?`<div class="practice"><div><h4>${t('chordsTitle')(st.capo)}</h4><div class="chordgrid">${chordsOf(s).map(T2).filter((c,i,a)=>a.indexOf(c)===i).map(c=>{const sh=shapeOf(c);return `<div class="cd"><b>${esc(c)}</b>${sh?diagram(sh):`<small>${t('noDiagram')}</small>`}</div>`}).join('')}</div></div>
+  $('#practice').innerHTML=st.practice?`<div class="practice"><div><h4>${t('chordsTitle')(st.capo)}</h4><div class="chordgrid">${chordsOf(s).map(T2).filter((c,i,a)=>a.indexOf(c)===i).map(chordCard).join('')}</div></div>
     <div class="rhythm"><div><h4>${t('feel')}</h4><div class="v">${t('feels')[s.feel]||t('feels').straight8}<small>${s.time||'4/4'}</small></div></div>${s.strum?`<div><h4>${t('strum')}</h4><div class="strum">${esc(s.strum)}</div>${strumNote?`<div class="snote">${strumNote}</div>`:''}</div>`:''}</div></div>`:'';
   $('.songbody').classList.toggle('withside',st.practice);
+  $('#practice').onclick=e=>{const d=e.target.closest('[data-alts]');if(!d)return;const al=d.dataset.alts.split('|'),i=(+d.dataset.i+1)%al.length;d.dataset.i=i;
+    d.querySelector('svg').outerHTML=diagram(al[i]);d.querySelector('.edtag span').textContent=`${i+1}/${al.length}`;const hp=hpNote(al[i]),h=d.querySelector('.hp');if(h)h.remove();if(hp)d.insertAdjacentHTML('beforeend',`<small class="hp">${esc(hp)}</small>`)};
+  $('#practice').onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-alts]')){e.preventDefault();e.target.click()}};
   const sheet=$('#sheet');sheet.classList.toggle('cols2',st.cols);
   document.documentElement.style.setProperty('--sheet-size',st.size+'px');
   const C=c=>`<span class="ch">${esc(T2(c))}</span>`;
@@ -745,7 +852,7 @@ function drawSheet(){
       segs.some(g=>g.c)?`<div class="ln">${segs.map(g=>`<span class="seg"><span class="c">${g.c?C(g.c):''}</span><span class="l">${esc(g.l)||' '}</span></span>`).join('')}</div>`
       :`<div class="ln"><span class="l">${esc(segs.map(g=>g.l).join(''))}</span></div>`).join('')}</section>`).join('');
   }else{
-    drawStructured(s,C);
+    drawStructured(s,C);fitBars();
   }
 }
 function drawLyrPanel(){
@@ -794,9 +901,18 @@ function barSlots(bar,beats){
   if(bar.includes('-')||bar.length===beats)return bar;
   if(beats%bar.length===0){const k=beats/bar.length;return real.flatMap(c=>[c,...Array(k-1).fill('-')])}
   return bar}
-function barsHtml(r,C){const beats=beatsOf(st.song&&st.song.time);
-  return `<div class="rowline"><div class="bars">${r.b.map(bar=>{const sl=barSlots(bar,beats);
-    return `<div class="bar" style="grid-template-columns:${sl.map(c=>c==='-'?'minmax(0,1fr)':'minmax(max-content,1fr)').join(' ')}">${sl.map(c=>c==='-'?'<span class="bt" aria-hidden="true">·</span>':C(c)).join('')}</div>`}).join('')}</div><span class="rep">${r.x?`×${r.x}`:''}</span></div>`}
+const METER=/^\d{1,2}\/(4|8)$/;
+/* 小節塞不下（八分音符、和弦名很長）時：先縮小字，還是塞不下就一列改排兩小節 */
+function fitBars(){const over=b=>[...b.children].some(x=>x.scrollWidth>x.clientWidth+1);
+  document.querySelectorAll('#sheet .bars').forEach(b=>b.classList.remove('tight','dense'));
+  document.querySelectorAll('#sheet .bars').forEach(b=>{if(!over(b))return;b.classList.add('tight');if(over(b)){b.classList.remove('tight');b.classList.add('dense')}})}
+let fitT;addEventListener('resize',()=>{clearTimeout(fitT);fitT=setTimeout(fitBars,150)});if(document.fonts)document.fonts.ready.then(()=>fitBars());
+function barsHtml(r,C){const beats0=beatsOf(st.song&&st.song.time);
+  return `<div class="rowline"><div class="bars">${r.b.map(bar0=>{let bar=bar0,m='';if(bar.length>1&&METER.test(bar[0])){m=bar[0];bar=bar.slice(1)}
+    const beats=m?beatsOf(m):beats0,ts=m?`<svg class="tsig" viewBox="0 0 12 22" role="img" aria-label="${esc(m)}"><title>${esc(m)}</title><text x="6" y="10" text-anchor="middle">${m.split('/')[0]}</text><text x="6" y="21" text-anchor="middle">${m.split('/')[1]}</text></svg>`:'';
+    if(bar.length===1&&bar[0]==='-')return `<div class="bar rest${m?' hasts':''}">${ts}<span class="restm" role="img" aria-label="${t('restBar')}" title="${t('restBar')}"></span></div>`;
+    const sl=barSlots(bar,beats);
+    return `<div class="bar${m?' hasts':''}" style="grid-template-columns:${sl.map(c=>c==='-'?'minmax(0,1fr)':'minmax(max-content,1fr)').join(' ')}">${ts}${sl.map(c=>c==='-'?'<span class="bt" aria-hidden="true">·</span>':C(c)).join('')}</div>`}).join('')}</div><span class="rep">${r.x?`×${r.x}`:''}</span></div>`}
 function lyrLine(label,text,occ){if(!text&&!st.lyrOpen)return '';return `<div class="lyr${text?'':' ph'}" data-occ="${occ}"><span class="n">${label}</span><span class="lt">${text?esc(text):t('lyrEmpty')}</span></div>`}
 function drawStructured(s,C){
   const occs=songOccs(s),tot=occTotals(s),lyr=getLyr(s),changed=lyrChangedKeys(s,lyr),warnKeys=new Set(changed.map(x=>x.key));
@@ -1075,7 +1191,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#modal').hidden
 
 /* ---------- tooltip ---------- */
 document.addEventListener('mouseover',e=>{const c=e.target.closest('.ch');const tip=$('#tip');if(!c){tip.hidden=true;return}
-  const name=c.textContent;const sh=shapeOf(name);tip.innerHTML=`<b>${esc(name)}</b>${sh?diagram(sh):`<small>${t('noDiagramTip')}</small>`}`;tip.hidden=false;
+  const name=c.textContent;const sh=shapeFor(name);tip.innerHTML=`<b>${esc(name)}</b>${sh?diagram(sh):`<small>${t('noDiagramTip')}</small>`}`;tip.hidden=false;
   const r=c.getBoundingClientRect();const w=tip.offsetWidth,h=tip.offsetHeight;let x=r.left+r.width/2-w/2,y=r.top-h-8;if(y<8)y=r.bottom+8;x=Math.max(8,Math.min(innerWidth-w-8,x));tip.style.left=x+'px';tip.style.top=y+'px'});
 window.addEventListener('scroll',()=>{$('#tip').hidden=true},{passive:true});
 
