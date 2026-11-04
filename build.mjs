@@ -31,8 +31,8 @@ const parseFrets = f => { const s = f.replace(/\s+/g, '').replace(/[Ｘ×]/g, 'x
   const out = []; for (const t of toks) { if (/^\d{2}$/.test(t)) out.push(t[0], t[1]); else out.push(t.replace('-', 'h')); }
   return out.length === 6 ? out.join('') : null; };
 const ORDER_NAMES = ['順序', 'order', 'Order', 'ORDER'];
-// Obsidian 習慣寫法 → 網站寫法：♯→#、♭→b、△7→maj7、單獨的 △（大三和弦）拿掉、—→-
-const normChord = c => c.replace(/♯/g, '#').replace(/♭/g, 'b').replace(/△7/g, 'maj7').replace(/△/g, '').replace(/^[—–]$/, '-');
+// Obsidian 習慣寫法 → 網站寫法：♯→#、♭→b、△ 接數字是大七系列（△7→maj7、△9→maj9、△13→maj13）、單獨的 △（大三和弦）拿掉、—→-
+const normChord = c => c.replace(/♯/g, '#').replace(/♭/g, 'b').replace(/△(\d+)/g, 'maj$1').replace(/△/g, '').replace(/^[—–]$/, '-');
 const ONLY = /^(?:第\s*(\d+)\s*次[^:：|]*|末次|最後一次)\s*[:：]\s*/;
 const REPEAT = /^[×xX*]\s*(\d+)$/;
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
