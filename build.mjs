@@ -16,9 +16,20 @@ const SECTION = {
 };
 const SECTION_ZH = {intro:'前奏',verse:'主歌',prechorus:'導歌',chorus:'副歌',bridge:'橋段',solo:'間奏',outro:'尾奏',verse12:'主歌（12 小節）',solo12:'間奏（12 小節）'};
 const FEELS = {straight8:'平均八分',swing:'搖擺八分',shuffle:'三連音拖曳',straight16:'平均十六分',triplet:'12/8 三連音'};
-const GENRES = ['pop','folk','blues','rock','ballad','oldies'];
+// 曲風標籤：筆記寫中文（可 1～3 個），網站用英文代號；第一個決定卡片顏色
+const GENRE_ZH = {'抒情':'ballad','輕快':'upbeat','民謠':'folk','搖滾':'rock','爵士':'jazz','藍調':'blues','R&B':'rnb','RnB':'rnb','饒舌':'rap','影視歌曲':'ost','影視':'ost'};
+const GENRES = ['ballad','upbeat','folk','rock','jazz','blues','rnb','rap','ost'];
+const toGenre = g => GENRE_ZH[String(g).trim()] || (GENRES.includes(String(g).trim().toLowerCase()) ? String(g).trim().toLowerCase() : null);
 const LANGS = {zh:'華語',tw:'台語',yue:'粵語',en:'英文',ja:'日文',ko:'韓文',inst:'演奏曲',other:'其他'};
 const CHORD = /^[A-G][#b]?[^\s/|]*(\/[A-G][#b]?)?$/;
+const METER = /^(2|3|4|5|6|7|9|12)\/(4|8)$/;            // 小節開頭的拍號，例如 | 2/4 A |
+// 指法：6 碼，x／數字；搥弦、勾弦寫成 (2h3)、(3p2)，(2-3) 當成搥弦
+const FRET = /x|\d{1,2}|\(\d{1,2}[hp-]\d{1,2}\)/g;
+const parseFrets = f => { const s = f.replace(/\s+/g, '').replace(/[Ｘ×]/g, 'x').replace(/（/g, '(').replace(/）/g, ')');
+  const toks = s.match(FRET) || []; if (toks.join('') !== s) return null;
+  // 單一數字一碼：連續數字要拆開（x02122 → x 0 2 1 2 2），兩位數格數用括號外的空格寫法不支援
+  const out = []; for (const t of toks) { if (/^\d{2}$/.test(t)) out.push(t[0], t[1]); else out.push(t.replace('-', 'h')); }
+  return out.length === 6 ? out.join('') : null; };
 const ORDER_NAMES = ['順序', 'order', 'Order', 'ORDER'];
 // Obsidian 習慣寫法 → 網站寫法：♯→#、♭→b、△7→maj7、單獨的 △（大三和弦）拿掉、—→-
 const normChord = c => c.replace(/♯/g, '#').replace(/♭/g, 'b').replace(/△7/g, 'maj7').replace(/△/g, '').replace(/^[—–]$/, '-');
@@ -37,21 +48,38 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
   const { data: d, content } = parsed;
   for (const k of ['title', 'key']) if (!d[k]) errors.push(`${where}：缺少 ${k}`);
   if (d.feel && !FEELS[d.feel]) errors.push(`${where}：feel 必須是 ${Object.keys(FEELS).join(' / ')}`);
-  if (d.genre && !GENRES.includes(d.genre)) errors.push(`${where}：genre 必須是 ${GENRES.join(' / ')}`);
+  const gRaw = d.genre == null || d.genre === '' ? [] : Array.isArray(d.genre) ? d.genre : String(d.genre).split(/[,，、]/);
+  const genres = [];
+  gRaw.map(x => String(x).trim()).filter(Boolean).forEach(x => { const g = toGenre(x); if (!g) errors.push(`${where}：看不懂的曲風「${x}」（可用：${Object.keys(GENRE_ZH).filter(k => !['RnB','影視'].includes(k)).join('、')}）`); else if (!genres.includes(g)) genres.push(g); });
+  if (genres.length > 3) errors.push(`${where}：曲風最多 3 個`);
   if (d.language && !LANGS[d.language]) errors.push(`${where}：language 必須是 ${Object.keys(LANGS).join(' / ')}`);
   const added = d.added instanceof Date ? d.added.toISOString().slice(0, 10) : String(d.added || '');
   if (added && !/^\d{4}-\d{2}-\d{2}$/.test(added)) errors.push(`${where}：added 要寫成 2026-10-29 這種格式`);
 
-  const sections = [];
-  let cur = null, orderLines = null;
+  const sections = [], shapes = [];
+  let cur = null, orderLines = null, inShapes = false;
   content.split(/\r?\n/).forEach((raw, i) => {
     const line = raw.trim();
     const h = line.match(/^##\s+(.+)$/);
     if (h) {
       const name = h[1].trim();
+      inShapes = name === '指法';
+      if (inShapes) { orderLines = null; cur = null; return; }
       if (ORDER_NAMES.includes(name)) { orderLines = []; cur = null; return; }
       orderLines = null;
       cur = { name: SECTION[name] || SECTION[name.toLowerCase()] || name, raw: name, rows: [] }; sections.push(cur); return;
+    }
+    if (inShapes) {
+      if (!line) return;
+      const m = line.replace(/^[-*]\s*/, '').match(/^(.+?)\s*(?:[（(]\s*capo\s*(\d+)\s*[)）])?\s*[＝=]\s*(.+)$/i);
+      if (!m) { errors.push(`${where} 第 ${i + 1} 行：指法要寫成「F7/A（Capo 3）＝2x453x」`); return; }
+      const c = normChord(m[1].trim()), capo = Number(m[2]) || 0;
+      if (!CHORD.test(c)) { errors.push(`${where} 第 ${i + 1} 行：指法的和弦名稱看不懂「${m[1]}」`); return; }
+      const f = m[3].split(/[、,，]/).map(x => x.trim()).filter(Boolean).map(x => ({ x, p: parseFrets(x) }));
+      const bad = f.filter(x => !x.p);
+      if (bad.length || !f.length) { errors.push(`${where} 第 ${i + 1} 行：指法要 6 碼（第 6 弦到第 1 弦），看不懂「${bad.map(x => x.x).join('、') || m[3]}」`); return; }
+      shapes.push({ c, capo, f: f.map(x => x.p) });
+      return;
     }
     if (orderLines) { if (line) orderLines.push({ line, i }); return; }
     let body = line, only;
@@ -66,7 +94,10 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
       if (rm) x = Number(rm[1]); else errors.push(`${where} 第 ${i + 1} 行：行尾看不懂「${tail}」（重複請寫 ×2）`);
     }
     const bars = parts.map(b => b.trim()).filter(Boolean).map(b => b.split(/\s+/).map(normChord));
-    bars.flat().forEach(c => { if (!CHORD.test(c) && c !== '%' && c !== '-') errors.push(`${where} 第 ${i + 1} 行：看不懂的和弦「${c}」`); });
+    bars.forEach(b => b.forEach((c, j) => {
+      if (j === 0 && METER.test(c)) { if (b.length < 2) errors.push(`${where} 第 ${i + 1} 行：拍號「${c}」後面要接和弦或 -`); return; }
+      if (!CHORD.test(c) && c !== '%' && c !== '-') errors.push(`${where} 第 ${i + 1} 行：看不懂的和弦「${c}」`);
+    }));
     if (!bars.length) return;
     const row = { b: bars };
     if (x && x > 1) row.x = x;
@@ -98,7 +129,7 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
     id, title: String(d.title || id), artist: String(d.artist || ''), key: String(d.key || 'C'),
     capo: Number(d.capo) || 0, bpm: Number(d.bpm) || 90, time: String(d.time || '4/4'),
     feel: d.feel || 'straight8', strum: String(d.strum || ''), strumNote: String(d.strum_note || ''), strumNoteEn: String(d.strum_note_en || ''),
-    diff: Number(d.level) || 1, genre: d.genre || 'pop', language: d.language || 'other', added, sections, order
+    diff: Number(d.level) || 1, genres, genre: genres[0] || '', shapes, language: d.language || 'other', added, sections, order
   };
 }).filter(Boolean);
 
