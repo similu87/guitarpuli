@@ -11,7 +11,7 @@ strum: "x ↑↑↓ x ↑↑↓"
 strum_note: "指法 T1 (32)1 T1 (32)1；x 為切音"
 level: 1
 language: zh
-genre: pop
+genre: [輕快, 饒舌]
 added: 2026-11-01
 ---
 

@@ -11,7 +11,7 @@ strum: "x ↑↑↓ x ↑↑↓"
 strum_note: "指法 T1 23 (延音) 1 21；x 為切音"
 level: 2
 language: zh
-genre: ballad
+genre: [抒情, 民謠]
 added: 2026-11-01
 ---
 
@@ -53,3 +53,9 @@ added: 2026-11-01
 
 ## 順序
 前奏 → 主歌 → 副歌 → 主歌 → 副歌2 → 間奏 → 副歌3 → 尾奏
+
+## 指法
+Dm11＝xx0213
+G#maj7＝4x554x
+G/Bb＝x10030
+Am7/G＝3x2010、3xx213

@@ -11,7 +11,7 @@ strum: "x ↑↑↓ x ↑↑↓"
 strum_note: "指法 T1 21 T1 21；x 為切音"
 level: 1
 language: tw
-genre: ballad
+genre: [抒情]
 added: 2026-11-01
 ---
 

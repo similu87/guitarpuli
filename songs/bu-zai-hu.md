@@ -11,7 +11,7 @@ strum: "x ↑↑↓ x ↑↑↓"
 strum_note: "x 為切音"
 level: 2
 language: zh
-genre: rock
+genre: [搖滾, 輕快]
 added: 2026-11-01
 ---
 

@@ -10,7 +10,7 @@ feel: straight8
 strum: ""
 level: 1
 language: zh
-genre: pop
+genre: [輕快, 影視歌曲]
 added: 2026-11-01
 ---
 
@@ -53,3 +53,7 @@ added: 2026-11-01
 
 ## 順序
 前奏 → 主歌 → 副歌前 → 副歌 → 間奏 → 主歌 → 副歌前2 → 副歌2（升 F 調） → 尾奏（F 調）
+
+## 指法
+F7/A（Capo 3）＝2x453x
+Cm7/Bb（Capo 3）＝3x2010

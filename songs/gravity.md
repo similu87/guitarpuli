@@ -10,7 +10,7 @@ feel: triplet
 strum: ""
 level: 2
 language: en
-genre: blues
+genre: [藍調, 抒情, 搖滾]
 added: 2026-10-30
 ---
 
@@ -31,3 +31,6 @@ added: 2026-10-30
 
 ## 順序
 Intro → Verse → Chorus → Verse → Chorus → Bridge → Chorus → Verse → Outro
+
+## 指法
+Gm/B♭＝6x878x

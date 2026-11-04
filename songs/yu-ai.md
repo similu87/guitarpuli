@@ -10,7 +10,7 @@ feel: straight8
 strum: ""
 level: 2
 language: zh
-genre: ballad
+genre: [抒情, 影視歌曲]
 added: 2026-11-01
 ---
 
@@ -47,3 +47,6 @@ added: 2026-11-01
 
 ## 順序
 前奏 → 主歌 → 副歌 → 間奏 → 主歌2 → 副歌2 → 尾奏
+
+## 指法
+Am6＝x02212

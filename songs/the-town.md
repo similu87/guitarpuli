@@ -10,7 +10,7 @@ feel: triplet
 strum: ""
 level: 3
 language: ko
-genre: ballad
+genre: [抒情, 搖滾, 影視歌曲]
 added: 2026-10-30
 ---
 
