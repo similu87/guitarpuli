@@ -57,7 +57,7 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
   if (added && !/^\d{4}-\d{2}-\d{2}$/.test(added)) errors.push(`${where}：added 要寫成 2026-10-29 這種格式`);
 
   const sections = [], shapes = [];
-  let cur = null, orderLines = null, inShapes = false;
+  let cur = null, orderLines = null, inShapes = false, orderAll = null;
   content.split(/\r?\n/).forEach((raw, i) => {
     const line = raw.trim();
     const h = line.match(/^##\s+(.+)$/);
@@ -65,7 +65,7 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
       const name = h[1].trim();
       inShapes = name === '指法';
       if (inShapes) { orderLines = null; cur = null; return; }
-      if (ORDER_NAMES.includes(name)) { orderLines = []; cur = null; return; }
+      if (ORDER_NAMES.includes(name)) { orderLines = orderAll = []; cur = null; return; }
       orderLines = null;
       cur = { name: SECTION[name] || SECTION[name.toLowerCase()] || name, raw: name, rows: [] }; sections.push(cur); return;
     }
@@ -108,7 +108,8 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
 
   // 順序：「主歌 ×2 → 副歌 → 間奏 → 副歌」；沒寫就照段落由上到下
   let order = sections.map((_, k) => k);
-  if (orderLines && orderLines.length) {
+  if (orderAll && orderAll.length) {  // 順序後面還有其他段落（例如 ## 指法）也不會弄丟
+    orderLines = orderAll;
     order = [];
     orderLines.forEach(({ line, i }) => line.split(/\s*(?:→|->|➜|,|，)\s*/).filter(Boolean).forEach(tok => {
       const m = tok.match(/^(.*?)\s*(?:[×xX*]\s*(\d+))?$/);
