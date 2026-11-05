@@ -25,7 +25,7 @@ const CHORD = /^[A-G][#b]?[^\s/|]*(\/[A-G][#b]?)?$/;
 const METER = /^(2|3|4|5|6|7|9|12)\/(4|8)$/;            // 小節開頭的拍號，例如 | 2/4 A |
 // 指法：6 碼，x／數字；搥弦、勾弦寫成 (2h3)、(3p2)，(2-3) 當成搥弦
 const FRET = /x|\d{1,2}|\(\d{1,2}[hp-]\d{1,2}\)/g;
-const parseFrets = f => { const s = f.replace(/\s+/g, '').replace(/[Ｘ×]/g, 'x').replace(/（/g, '(').replace(/）/g, ')');
+const parseFrets = f => { const s = f.replace(/\s+/g, '').replace(/[ＸX×]/g, 'x').replace(/（/g, '(').replace(/）/g, ')');
   const toks = s.match(FRET) || []; if (toks.join('') !== s) return null;
   // 單一數字一碼：連續數字要拆開（x02122 → x 0 2 1 2 2），兩位數格數用括號外的空格寫法不支援
   const out = []; for (const t of toks) { if (/^\d{2}$/.test(t)) out.push(t[0], t[1]); else out.push(t.replace('-', 'h')); }
@@ -33,8 +33,24 @@ const parseFrets = f => { const s = f.replace(/\s+/g, '').replace(/[Ｘ×]/g, 'x
 const ORDER_NAMES = ['順序', 'order', 'Order', 'ORDER'];
 // Obsidian 習慣寫法 → 網站寫法：♯→#、♭→b、△ 接數字是大七系列（△7→maj7、△9→maj9、△13→maj13）、單獨的 △（大三和弦）拿掉、—→-
 const normChord = c => c.replace(/♯/g, '#').replace(/♭/g, 'b').replace(/△(\d+)/g, 'maj$1').replace(/△/g, '').replace(/^[—–]$/, '-');
-const ONLY = /^(?:第\s*(\d+)\s*次[^:：|]*|末次|最後一次)\s*[:：]\s*/;
+const CAPO = /\s*[（(]\s*capo\s*(\d+)\s*[)）]/i;          // 段落標題或「末次」後面的 (Capo 3)：這一段換 Capo
+const ONLY = /^(?:第\s*(\d+)\s*次[^:：|(（]*|末次|最後一次)\s*(?:[（(]\s*capo\s*(\d+)\s*[)）])?\s*[:：]\s*/i;
+// 刷法：D 下刷、U 上刷、- 空拍、x 切音，一個字一格；律動決定一小節幾格
+const STRUM_SLOTS = {straight8:8,straight16:16,swing:8,shuffle:8,triplet:12};
+const STRUM_RE = /^[DUX-]+$/i;
 const REPEAT = /^[×xX*]\s*(\d+)$/;
+// 調弦：6 個音，從第 6 弦寫到第 1 弦，例如 E A E A C# E；標準調弦（E A D G B E）不顯示
+const normTuning = t => { const s = String(t ?? '').replace(/♯/g, '#').replace(/♭/g, 'b').trim(); if (!s) return '';
+  const notes = s.match(/[A-G][#b]?/g) || []; if (notes.join('') !== s.replace(/[\s,，、\-–—]/g, '')) return null;
+  if (notes.length !== 6) return null; const out = notes.join(' '); return out === 'E A D G B E' ? '' : out; };
+const SH = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'], FL = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'], ODD = {Cb:11,Fb:4,'E#':5,'B#':0};
+const nIdx = n => SH.includes(n) ? SH.indexOf(n) : FL.includes(n) ? FL.indexOf(n) : (n in ODD ? ODD[n] : -1);
+const keyFlat = k => { const m = String(k).match(/^([A-G][#b]?)(m?)$/); if (!m) return false; let i = nIdx(m[1]); if (m[2]) i = (i + 3) % 12; return [5,10,3,8,1].includes(i); };
+const tKey = (k, d) => { const m = String(k).match(/^([A-G][#b]?)(m?)$/); if (!m) return k; const i = ((nIdx(m[1]) + d) % 12 + 12) % 12; const rel = m[2] ? (i + 3) % 12 : i; return ([5,10,3,8,1].includes(rel) ? FL : SH)[i] + m[2]; };
+// 實際音高 → 夾 Capo 後手上按的和弦名稱（跟網站畫面的預設顯示一樣）
+const shapeName = (c, capo, key) => { if (!capo || !/^[A-G]/.test(c)) return c; const flat = keyFlat(tKey(key, -capo));
+  const tn = n => { const i = nIdx(n); return i < 0 ? n : (flat ? FL : SH)[((i - capo) % 12 + 12) % 12]; };
+  const m = c.match(/^([A-G][#b]?)([^/]*)(?:\/([A-G][#b]?))?$/); return m ? tn(m[1]) + m[2] + (m[3] ? '/' + tn(m[3]) : '') : c; };
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 const errors = [];
@@ -57,7 +73,7 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
   if (added && !/^\d{4}-\d{2}-\d{2}$/.test(added)) errors.push(`${where}：added 要寫成 2026-10-29 這種格式`);
 
   const sections = [], shapes = [];
-  let cur = null, orderLines = null, inShapes = false, orderAll = null;
+  let cur = null, orderLines = null, inShapes = false, orderAll = null, block;
   content.split(/\r?\n/).forEach((raw, i) => {
     const line = raw.trim();
     const h = line.match(/^##\s+(.+)$/);
@@ -66,8 +82,11 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
       inShapes = name === '指法';
       if (inShapes) { orderLines = null; cur = null; return; }
       if (ORDER_NAMES.includes(name)) { orderLines = orderAll = []; cur = null; return; }
-      orderLines = null;
-      cur = { name: SECTION[name] || SECTION[name.toLowerCase()] || name, raw: name, rows: [] }; sections.push(cur); return;
+      orderLines = null; block = undefined;
+      const cm = name.match(CAPO), nm0 = name.replace(CAPO, '').trim();
+      cur = { name: SECTION[nm0] || SECTION[nm0.toLowerCase()] || nm0, raw: nm0, rows: [] };
+      if (cm) cur.capo = Number(cm[1]);
+      sections.push(cur); return;
     }
     if (inShapes) {
       if (!line) return;
@@ -82,18 +101,22 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
       return;
     }
     if (orderLines) { if (line) orderLines.push({ line, i }); return; }
-    let body = line, only;
+    let body = line, only, rcapo;
     const om = body.match(ONLY);
-    if (om) { only = om[1] ? Number(om[1]) : 'last'; body = body.slice(om[0].length).trim(); }
+    if (om) { only = om[1] ? Number(om[1]) : 'last'; if (om[2]) rcapo = Number(om[2]); body = body.slice(om[0].length).trim();
+      // 「第1次副歌:」單獨一行：底下的列都只在那一次彈，直到下一個標記或下一段
+      if (!body) { block = { only, capo: rcapo }; return; }
+      block = undefined;
+    } else if (block && body.startsWith('|')) { only = block.only; rcapo = block.capo; }
     if (!body.startsWith('|')) return;
     if (!cur) { cur = { name: '', raw: '', rows: [] }; sections.push(cur); }
     const parts = body.split('|');
-    // 行尾可以寫 ×2（這列彈兩次）和 詞3（這列每彈一次唱 3 行歌詞），順序不拘
-    let tail = parts.pop().trim(), x, ly;
+    // 行尾可以寫 ×2（這列彈兩次）；舊的「詞3」已停用，寫了也不影響
+    let tail = parts.pop().trim(), x;
     for (const tok of tail ? tail.split(/\s+/) : []) {
-      const rm = tok.match(REPEAT), lm = tok.match(/^詞(\d+)$/);
-      if (rm) x = Number(rm[1]); else if (lm) ly = Number(lm[1]);
-      else errors.push(`${where} 第 ${i + 1} 行：行尾看不懂「${tok}」（重複寫 ×2、每列唱幾行寫 詞3）`);
+      const rm = tok.match(REPEAT);
+      if (rm) x = Number(rm[1]); else if (/^詞\d+$/.test(tok)) continue;
+      else errors.push(`${where} 第 ${i + 1} 行：行尾看不懂「${tok}」（重複寫 ×2）`);
     }
     const bars = parts.map(b => b.trim()).filter(Boolean).map(b => b.split(/\s+/).map(normChord));
     bars.forEach(b => b.forEach((c, j) => {
@@ -103,8 +126,8 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
     if (!bars.length) return;
     const row = { b: bars };
     if (x && x > 1) row.x = x;
-    if (ly && ly !== 1) row.ly = ly;
     if (only !== undefined) row.only = only;
+    if (rcapo !== undefined) row.capo = rcapo;
     cur.rows.push(row);
   });
   if (!sections.some(s => s.rows.length)) errors.push(`${where}：沒有任何和弦列（每列要用 | 開頭）`);
@@ -129,11 +152,18 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
     delete s.raw;
   });
 
+  const strumRaw = String(d.strum || '').replace(/\s+/g, '');
+  if (strumRaw && STRUM_RE.test(strumRaw)) {
+    const n = STRUM_SLOTS[d.feel || 'straight8'] || 8;
+    if (strumRaw.length % n) errors.push(`${where}：刷法「${d.strum}」有 ${strumRaw.length} 格，${FEELS[d.feel || 'straight8']}一小節要 ${n} 格（或 ${n * 2} 格兩小節）`);
+  }
+  const tuning = normTuning(d.tuning);
+  if (tuning === null) errors.push(`${where}：調弦「${d.tuning}」看不懂，要寫 6 個音，從第 6 弦寫到第 1 弦，例如 E A E A C# E`);
   return {
     id, title: String(d.title || id), artist: String(d.artist || ''), key: String(d.key || 'C'),
     capo: Number(d.capo) || 0, bpm: Number(d.bpm) || 90, time: String(d.time || '4/4'),
     feel: d.feel || 'straight8', strum: String(d.strum || ''), strumNote: String(d.strum_note || ''), strumNoteEn: String(d.strum_note_en || ''),
-    diff: Number(d.level) || 1, genres, genre: genres[0] || '', shapes, language: d.language || 'other', added, sections, order
+    diff: Number(d.level) || 1, ...(tuning ? { tuning } : {}), genres, genre: genres[0] || '', shapes, language: d.language || 'other', added, sections, order
   };
 }).filter(Boolean);
 
@@ -188,9 +218,11 @@ for (const s of songs) {
   const chart = s.order.map(k => {
     const sec = s.sections[k]; cnt[k] = (cnt[k] || 0) + 1; const n = cnt[k];
     const rows = sec.rows.filter(r => r.only === undefined || r.only === n || (r.only === 'last' && n === total[k]));
-    return `<h2>${esc(SECTION_ZH[sec.name] || sec.name)}${total[k] > 1 ? `（第 ${n} 次）` : ''}</h2><pre>${rows.map(r => '| ' + r.b.map(b => b.join(' ')).join(' | ') + ' |' + (r.x ? ' ×' + r.x : '')).join('\n')}</pre>`;
+    // 跟畫面一樣：顯示夾 Capo 後的按法
+    const capOf = r => r.capo ?? sec.capo ?? s.capo;
+    return `<h2>${esc(SECTION_ZH[sec.name] || sec.name)}${total[k] > 1 ? `（第 ${n} 次）` : ''}${sec.capo !== undefined ? `（Capo ${sec.capo}）` : ''}</h2><pre>${rows.map(r => (r.capo !== undefined ? `（Capo ${r.capo}）` : '') + '| ' + r.b.map(b => b.map(c => shapeName(c, capOf(r), s.key)).join(' ')).join(' | ') + ' |' + (r.x ? ' ×' + r.x : '')).join('\n')}</pre>`;
   }).join('');
-  const body = `<div id="app"><article class="prose"><h1>${esc(s.title)}</h1><p>${esc(s.artist)} · 原調 ${esc(s.key)}${s.capo ? ` · Capo ${s.capo}` : ''} · ${s.bpm} BPM · ${esc(s.time)} · ${FEELS[s.feel]} · ${LANGS[s.language]}</p>${s.strum ? `<p>刷法：${esc(s.strum)}</p>` : ''}${chart}</article></div>`;
+  const body = `<div id="app"><article class="prose"><h1>${esc(s.title)}</h1><p>${esc(s.artist)} · 原調 ${esc(s.key)}${s.capo ? ` · Capo ${s.capo}` : ''}${s.tuning ? ` · 調弦 ${esc(s.tuning)}` : ''} · ${s.bpm} BPM · ${esc(s.time)} · ${FEELS[s.feel]} · ${LANGS[s.language]}</p>${s.strum ? `<p>刷法：${esc(s.strum)}</p>` : ''}${chart}</article></div>`;
   const html = shell.replace('<title>吉他普利</title>', head).replace('<div id="app"></div>', body);
   fs.mkdirSync(path.join(PUB, 'song', s.id), { recursive: true });
   fs.writeFileSync(path.join(PUB, 'song', s.id, 'index.html'), html);
