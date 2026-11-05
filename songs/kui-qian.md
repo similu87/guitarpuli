@@ -23,7 +23,7 @@ added: 2026-11-04
 
 ## 副歌前
 | Bbmaj9 | Ebmaj7(#11) | Bbmaj9 | Am11 Ab7(b5) |
-| Gm7 | C7sus4 C7 | F7sus4 | Bbmaj7 Bbmaj7(13) |
+| Gm7 | C7sus4 C7 | F7sus4 | Bbmaj7 Bbmaj13 |
 
 ## 副歌
 | Cm9 Cm9/F | Bbsus2 Bbsus2/G |
@@ -43,7 +43,7 @@ added: 2026-11-04
 | Cm9 Cm9/F | Bbsus2 Bbsus2/G |
 | Cm9 Cm9/F | Bbsus2 Bbsus2/G |
 | Em7 A7 | Dm7 - - G7 |
-| Cm7 F7sus4 | Bbmaj7 Bbmaj7(13) |
+| Cm7 F7sus4 | Bbmaj7 Bbmaj13 |
 
 ## 副歌3
 | Cm9 Cm9/F | Bbsus2 Bbsus2/G |
@@ -53,7 +53,7 @@ added: 2026-11-04
 
 ## 尾奏
 | Bbmaj9 | Ebmaj9(#11) | Bbmaj9 | Am11 Ab7(b5) |
-| Gm7 | C7sus4 C7 | F7sus4 | Bbmaj7 Cdim/Bb |
+| Gm7 | C7sus4 C7 | F7sus4 | Bbmaj7 Cdim7/Bb |
 
 ## 順序
 前奏 → 主歌 ×2 → 副歌 → 主歌2 → 間奏 → 副歌 ×2 → 尾奏
@@ -76,3 +76,8 @@ Gm11（Capo 1）＝2x220x
 F#m6(maj7)（Capo 1）＝1x213x
 Am11（Capo 1）＝4x442x
 Ab7(b5)（Capo 1）＝3x342x
+C7sus4 （Capo 1）＝X24252
+C7（Capo 1）＝X24242
+Em7（Capo 1）＝X68676
+Dm7（Capo 1）＝X46454
+A7（Capo 1）＝464544
