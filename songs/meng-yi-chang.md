@@ -48,3 +48,5 @@ Em7/A（Capo 2）＝3x0211
 Bm7（Capo 2）＝x02013
 A/C#（Capo 2）＝x20030
 Em9（Capo 2）＝x5(2h3)53x
+Bm11（Capo 2）＝x02030
+Gm/D（Capo 2）＝X33111
