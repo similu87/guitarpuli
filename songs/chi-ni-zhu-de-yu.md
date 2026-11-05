@@ -18,17 +18,17 @@ added: 2026-11-04
 | G | G |
 
 ## 主歌
-| G | Bm | Cadd9 | Cm | ×2
+| G | Bm | Cadd9 | Cm | ×2 詞3
 
 ## 副歌
-| G | Bm | Cadd9 | Cm | ×2
+| G | Bm | Cadd9 | Cm | ×2 詞2
 
 ## 間奏
 | G G/F | Cadd9 Cm |
 | G G/F | Cadd9 - - Cm - - - - | 2/4 Cm |
 
 ## 副歌2
-| G | Bm | Cadd9 | Cm | ×4
+| G | Bm | Cadd9 | Cm | ×4 詞2
 
 ## 尾奏
 | G G/F | Cadd9 Cm | ×4
