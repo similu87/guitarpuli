@@ -88,10 +88,12 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
     if (!body.startsWith('|')) return;
     if (!cur) { cur = { name: '', raw: '', rows: [] }; sections.push(cur); }
     const parts = body.split('|');
-    let tail = parts.pop().trim(), x;
-    if (tail) {
-      const rm = tail.match(REPEAT);
-      if (rm) x = Number(rm[1]); else errors.push(`${where} 第 ${i + 1} 行：行尾看不懂「${tail}」（重複請寫 ×2）`);
+    // 行尾可以寫 ×2（這列彈兩次）和 詞3（這列每彈一次唱 3 行歌詞），順序不拘
+    let tail = parts.pop().trim(), x, ly;
+    for (const tok of tail ? tail.split(/\s+/) : []) {
+      const rm = tok.match(REPEAT), lm = tok.match(/^詞(\d+)$/);
+      if (rm) x = Number(rm[1]); else if (lm) ly = Number(lm[1]);
+      else errors.push(`${where} 第 ${i + 1} 行：行尾看不懂「${tok}」（重複寫 ×2、每列唱幾行寫 詞3）`);
     }
     const bars = parts.map(b => b.trim()).filter(Boolean).map(b => b.split(/\s+/).map(normChord));
     bars.forEach(b => b.forEach((c, j) => {
@@ -101,6 +103,7 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
     if (!bars.length) return;
     const row = { b: bars };
     if (x && x > 1) row.x = x;
+    if (ly && ly !== 1) row.ly = ly;
     if (only !== undefined) row.only = only;
     cur.rows.push(row);
   });
