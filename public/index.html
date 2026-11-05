@@ -367,6 +367,15 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .lbox label{font-size:13px;font-weight:700;display:flex;justify-content:space-between;gap:8px;align-items:center}
 .lbox label span.cnt{font-weight:400;color:var(--muted);font-size:12px}
 .lbox label span.cnt.bad{color:var(--g-rock)}
+.lbox label{justify-content:flex-start;min-height:28px}.lbox label .cnt{margin-left:2px}.lbox .mv{display:inline-flex;gap:4px;margin-left:auto}
+.lbox .mv button{width:26px;height:24px;border:1px solid var(--line);border-radius:6px;background:var(--surface);font-size:12px;line-height:1;padding:0}
+.lbox .mv button:hover{border-color:var(--muted)}
+.lpaste{border:1px dashed var(--line);border-radius:10px;padding:8px 12px;background:var(--bg)}
+.lpaste summary{cursor:pointer;font-weight:700;font-size:13.5px;color:var(--brass)}
+.lpaste p{margin:6px 0;font-size:12.5px;color:var(--muted)}
+.lpaste textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--surface);font-size:14px;resize:vertical}
+.lpaste .btns{display:flex;align-items:center;gap:10px;margin-top:8px}
+.lres{font-size:13px;color:var(--chord)}.lres.bad{color:var(--g-rock)}
 .viewbtns .seg-toggle{margin-left:0;overflow:visible}
 .viewbtns .seg-toggle button{height:30px}
 .viewbtns .seg-toggle button:first-child{border-radius:5px 0 0 5px}.viewbtns .seg-toggle button:last-child{border-radius:0 5px 5px 0}
@@ -527,7 +536,7 @@ home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲明',c
   strumNote:{late:'後半拍稍微延後',down:'全部下刷'},
   sec:{solo:'間奏',intro:'前奏',verse:'主歌',verse12:'主歌（12 小節）',solo12:'間奏（12 小節）',prechorus:'導歌',chorus:'副歌',bridge:'橋段',outro:'尾奏'},
   lyrHelp:n=>`每一格是「某段的第幾次」，一行歌詞對一列和弦，空白行代表那一列沒有歌詞。切換完整、精簡時歌詞都從這裡讀，不會跑掉。內容只存在你的瀏覽器，不會上傳到網站。`,lyrHelpAcct:n=>`每一格是「某段的第幾次」，一行歌詞對一列和弦，空白行代表那一列沒有歌詞。切換完整、精簡時歌詞都從這裡讀，不會跑掉。歌詞會存到你的帳號，手機和電腦都看得到，其他人看不到。`,lyrPh:'第 1 行歌詞\n第 2 行歌詞\n…',
-  lyrSave:'儲存歌詞',lyrSaved:'已儲存',lyrClose:'收起',lyrLine:n=>`第 ${n} 行歌詞`,
+  lyrPaste:'貼上整首歌詞，自動分到各段',lyrPasteHelp:'從歌詞網站整首複製貼上，按「自動分段」。作詞作曲、（間奏）、裝飾符號會自動刪掉，再依每段需要的行數由上到下填進下面的格子。對不準的地方用每格右上的 ↑↓ 把一行移到上一段或下一段。',lyrPastePh:'在這裡貼上整首歌詞',lyrFill:'自動分段',lyrNone:'沒有讀到歌詞',lyrResult:(a,n)=>a===n?`共 ${a} 行，剛好對上 ✓`:a>n?`共 ${a} 行，比需要的多 ${a-n} 行（多的放在最後一段）`:`共 ${a} 行，比需要的少 ${n-a} 行`,lyrMvUp:'把第一行移到上一段',lyrMvDown:'把最後一行移到下一段',lyrSave:'儲存歌詞',lyrSaved:'已儲存',lyrClose:'收起',lyrLine:n=>`第 ${n} 行歌詞`,
   editTitle:'編輯譜',newTitle:'新增譜',fTitle:'歌名',fArtist:'歌手',fKey:'原調（實際音高）',fCapo:'建議 Capo',capoNo:'不夾',fFeel:'律動',fTime:'拍號',fStrum:'刷法',
   fBody:'歌詞與和弦（寫實際音高的和弦）',hint:'和弦放在方括號裡：<code>[G]歌詞[D]歌詞</code>。段落標題寫 <code>{c: 副歌}</code> 或 <code># 副歌</code>，空一行分段。',
   btnSave:'儲存',btnCancel:'取消',btnDel:'刪除',delConfirm:'再按一次確認刪除',needTitle:'請先填歌名',
@@ -560,7 +569,7 @@ home:'Home',library:'My Library',theme:'Theme',legal:'Copyright',changelog:'Chan
   strumNote:{late:'lay back on the upbeat',down:'all downstrokes'},
   sec:{solo:'Solo',intro:'Intro',verse:'Verse',verse12:'Verse (12-bar)',solo12:'Solo (12-bar)',prechorus:'Pre-Chorus',chorus:'Chorus',bridge:'Bridge',outro:'Outro'},
   lyrHelp:n=>`Each box is one pass through a section. One line of lyrics goes under one row of chords; leave a line blank to skip a row. Switching between Full and Compact reads from here, so lyrics stay in place. Your lyrics stay in this browser and are never uploaded.`,lyrHelpAcct:n=>`Each box is one pass through a section. One line of lyrics goes under one row of chords; leave a line blank to skip a row. Switching between Full and Compact reads from here, so lyrics stay in place. Lyrics are saved to your account, so they show up on all your devices. Nobody else can see them.`,lyrPh:'Line 1\nLine 2\n…',
-  lyrSave:'Save Lyrics',lyrSaved:'Saved',lyrClose:'Close',lyrLine:n=>`Line ${n}`,
+  lyrPaste:'Paste the whole song and split it automatically',lyrPasteHelp:'Copy the full lyrics from a lyrics site, paste them here and press Split. Credits, (interlude) markers and decorations are removed, then lines fill the boxes below in order using how many lines each section needs. Use ↑↓ on each box to move a line to the previous or next section.',lyrPastePh:'Paste the whole song here',lyrFill:'Split',lyrNone:'No lyrics found',lyrResult:(a,n)=>a===n?`${a} lines — perfect match ✓`:a>n?`${a} lines, ${a-n} more than needed (extras go in the last box)`:`${a} lines, ${n-a} fewer than needed`,lyrMvUp:'Move the first line to the previous section',lyrMvDown:'Move the last line to the next section',lyrSave:'Save Lyrics',lyrSaved:'Saved',lyrClose:'Close',lyrLine:n=>`Line ${n}`,
   editTitle:'Edit Sheet',newTitle:'New Sheet',fTitle:'Title',fArtist:'Artist',fKey:'Key (concert pitch)',fCapo:'Suggested capo',capoNo:'None',fFeel:'Feel',fTime:'Time',fStrum:'Strumming',
   fBody:'Lyrics and chords (write chords in concert pitch)',hint:'Put chords in brackets: <code>[G]lyric[D]lyric</code>. Mark sections with <code>{c: Chorus}</code> or <code># Chorus</code>, and leave a blank line between sections.',
   btnSave:'Save',btnCancel:'Cancel',btnDel:'Delete',delConfirm:'Click again to delete',needTitle:'Title required',
@@ -877,19 +886,42 @@ function drawSheet(){
     drawStructured(s,C);fitBars();
   }
 }
+/* 歌詞網站複製來的雜訊：作詞作曲、時間碼、（間奏）標記、裝飾符號、網址 */
+function cleanLyrics(txt){
+  const credit=/^(作詞|作曲|編曲|監製|製作人?|詞|曲|演唱|原唱|Lyricist|Composer|Lyrics|Music|Arrange[rd]?|Producer)\s*[:：]/i;
+  const junk=/(https?:|www\.|魔鏡|KKBOX|mojim|歌詞網|更多更詳盡|完唷|好聽|※|^\W*(間奏|前奏|尾奏|music|repeat|interlude|solo)\W*$)/i;
+  return String(txt).replace(/\r/g,'').split('\n').map(l=>l.replace(/\[\d{1,2}:\d{2}(?:[.:]\d{1,3})?\]/g,'').replace(/^\s*(合|男|女|Rap|RAP|和聲)\s*[:：]\s*/,'').trim())
+    .filter(l=>l&&!credit.test(l)&&!junk.test(l)&&/[\p{L}\p{N}]/u.test(l)&&!/^[\s*＊~～︿﹀←→↑↓♪♫☆★·•\-—=_.。…]+$/.test(l))}
 function drawLyrPanel(){
   const p=$('#lyrpanel');if(!st.lyrOpen){p.innerHTML='';drawSheet();return}
   const s=st.song,occs=songOccs(s),lyr=getLyr(s),tot=occTotals(s);
   const boxes=occs.filter(o=>!isInst(o.sec)).map(o=>{const cur=(lyr.L[o.key]||{})[o.n]||[];const id=`lt-${o.k}-${o.n}`;
     return `<div class="lbox"><label for="${id}"><span>${esc(secName(o.sec.name))}${tot[o.k]>1?nb(o.n):''}</span><span class="cnt ${cur.length===o.lines?'':'bad'}">${t('lyrLines')(cur.length,o.lines)}</span></label><textarea id="${id}" rows="${Math.max(o.lines,3)}" data-key="${esc(o.key)}" data-n="${o.n}" data-lines="${o.lines}">${esc(cur.join('\n'))}</textarea></div>`}).join('');
-  p.innerHTML=`<div class="lyrpanel"><p>${user?t('lyrHelpAcct')():t('lyrHelp')()}</p><div class="lboxes">${boxes}</div>
+  p.innerHTML=`<div class="lyrpanel"><p>${user?t('lyrHelpAcct')():t('lyrHelp')()}</p>
+  <details class="lpaste"${st.pasteOpen?' open':''}><summary>${t('lyrPaste')}</summary><p>${t('lyrPasteHelp')}</p><textarea id="lyrall" rows="8" placeholder="${esc(t('lyrPastePh'))}"></textarea>
+  <div class="btns"><button class="btn pri" id="lyrfill">${t('lyrFill')}</button><span class="lres" id="lyrres" role="status"></span></div></details>
+  <div class="lboxes">${boxes}</div>
   <div class="btns"><button class="btn pri" id="lyrsave">${t('lyrSave')}</button><button class="btn" id="lyrclose">${t('lyrClose')}</button></div></div>`;
   const save=ta=>{const l=getLyr(s);const lines=ta.value.split('\n');while(lines.length&&lines[lines.length-1]==='')lines.pop();
     (l.L[ta.dataset.key]=l.L[ta.dataset.key]||{})[ta.dataset.n]=lines;setLyr(s,l);
     const c=ta.previousElementSibling.querySelector('.cnt');c.textContent=t('lyrLines')(lines.length,+ta.dataset.lines);c.classList.toggle('bad',lines.length!==+ta.dataset.lines)};
-  p.querySelectorAll('textarea').forEach(ta=>ta.oninput=()=>{save(ta);drawSheet()});
-  $('#lyrsave').onclick=()=>{p.querySelectorAll('textarea').forEach(save);$('#lyrsave').textContent=t('lyrSaved');setTimeout(()=>{if($('#lyrsave'))$('#lyrsave').textContent=t('lyrSave')},1200)};
+  p.querySelectorAll('.lboxes textarea').forEach(ta=>ta.oninput=()=>{save(ta);drawSheet()});
+  $('#lyrsave').onclick=()=>{p.querySelectorAll('.lboxes textarea').forEach(save);$('#lyrsave').textContent=t('lyrSaved');setTimeout(()=>{if($('#lyrsave'))$('#lyrsave').textContent=t('lyrSave')},1200)};
   $('#lyrclose').onclick=()=>act('lyr');
+  const bxs=[...p.querySelectorAll('.lboxes textarea')];
+  const vals=ta=>ta.value.split('\n').filter((x,i,a)=>!(x===''&&i===a.length-1));
+  /* 貼上整首：清掉雜訊後，依每段需要的行數由上到下填進去 */
+  $('#lyrfill').onclick=()=>{const all=cleanLyrics($('#lyrall').value);if(!all.length){$('#lyrres').textContent=t('lyrNone');return}
+    let i=0;bxs.forEach((ta,k)=>{const n=+ta.dataset.lines;const take=k===bxs.length-1?all.slice(i):all.slice(i,i+n);i+=take.length;ta.value=take.join('\n');save(ta)});
+    const need=bxs.reduce((a,ta)=>a+(+ta.dataset.lines),0);
+    $('#lyrres').textContent=t('lyrResult')(all.length,need);$('#lyrres').classList.toggle('bad',all.length!==need);drawSheet()};
+  /* 每格的「↑」「↓」：把第一行移到上一段、最後一行移到下一段 */
+  bxs.forEach((ta,k)=>{const lab=ta.previousElementSibling;
+    lab.insertAdjacentHTML('beforeend',`<span class="mv">${k?`<button type="button" data-mv="up" title="${t('lyrMvUp')}" aria-label="${t('lyrMvUp')}">↑</button>`:''}${k<bxs.length-1?`<button type="button" data-mv="down" title="${t('lyrMvDown')}" aria-label="${t('lyrMvDown')}">↓</button>`:''}</span>`);
+    lab.querySelectorAll('[data-mv]').forEach(b=>b.onclick=e=>{e.preventDefault();const a=vals(ta);if(!a.length)return;
+      if(b.dataset.mv==='up'){const o=bxs[k-1];o.value=[...vals(o),a.shift()].join('\n');save(o)}else{const o=bxs[k+1];o.value=[a.pop(),...vals(o)].join('\n');save(o)}
+      ta.value=a.join('\n');save(ta);drawSheet()})});
+  p.querySelector('.lpaste').ontoggle=e=>{st.pasteOpen=e.target.open};
   drawSheet();
 }
 
@@ -904,7 +936,7 @@ function occTotals(s){const tot={};songOrder(s).forEach(k=>tot[k]=(tot[k]||0)+1)
 function songOccs(s){const keys=secKeys(s),tot=occTotals(s),cnt={};
   return songOrder(s).map(k=>{const sec=s.sections[k];cnt[k]=(cnt[k]||0)+1;const n=cnt[k];
     const rows=rowsOf(sec).map((r,ri)=>({...r,ri})).filter(r=>r.only===undefined||r.only===n||(r.only==='last'&&n===tot[k]));
-    let li=0;const lineOf={};rows.forEach(r=>{for(let rep=1;rep<=(r.x||1);rep++)lineOf[r.ri+':'+rep]=li++});
+    let li=0;const lineOf={};rows.forEach(r=>{for(let rep=1;rep<=(r.x||1);rep++){lineOf[r.ri+':'+rep]=li;li+=(r.ly||1)}});
     return {k,key:keys[k],sec,n,rows,lineOf,lines:isInst(sec)?0:li,sig:JSON.stringify(rows.map(r=>r.ri))}})}
 const secFp=sec=>JSON.stringify(rowsOf(sec));
 function getLyr(s){const raw=LS.get('lyr_'+s.id,null);
@@ -955,7 +987,7 @@ function drawStructured(s,C){
     s.sections.forEach((_,k)=>{if(!firstSeen.includes(k))firstSeen.push(k)});
     html=firstSeen.map(k=>{const sec=s.sections[k],mine=occs.filter(o=>o.k===k),inst=isInst(sec),key=secKeys(s)[k];
       const rows=rowsOf(sec).map((r,ri)=>{const only=r.only===undefined?'':`<span class="only">${r.only==='last'?t('onlyLast')(esc(secName(sec.name))):t('onlyIn')(esc(secName(sec.name)),nb(r.only))}</span>`;
-        let ly='';if(!inst)mine.forEach(o=>{for(let rep=1;rep<=(r.x||1);rep++){const idx=o.lineOf[ri+':'+rep];if(idx===undefined)continue;ly+=lyrLine(mine.length>1?nb(o.n):'',at(o,idx),o.k+'-'+o.n)}});
+        let ly='';if(!inst)mine.forEach(o=>{for(let rep=1;rep<=(r.x||1);rep++){const idx=o.lineOf[ri+':'+rep];if(idx===undefined)continue;for(let q=0;q<(r.ly||1);q++)ly+=lyrLine(mine.length>1&&q===0?nb(o.n):'',at(o,idx+q),o.k+'-'+o.n)}});
         return `<div class="row">${only}${barsHtml(r,C)}${ly}</div>`}).join('');
       return `<section class="sec" id="sec-${k}"><h3>${esc(secName(sec.name))}${tot[k]>1?mine.map(o=>nb(o.n)).join(''):''}${warnTag(key)}</h3>${rows}</section>`}).join('');
     chips=occs.map(o=>`<button class="chip${isInst(o.sec)?' inst':''}" data-go="sec-${o.k}" data-hl="${o.k}-${o.n}">${esc(secName(o.sec.name))}${tot[o.k]>1?nb(o.n):''}</button>`).join('<span class="arrow">→</span>');
@@ -964,7 +996,7 @@ function drawStructured(s,C){
     html=groups.map((g,gi)=>{const o0=g.occs[0],inst=isInst(g.sec);
       let tag=tot[g.k]>1?g.occs.map(o=>nb(o.n)).join(''):'';
       tag+=warnTag(o0.key);
-      const rows=o0.rows.map(r=>{let ly='';if(!inst)g.occs.forEach((o,j)=>{for(let rep=1;rep<=(r.x||1);rep++)ly+=lyrLine(g.occs.length>1?nb(o.n):'',at(o,o.lineOf[r.ri+':'+rep]),o.k+'-'+o.n)});
+      const rows=o0.rows.map(r=>{let ly='';if(!inst)g.occs.forEach((o,j)=>{for(let rep=1;rep<=(r.x||1);rep++)for(let q=0;q<(r.ly||1);q++)ly+=lyrLine(g.occs.length>1&&q===0?nb(o.n):'',at(o,o.lineOf[r.ri+':'+rep]+q),o.k+'-'+o.n)});
         return `<div class="row">${barsHtml(r,C)}${ly}</div>`}).join('');
       return `<section class="sec" id="grp-${gi}"><h3>${esc(secName(g.sec.name))}${tag}</h3>${rows}</section>`}).join('');
     chips=groups.map((g,gi)=>`<button class="chip${isInst(g.sec)?' inst':''}" data-go="grp-${gi}">${esc(secName(g.sec.name))}${tot[g.k]>1?g.occs.map(o=>nb(o.n)).join(''):''}</button>`).join('<span class="arrow">→</span>');
