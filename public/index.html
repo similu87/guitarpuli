@@ -562,7 +562,7 @@ home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲明',c
   back:'返回',origKey:'原調',transpose:'移調',reset:'原調',resetTip:'回原調並套用編者建議的 Capo',capoNone:'無',real:'實音',realTip:'顯示實際音高（關閉時顯示夾 Capo 後手上按的和弦）',
   size:'字體',metro:'節拍器',sub:'細分',subTip:'依律動加入細分拍',practice:'練習面板',lyrics:'我的歌詞',cols:'兩欄',perform:'全螢幕演奏',endPerform:'離開全螢幕',viewFull:'完整',viewCompact:'精簡',viewFullTip:'照彈奏順序從頭看到尾。連續、一模一樣的段落只顯示一次，歌詞分 1. 2.。',viewCompactTip:'每段只寫一次，照上方的順序彈。點順序裡的段落，會標出那一次的歌詞。',orderLbl:'順序',singN:n=>`唱 ${n} 次`,nthTime:n=>`第 ${n} 次`,onlyIn:(s,n)=>`只有${s}${n}`,onlyLast:s=>`只有最後一次${s}`,lyrEmpty:'（還沒填歌詞）',lyrChanged:s=>`<b>${s}</b> 的譜有更新，這幾段的歌詞可能對不上，請打開「我的歌詞」確認。其他段落不受影響。`,lyrOk:'我確認過了',lyrLines:a=>`${a} 行`,
   noteCapo:(a,c,s,r)=>r?`調性 <b>${a}</b>，夾 Capo ${c}：譜上照實際音高寫，和弦圖是夾 Capo 後的按法`:`調性 <b>${a}</b>，夾 Capo ${c}：譜上是 <b>${s}</b> 調按法，實際音高高 ${c} 個半音`,noteKey:a=>`目前調性 <b>${a}</b>`,
-  tuneLbl:'調弦',tuneStd:'標準調弦',noteTune:(tn,nm)=>`這首用<b>${nm?nm+'（'+tn+'）':tn}</b>調弦：沒有標「編者按法」的和弦圖是標準調弦的按法，只能參考`,
+  noteFinger:(a,c)=>`調性 <b>${a}</b>，夾 Capo ${c}：這首的 Capo 是當多一根手指按和弦用，譜上照實際音高寫，和弦圖格數從 Capo 算起`,tuneLbl:'調弦',tuneStd:'標準調弦',noteTune:(tn,nm)=>`這首用<b>${nm?nm+'（'+tn+'）':tn}</b>調弦：沒有標「編者按法」的和弦圖是標準調弦的按法，只能參考`,
   noteShift:(o,n)=>`（原調 ${o}，${n>0?'升':'降'} ${Math.abs(n)} 個半音）`,noteEditor:(c,s)=>`編者建議 Capo ${c}`,notePub:'公開譜只含和弦與段落；歌詞由你自己輸入，只存在這台裝置',notePubAcct:'公開譜只含和弦與段落；你的歌詞存在你的帳號裡，只有你看得到',
   capoMove:(a,b)=>`${b>a?'↑':'↓'} Capo 從 ${a||'不夾'} 移到 ${b||'不夾'}`,chordsTitle:c=>c?`本曲和弦（Capo ${c}，格數從 Capo 算起）`:'本曲和弦',chordsShort:'本曲和弦',dockOpen:'和弦圖 ▴',dockClose:'收起 ▾',feel:'律動',strum:'刷法',noDiagram:'指法圖待補',noDiagramTip:'這個和弦的指法圖之後補上',
   feels:{straight8:'平均八分',swing:'搖擺八分',shuffle:'三連音拖曳',straight16:'平均十六分',triplet:'12/8 三連音'},
@@ -596,7 +596,7 @@ home:'Home',library:'My Library',theme:'Theme',legal:'Copyright',changelog:'Chan
   back:'Back',origKey:'Original key',transpose:'Transpose',reset:'Reset',resetTip:'Back to the original key and the editor’s capo',capoNone:'None',real:'Concert',realTip:'Show concert pitch (off: show the chord shapes you play with the capo on)',
   size:'Text',metro:'Metronome',sub:'Subdivide',subTip:'Add subdivisions that follow the feel',practice:'Practice Panel',lyrics:'My Lyrics',cols:'Two Columns',perform:'Full Screen',endPerform:'Exit Full Screen',viewFull:'Full',viewCompact:'Compact',viewFullTip:'Read top to bottom in playing order. Back-to-back identical sections show once, with lyrics as 1. 2.',viewCompactTip:'Each section shows once. Follow the order above. Tap a section in the order to highlight its lyrics.',orderLbl:'ORDER',singN:n=>`${n} times`,nthTime:n=>`time ${n}`,onlyIn:(s,n)=>`${s} ${n} only`,onlyLast:s=>`Last ${s} only`,lyrEmpty:'(no lyrics yet)',lyrChanged:s=>`The chords for <b>${s}</b> were updated, so those lyrics may be out of place. Open My Lyrics to check. Other sections are fine.`,lyrOk:'Looks right',lyrLines:a=>`${a} line${a===1?'':'s'}`,
   noteCapo:(a,c,s,r)=>r?`Key <b>${a}</b>, Capo ${c}: chords are shown at concert pitch; diagrams show the fingering with the capo on`:`Key <b>${a}</b>, Capo ${c}: chords are <b>${s}</b> shapes; they sound ${c} semitone${c>1?'s':''} higher`,noteKey:a=>`Key: <b>${a}</b>`,
-  tuneLbl:'Tuning',tuneStd:'Standard',noteTune:(tn,nm)=>`This song uses <b>${nm?nm+' ('+tn+')':tn}</b> tuning. Diagrams not marked “Editor’s voicing” show standard-tuning shapes, for reference only`,
+  noteFinger:(a,c)=>`Key <b>${a}</b>, Capo ${c}: the capo works as an extra finger for these voicings, so chords are written at concert pitch; diagram frets are counted from the capo`,tuneLbl:'Tuning',tuneStd:'Standard',noteTune:(tn,nm)=>`This song uses <b>${nm?nm+' ('+tn+')':tn}</b> tuning. Diagrams not marked “Editor’s voicing” show standard-tuning shapes, for reference only`,
   noteShift:(o,n)=>` (original ${o}, ${n>0?'up':'down'} ${Math.abs(n)} ${Math.abs(n)===1?'semitone':'semitones'})`,noteEditor:(c,s)=>`Editor’s pick: Capo ${c}`,notePub:'Public sheets show chords and sections only. Lyrics you add stay on this device.',notePubAcct:'Public sheets show chords and sections only. Your lyrics are saved to your account and only you can see them.',
   capoMove:(a,b)=>`${b>a?'↑':'↓'} Move the capo from ${a||'none'} to ${b||'none'}`,chordsTitle:c=>c?`Chords (Capo ${c}; frets counted from the capo)`:'Chords',chordsShort:'Chords',dockOpen:'Diagrams ▴',dockClose:'Hide ▾',feel:'Feel',strum:'Strumming',noDiagram:'Diagram coming',noDiagramTip:'Diagram for this chord is coming',
   feels:{straight8:'Straight 8ths',swing:'Swing',shuffle:'Shuffle',straight16:'Straight 16ths',triplet:'12/8 Triplet'},
@@ -681,6 +681,8 @@ function chordCard(c,shape,cp){shape=shape||c;const alts=CUR[shape],sh=alts?alts
 /* ---------- state ---------- */
 const st={layout:LS.get('layout','grid'),f:{q:'',sort:'new',lang:[],genre:[],diff:[],key:[]},cols:LS.get('cols',true),size:LS.get('size',16),
   practice:LS.get('practice',true),dockOpen:LS.get('dockOpen',false),real:LS.get('real',false),sub:LS.get('sub',true),view:LS.get('view','full'),shift:0,capo:0,bpm:90,metro:false,song:null,lyrOpen:false};
+/* capo_use: finger 的歌（Capo 當多一根手指用）預設顯示實際音高，讀者切換後只記在這首 */
+const isReal=s=>s&&s.capoUse==='finger'?LS.get('real_'+s.id,true):st.real;
 const favs=()=>LS.get('fav',[]),mine=()=>LS.get('mine',[]);
 function toggleFav(id){const f=favs();const i=f.indexOf(id);i<0?f.unshift(id):f.splice(i,1);LS.set('fav',f);return i<0}
 const heart='<svg class="i" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg>';
@@ -867,7 +869,7 @@ function openSong(song,isMine,keepState){
   </div>
   <div class="toolwrap"><div class="tools" role="toolbar">
     <div class="tg"><span class="tl">${t('transpose')}</span><div class="tc"><button class="tb" data-act="key-" aria-label="−1">−</button><span class="tv" id="keyv"></span><button class="tb" data-act="key+" aria-label="+1">+</button><button class="tb" data-act="key0" title="${t('resetTip')}">${t('reset')}</button></div></div>
-    <div class="tg"><label class="tl" for="capo">CAPO</label><div class="tc"><select id="capo">${[...Array(8)].map((_,i)=>`<option value="${i}">${i||t('capoNone')}</option>`).join('')}</select><button class="tb ${st.real?'on':''}" data-act="real" id="realbtn" aria-pressed="${st.real}" title="${t('realTip')}">${t('real')}</button></div></div>
+    <div class="tg"><label class="tl" for="capo">CAPO</label><div class="tc"><select id="capo">${[...Array(8)].map((_,i)=>`<option value="${i}">${i||t('capoNone')}</option>`).join('')}</select><button class="tb ${isReal(song)?'on':''}" data-act="real" id="realbtn" aria-pressed="${isReal(song)}" title="${t('realTip')}">${t('real')}</button></div></div>
     <div class="tg"><span class="tl">${t('size')}</span><div class="tc"><button class="tb" data-act="size-">A−</button><button class="tb" data-act="size+">A+</button></div></div>
     <div class="tg"><span class="tl">${t('metro')}</span><div class="tc"><button class="tb" data-act="bpm-" aria-label="−">−</button><span class="tv" id="bpmv"></span><button class="tb" data-act="bpm+" aria-label="+">+</button><button class="tb" data-act="metro" id="metrobtn" aria-label="${t('metro')}">▶</button><button class="tb ${st.sub?'on':''}" data-act="sub" id="subbtn" title="${t('subTip')}">${t('sub')}</button><span class="dots" id="dots"><i></i><i></i><i></i><i></i></span></div></div>
     </div><div class="viewbtns">${isMine?'':`<div class="seg-toggle" role="group"><button class="${st.view==='full'?'on':''}" data-act="view-full" id="vfull" data-tip="${t('viewFullTip')}">${t('viewFull')}</button><button class="${st.view==='compact'?'on':''}" data-act="view-compact" id="vcompact" data-tip="${t('viewCompactTip')}">${t('viewCompact')}</button></div>`}<button class="tb ${st.practice?'on':''}" data-act="practice" id="pracbtn">${t('practice')}</button>${isMine?'':`<button class="tb ${st.lyrOpen?'on':''}" data-act="lyr" id="lyrbtn">${t('lyrics')}</button>`}<button class="tb ${st.cols?'on':''}" data-act="cols" id="colsbtn">${t('cols')}</button><button class="tb ibtn" data-act="perform" id="perfbtn" aria-label="${t('perform')}" title="${t('perform')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></div>
@@ -885,7 +887,7 @@ function savePref(){LS.set('pref_'+st.song.id,{shift:st.shift,capo:st.capo})}
 function act(a){
   if(a==='key-'||a==='key+'){st.shift=mod(st.shift+(a==='key+'?1:-1)+6)-6;savePref();drawSheet()}
   if(a==='key0'){st.shift=0;st.capo=st.song.capo||0;savePref();drawSheet()}
-  if(a==='real'){st.real=!st.real;LS.set('real',st.real);drawSheet()}
+  if(a==='real'){const s=st.song;if(s&&s.capoUse==='finger')LS.set('real_'+s.id,!isReal(s));else{st.real=!st.real;LS.set('real',st.real)}drawSheet()}
   if(a==='size-'||a==='size+'){st.size=Math.min(26,Math.max(12,st.size+(a==='size+'?1:-1)));LS.set('size',st.size);document.documentElement.style.setProperty('--sheet-size',st.size+'px');fitBars()}
   if(a==='cols'){st.cols=!st.cols;LS.set('cols',st.cols);$('#colsbtn').classList.toggle('on',st.cols);drawSheet()}
   if(a==='bpm-'||a==='bpm+'){st.bpm=Math.min(240,Math.max(40,st.bpm+(a==='bpm+'?2:-2)));$('#bpmv').textContent=st.bpm;if(st.metro){metroStop();metroStart()}}
@@ -899,8 +901,8 @@ function act(a){
 function drawSheet(){
   const s=st.song;const sounding=tKey(s.key,st.shift);const shape=tKey(sounding,-st.capo);const flat=keyFlat(shape);const total=st.shift-st.capo;
   $('#keyv').textContent=sounding;$('#bpmv').textContent=st.bpm;$('#capo').value=st.capo;
-  const rb=$('#realbtn');if(rb){rb.classList.toggle('on',st.real);rb.setAttribute('aria-pressed',st.real);rb.disabled=!st.capo}
-  let note=st.capo?`<span>${t('noteCapo')(sounding,st.capo,shape,st.real)}</span>`:'';
+  const real=isReal(s),rb=$('#realbtn');if(rb){rb.classList.toggle('on',real);rb.setAttribute('aria-pressed',real);rb.disabled=!st.capo}
+  let note=st.capo?`<span>${s.capoUse==='finger'&&real?t('noteFinger')(sounding,st.capo):t('noteCapo')(sounding,st.capo,shape,real)}</span>`:'';
   if(s.tuning)note+=`<span class="tunenote">${t('noteTune')(esc(s.tuning),tuneName(s.tuning))}</span>`;
   if(s.capo&&!st.shift)note+=`<span>${t('noteEditor')(s.capo,tKey(s.key,-s.capo))}</span>`;
   if(!st.isMine)note+=`<span>${user?t('notePubAcct'):t('notePub')}</span>`;
@@ -908,7 +910,7 @@ function drawSheet(){
   /* 段落換 Capo：筆記寫的 (Capo 3) 是編者的夾法；讀者改 Capo 時，這段跟著差一樣的格數 */
   const capoOf=m=>m===undefined||m===null?st.capo:Math.max(0,st.capo+m-(s.capo||0));
   const T2=(c,cp=st.capo)=>tChord(c,st.shift-cp,keyFlat(tKey(sounding,-cp)));   // 夾 Capo 後手上按的和弦
-  const N=(c,cp=st.capo)=>st.real?tChord(c,st.shift,keyFlat(sounding)):T2(c,cp); // 譜上顯示：預設是按法，按「實音」顯示實際音高
+  const N=(c,cp=st.capo)=>real?tChord(c,st.shift,keyFlat(sounding)):T2(c,cp); // 譜上顯示：預設是按法，按「實音」顯示實際音高
   const used=[];(s.sections||[]).forEach(sec=>rowsOf(sec).forEach(r=>r.b.forEach(b=>b.forEach(c=>{if(/^[A-G]/.test(c)){const cp=capoOf(r.capo??sec.capo);if(!used.some(u=>u[0]===c&&u[1]===cp))used.push([c,cp])}}))));
   if(!s.sections)chordsOf(s).forEach(c=>used.push([c,st.capo]));
   const caps=new Set(used.map(u=>u[1]));
