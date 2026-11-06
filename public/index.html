@@ -315,6 +315,7 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .rhythm .v{font-size:15px;font-weight:700}
 .rhythm .v small{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:6px}
 .tunenote{color:var(--brass)}
+.ch sup.ext{font-size:.6em;vertical-align:.6em;line-height:0;margin-left:.06em;letter-spacing:-.02em}
 .snote{font-size:12.5px;color:var(--muted);margin-top:2px}
 .strum{font-family:var(--f-mono);font-size:17px;letter-spacing:.08em;color:var(--chord)}
 .sgrid{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));border:1px solid var(--line);border-radius:6px;overflow:hidden;max-width:420px}
@@ -673,6 +674,8 @@ function strumHtml(raw,feel){const s=String(raw).replace(/\s+/g,''),n=STRUM_N[fe
   const per=n===12?3:n/4,lab=n===16?['1','e','&','a']:n===12?['1','&','a']:['1','&'];
   const bars=[];for(let i=0;i<s.length;i+=n)bars.push(s.slice(i,i+n));
   return bars.map(b=>`<div class="sgrid" style="--n:${n}" role="img" aria-label="${esc(raw)}">${[...b].map((c,i)=>`<span class="sl${i%per?'':' bt1'}${i?'':' c0'}">${i%per?lab[i%per]:i/per+1}</span>`).join('')}${[...b].map((c,i)=>{const u=c.toUpperCase();return `<span class="sa${i%per?'':' bt1'}${i?'':' c0'} ${u==='D'?'d':u==='U'?'u':u==='X'?'x':''}">${u==='D'?'↓':u==='U'?'↑':u==='X'?'×':''}</span>`}).join('')}</div>`).join('')}
+/* 括號裡的延伸音（例如 F#7(#9,b13)）縮小寫在右上，名字變短，小節才不會被撐寬 */
+function chordTxt(n){const m=String(n).match(/^([^(\/]+)\(([^)]*)\)(\/.*)?$/);return m?`${esc(m[1])}<sup class="ext">${esc(m[2])}</sup>${esc(m[3]||'')}`:esc(n)}
 let CUR={};const shapeFor=c=>(CUR[c]&&CUR[c][0])||shapeOf(c);
 const hpNote=sh=>{const f=frets(sh).filter(x=>x.h);return f.length?f.map(x=>`${x.a}→${x.v} ${x.h==='h'?t('hammer'):t('pull')}`).join('、'):''};
 function chordCard(c,shape,cp){shape=shape||c;const alts=CUR[shape],sh=alts?alts[0]:shapeOf(shape),hp=sh?hpNote(sh):'';
@@ -928,7 +931,7 @@ function drawSheet(){
   $('#practice').onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-alts]')){e.preventDefault();e.target.click()}};
   const sheet=$('#sheet');sheet.classList.toggle('cols2',st.cols);
   document.documentElement.style.setProperty('--sheet-size',st.size+'px');
-  const C=(c,cp)=>`<span class="ch" data-s="${esc(T2(c,cp))}">${esc(N(c,cp))}</span>`;C.capoOf=capoOf;
+  const C=(c,cp)=>`<span class="ch" data-s="${esc(T2(c,cp))}">${chordTxt(N(c,cp))}</span>`;C.capoOf=capoOf;
   if(st.isMine){
     $('#orderbar').hidden=true;
     sheet.innerHTML=parsePro(s.body).map(sec=>`<section class="sec">${sec.name?`<h3>${esc(sec.name)}</h3>`:''}${sec.lines.map(segs=>
@@ -1027,8 +1030,14 @@ function fitBars(){const sh=$('#sheet');if(!sh||!sh.querySelector('.bar'))return
       const cs=getComputedStyle(bar),inner=bar.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight),slot=inner/n,gap=parseFloat(cs.fontSize)*.45;
       kids.forEach((x,i)=>{if(!x.classList.contains('ch'))return;let k=1;while(i+k<n&&kids[i+k].classList.contains('bt'))k++;if(i+k>=n)k=Math.max(k,1);
         const need=(x.offsetWidth+(i+k<n?gap:0))/(k*slot);if(need>r)r=need})});return r};
-  let r=ratio();
-  if(r>1){sh.setAttribute('data-bpr','2');r=ratio()}
+  sh.querySelectorAll('.ch').forEach(x=>x.style.fontSize='');
+  /* 單一和弦太長（例如一拍的 F#7(#9,b13)）只縮那一個字，最多縮到 65%，不要為了它整首改成一行兩小節 */
+  const shrink=()=>sh.querySelectorAll('.bar').forEach(bar=>{const kids=[...bar.children].filter(x=>x.classList.contains('ch')||x.classList.contains('bt'));const n=kids.length;if(!n)return;
+    const cs=getComputedStyle(bar),inner=bar.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight),slot=inner/n,gap=parseFloat(cs.fontSize)*.45;
+    kids.forEach((x,i)=>{if(!x.classList.contains('ch'))return;let k=1;while(i+k<n&&kids[i+k].classList.contains('bt'))k++;
+      const need=(x.offsetWidth+(i+k<n?gap:0))/(k*slot);if(need>1&&need<=1/.65)x.style.fontSize=(.97/need).toFixed(3)+'em'})});
+  shrink();let r=ratio();
+  if(r>1){sh.querySelectorAll('.ch').forEach(x=>x.style.fontSize='');sh.setAttribute('data-bpr','2');shrink();r=ratio()}
   if(r>1/.7){sh.setAttribute('data-bpr','1');r=ratio()}
   if(r>1)sh.style.setProperty('--fit',Math.max(.6,1/r*.98).toFixed(3));
   sh.querySelectorAll('.bar').forEach(bar=>{let edge=-1e9;[...bar.children].forEach(x=>{if(x.classList.contains('ch')){edge=x.getBoundingClientRect().right+2}else if(x.classList.contains('bt')&&x.getBoundingClientRect().left<edge)x.classList.add('cov')})})}
