@@ -163,7 +163,7 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
     id, title: String(d.title || id), artist: String(d.artist || ''), key: String(d.key || 'C'),
     capo: Number(d.capo) || 0, bpm: Number(d.bpm) || 90, time: String(d.time || '4/4'),
     feel: d.feel || 'straight8', strum: String(d.strum || ''), strumNote: String(d.strum_note || ''), strumNoteEn: String(d.strum_note_en || ''),
-    diff: Number(d.level) || 1, ...(tuning ? { tuning } : {}), genres, genre: genres[0] || '', shapes, language: d.language || 'other', added, sections, order
+    diff: Number(d.level) || 1, ...(tuning ? { tuning } : {}), ...(d.capo_use === true || d.capo_use === 'finger' ? { capoUse: 'finger' } : {}), genres, genre: genres[0] || '', shapes, language: d.language || 'other', added, sections, order
   };
 }).filter(Boolean);
 
@@ -219,7 +219,7 @@ for (const s of songs) {
     const sec = s.sections[k]; cnt[k] = (cnt[k] || 0) + 1; const n = cnt[k];
     const rows = sec.rows.filter(r => r.only === undefined || r.only === n || (r.only === 'last' && n === total[k]));
     // 跟畫面一樣：顯示夾 Capo 後的按法
-    const capOf = r => r.capo ?? sec.capo ?? s.capo;
+    const capOf = r => s.capoUse === 'finger' ? 0 : (r.capo ?? sec.capo ?? s.capo);
     return `<h2>${esc(SECTION_ZH[sec.name] || sec.name)}${total[k] > 1 ? `（第 ${n} 次）` : ''}${sec.capo !== undefined ? `（Capo ${sec.capo}）` : ''}</h2><pre>${rows.map(r => (r.capo !== undefined ? `（Capo ${r.capo}）` : '') + '| ' + r.b.map(b => b.map(c => shapeName(c, capOf(r), s.key)).join(' ')).join(' | ') + ' |' + (r.x ? ' ×' + r.x : '')).join('\n')}</pre>`;
   }).join('');
   const body = `<div id="app"><article class="prose"><h1>${esc(s.title)}</h1><p>${esc(s.artist)} · 原調 ${esc(s.key)}${s.capo ? ` · Capo ${s.capo}` : ''}${s.tuning ? ` · 調弦 ${esc(s.tuning)}` : ''} · ${s.bpm} BPM · ${esc(s.time)} · ${FEELS[s.feel]} · ${LANGS[s.language]}</p>${s.strum ? `<p>刷法：${esc(s.strum)}</p>` : ''}${chart}</article></div>`;
