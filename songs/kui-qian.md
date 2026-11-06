@@ -4,6 +4,7 @@ title: "虧欠"
 artist: "張震嶽"
 key: "Bb"
 capo: 1
+capo_use: true
 bpm: 72
 time: "4/4"
 feel: straight8
