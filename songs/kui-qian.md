@@ -33,11 +33,11 @@ added: 2026-11-04
 | Cm7 F7sus4 | Bbmaj7 Cdim7/Bb |
 
 ## 主歌2
-| Bbmaj9 | Ebmaj9(#11) | Bbmaj9 | Am11 Ab7(b5) |
+| Bbmaj9 | Ebmaj7(#11) | Bbmaj9 | Am11 Ab7(b5) |
 | Gm7 | C7sus4 C7 | F7sus4 | Bbmaj7 Cdim7/Bb |
 
 ## 間奏
-| Bbmaj9 | Ebmaj9(#11) | Bbmaj9 | Am11 Ab7(b5) |
+| Bbmaj9 | Ebmaj7(#11) | Bbmaj9 | Am11 Ab7(b5) |
 | Gm7 | C7sus4 C7 | F7sus4 | Bbmaj7 |
 
 ## 副歌2
@@ -53,7 +53,7 @@ added: 2026-11-04
 | Cm7 F7sus4 | Bbmaj7 |
 
 ## 尾奏
-| Bbmaj9 | Ebmaj9(#11) | Bbmaj9 | Am11 Ab7(b5) |
+| Bbmaj9 | Ebmaj7(#11) | Bbmaj9 | Am11 Ab7(b5) |
 | Gm7 | C7sus4 C7 | F7sus4 | Bbmaj7 Cdim7/Bb |
 
 ## 順序
