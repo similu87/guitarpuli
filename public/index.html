@@ -315,6 +315,7 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .rhythm .v{font-size:15px;font-weight:700}
 .rhythm .v small{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:6px}
 .tunenote{color:var(--brass)}
+.ch .stk{display:inline-flex;flex-direction:column;font-size:.55em;line-height:1;vertical-align:baseline;transform:translateY(-62%);margin-left:.06em;letter-spacing:-.02em}
 .ch sup.ext{font-size:.6em;vertical-align:.6em;line-height:0;margin-left:.06em;letter-spacing:-.02em}
 .snote{font-size:12.5px;color:var(--muted);margin-top:2px}
 .strum{font-family:var(--f-mono);font-size:17px;letter-spacing:.08em;color:var(--chord)}
@@ -342,7 +343,7 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .bars{display:grid;grid-template-columns:repeat(var(--bpr),minmax(0,1fr));row-gap:.45em;font-size:calc(1em * var(--fit))}
 .bar{border-right:2px solid var(--muted);padding:.15em .55em;display:grid;column-gap:0;min-height:1.9em;align-items:center;justify-items:start}
 .bar>.ch{white-space:nowrap;position:relative;z-index:1}
-.bt.cov{visibility:hidden}
+.bt.cov,.bt.hid{visibility:hidden}
 .bt{font-family:var(--f-mono);font-weight:700;color:var(--muted);opacity:.75}
 .bar{position:relative}.bars .bar.hasts{padding-left:1.45em}
 .tsig{position:absolute;left:.35em;top:50%;transform:translateY(-50%);width:.75em;height:1.4em;overflow:visible}.tsig text{font-family:var(--f-mono);font-weight:700;font-size:11px;fill:var(--brass)}
@@ -675,7 +676,8 @@ function strumHtml(raw,feel){const s=String(raw).replace(/\s+/g,''),n=STRUM_N[fe
   const bars=[];for(let i=0;i<s.length;i+=n)bars.push(s.slice(i,i+n));
   return bars.map(b=>`<div class="sgrid" style="--n:${n}" role="img" aria-label="${esc(raw)}">${[...b].map((c,i)=>`<span class="sl${i%per?'':' bt1'}${i?'':' c0'}">${i%per?lab[i%per]:i/per+1}</span>`).join('')}${[...b].map((c,i)=>{const u=c.toUpperCase();return `<span class="sa${i%per?'':' bt1'}${i?'':' c0'} ${u==='D'?'d':u==='U'?'u':u==='X'?'x':''}">${u==='D'?'↓':u==='U'?'↑':u==='X'?'×':''}</span>`}).join('')}</div>`).join('')}
 /* 括號裡的延伸音（例如 F#7(#9,b13)）縮小寫在右上，名字變短，小節才不會被撐寬 */
-function chordTxt(n){const m=String(n).match(/^([^(\/]+)\(([^)]*)\)(\/.*)?$/);return m?`${esc(m[1])}<sup class="ext">${esc(m[2])}</sup>${esc(m[3]||'')}`:esc(n)}
+function chordTxt(n){const m=String(n).match(/^([^(\/]+)\(([^)]*)\)(\/.*)?$/);if(!m)return esc(n);const xs=m[2].split(/\s*,\s*/);
+  return `${esc(m[1])}${xs.length>1?`<span class="ext stk">${xs.map(x=>`<span>${esc(x)}</span>`).join('')}</span>`:`<sup class="ext">${esc(m[2])}</sup>`}${esc(m[3]||'')}`}
 let CUR={};const shapeFor=c=>(CUR[c]&&CUR[c][0])||shapeOf(c);
 const hpNote=sh=>{const f=frets(sh).filter(x=>x.h);return f.length?f.map(x=>`${x.a}→${x.v} ${x.h==='h'?t('hammer'):t('pull')}`).join('、'):''};
 function chordCard(c,shape,cp){shape=shape||c;const alts=CUR[shape],sh=alts?alts[0]:shapeOf(shape),hp=sh?hpNote(sh):'';
@@ -1030,14 +1032,9 @@ function fitBars(){const sh=$('#sheet');if(!sh||!sh.querySelector('.bar'))return
       const cs=getComputedStyle(bar),inner=bar.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight),slot=inner/n,gap=parseFloat(cs.fontSize)*.45;
       kids.forEach((x,i)=>{if(!x.classList.contains('ch'))return;let k=1;while(i+k<n&&kids[i+k].classList.contains('bt'))k++;if(i+k>=n)k=Math.max(k,1);
         const need=(x.offsetWidth+(i+k<n?gap:0))/(k*slot);if(need>r)r=need})});return r};
-  sh.querySelectorAll('.ch').forEach(x=>x.style.fontSize='');
-  /* 單一和弦太長（例如一拍的 F#7(#9,b13)）只縮那一個字，最多縮到 65%，不要為了它整首改成一行兩小節 */
-  const shrink=()=>sh.querySelectorAll('.bar').forEach(bar=>{const kids=[...bar.children].filter(x=>x.classList.contains('ch')||x.classList.contains('bt'));const n=kids.length;if(!n)return;
-    const cs=getComputedStyle(bar),inner=bar.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight),slot=inner/n,gap=parseFloat(cs.fontSize)*.45;
-    kids.forEach((x,i)=>{if(!x.classList.contains('ch'))return;let k=1;while(i+k<n&&kids[i+k].classList.contains('bt'))k++;
-      const need=(x.offsetWidth+(i+k<n?gap:0))/(k*slot);if(need>1&&need<=1/.65)x.style.fontSize=(.97/need).toFixed(3)+'em'})});
-  shrink();let r=ratio();
-  if(r>1){sh.querySelectorAll('.ch').forEach(x=>x.style.fontSize='');sh.setAttribute('data-bpr','2');shrink();r=ratio()}
+  let r=ratio();
+  /* 稍微放不下時先整首一起縮字（最多 85%，所有和弦一樣大），還是不夠才改成一行兩小節 */
+  if(r>1/.85){sh.setAttribute('data-bpr','2');r=ratio()}
   if(r>1/.7){sh.setAttribute('data-bpr','1');r=ratio()}
   if(r>1)sh.style.setProperty('--fit',Math.max(.6,1/r*.98).toFixed(3));
   sh.querySelectorAll('.bar').forEach(bar=>{let edge=-1e9;[...bar.children].forEach(x=>{if(x.classList.contains('ch')){edge=x.getBoundingClientRect().right+2}else if(x.classList.contains('bt')&&x.getBoundingClientRect().left<edge)x.classList.add('cov')})})}
@@ -1047,7 +1044,10 @@ function barsHtml(r,C){const beats0=beatsOf(st.song&&st.song.time);
     const beats=m?beatsOf(m):beats0,ts=m?`<svg class="tsig" viewBox="0 0 12 22" role="img" aria-label="${esc(m)}"><title>${esc(m)}</title><text x="6" y="10" text-anchor="middle">${m.split('/')[0]}</text><text x="6" y="21" text-anchor="middle">${m.split('/')[1]}</text></svg>`:'';
     if(bar.length===1&&bar[0]==='-')return `<div class="bar rest${m?' hasts':''}">${ts}<span class="nc" title="${t('restBar')}">N.C.</span></div>`;
     const sl=barSlots(bar,beats);
-    return `<div class="bar${m?' hasts':''}" style="grid-template-columns:repeat(${sl.length},minmax(0,1fr))">${ts}${sl.map(c=>c==='-'?'<span class="bt" aria-hidden="true">·</span>':C(c)).join('')}</div>`}).join('')}</div><span class="rep">${r.x?`×${r.x}`:''}</span></div>`}
+    /* 平均分的小節（例如兩個和弦各兩拍）不畫拍點，只有切分、不平均的小節才畫 */
+    const pos=sl.map((c,i)=>c==='-'?-1:i).filter(i=>i>=0),spans=pos.map((p,j)=>(j+1<pos.length?pos[j+1]:sl.length)-p);
+    const even=pos[0]===0&&spans.every(x=>x===spans[0]);
+    return `<div class="bar${m?' hasts':''}" style="grid-template-columns:repeat(${sl.length},minmax(0,1fr))">${ts}${sl.map(c=>c==='-'?`<span class="bt${even?' hid':''}" aria-hidden="true">·</span>`:C(c)).join('')}</div>`}).join('')}</div><span class="rep">${r.x?`×${r.x}`:''}</span></div>`}
 /* 歌詞整段放在段落和弦下面，兩句一排（左上1、右上2、左下3、右下4） */
 function lyrBlock(o,label,lyr){const a=((lyr.L[o.key]||{})[o.n]||[]);const has=a.some(x=>x&&x.trim());if(!has&&!st.lyrOpen)return '';
   return `<div class="lyb${has?'':' ph'}" data-occ="${o.k}-${o.n}">${label?`<span class="n">${label}</span>`:''}${has?`<div class="lyg">${a.map(x=>`<span>${esc(x)||'&nbsp;'}</span>`).join('')}</div>`:`<span class="lt">${t('lyrEmpty')}</span>`}</div>`}
