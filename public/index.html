@@ -3,7 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!--site-meta-->
 <meta name="description" content="吉他普利 Guitarpuli：可移調、可夾 Capo 的吉他和弦譜。">
+<link rel="canonical" href="https://guitarpuli.pages.dev/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="吉他普利 Guitarpuli">
+<meta property="og:title" content="吉他普利 Guitarpuli">
+<meta property="og:description" content="可移調、可夾 Capo 的吉他和弦譜。">
+<meta property="og:url" content="https://guitarpuli.pages.dev/">
+<meta property="og:image" content="https://guitarpuli.pages.dev/og/site.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"吉他普利 Guitarpuli","alternateName":["吉他普利","Guitarpuli"],"url":"https://guitarpuli.pages.dev/","inLanguage":"zh-Hant"}</script>
+<!--/site-meta-->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#9C6A12" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#5C3F0B" media="(prefers-color-scheme: dark)">
 <style>html{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>吉他普利</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -624,6 +641,10 @@ const mod=n=>((n%12)+12)%12;
 function keyFlat(k){const m=k.match(/^([A-G][#b]?)(m?)$/);if(!m)return false;let i=idx(m[1]);if(m[2])i=mod(i+3);return [5,10,3,8,1].includes(i)}
 function tNote(n,s,flat){const i=idx(n);if(i<0||mod(s)===0)return n;return (flat?FL:SH)[mod(i+s)]}
 function tKey(k,s){const m=k.match(/^([A-G][#b]?)(m?)$/);const minor=!!m[2];const i=mod(idx(m[1])+s);const rel=minor?mod(i+3):i;return ([5,10,3,8,1].includes(rel)?FL:SH)[i]+(minor?'m':'')}
+/* 夾 Capo 後的按法名稱：在按法的調裡屬於音階內的音照調號寫，音階外的黑鍵音寫降記號（C 調的 A♭、B♭），只有升四級照升記號（C 調的 F#） */
+function tNoteK(n,s,key){const i=idx(n);if(i<0||mod(s)===0)return n;const j=mod(i+s),m=key.match(/^([A-G][#b]?)(m?)$/);if(!m)return SH[j];
+  const tonic=mod(idx(m[1])+(m[2]?3:0)),dia=[0,2,4,5,7,9,11].map(x=>mod(tonic+x));return dia.includes(j)?(keyFlat(key)?FL:SH)[j]:(mod(j-tonic)===6&&!keyFlat(key)?SH:FL)[j]}
+function tChordK(c,s,key){const m=c.match(/^([A-G][#b]?)([^/]*)(?:\/([A-G][#b]?))?$/);if(!m)return c;return tNoteK(m[1],s,key)+m[2]+(m[3]?'/'+tNoteK(m[3],s,key):'')}
 function tChord(c,s,flat){const m=c.match(/^([A-G][#b]?)([^/]*)(?:\/([A-G][#b]?))?$/);if(!m)return c;return tNote(m[1],s,flat)+m[2]+(m[3]?'/'+tNote(m[3],s,flat):'')}
 const MAJ={I:0,II:2,III:4,IV:5,V:7,VI:9,VII:11},MIN={I:0,II:2,III:3,IV:5,V:7,VI:8,VII:10};
 function deg(tok,key){const m=tok.match(/^(b?)(VII|VI|V|IV|III|II|I|vii|vi|v|iv|iii|ii|i)(.*)$/);if(!m)return tok;
@@ -914,7 +935,7 @@ function drawSheet(){
   $('#note').innerHTML=note;
   /* 段落換 Capo：筆記寫的 (Capo 3) 是編者的夾法；讀者改 Capo 時，這段跟著差一樣的格數 */
   const capoOf=m=>m===undefined||m===null?st.capo:Math.max(0,st.capo+m-(s.capo||0));
-  const T2=(c,cp=st.capo)=>tChord(c,st.shift-cp,keyFlat(tKey(sounding,-cp)));   // 夾 Capo 後手上按的和弦
+  const T2=(c,cp=st.capo)=>tChordK(c,st.shift-cp,tKey(sounding,-cp));   // 夾 Capo 後手上按的和弦
   const N=(c,cp=st.capo)=>real?tChord(c,st.shift,keyFlat(sounding)):T2(c,cp); // 譜上顯示：預設是按法，按「實音」顯示實際音高
   const used=[];(s.sections||[]).forEach(sec=>rowsOf(sec).forEach(r=>r.b.forEach(b=>b.forEach(c=>{if(/^[A-G]/.test(c)){const cp=capoOf(r.capo??sec.capo);if(!used.some(u=>u[0]===c&&u[1]===cp))used.push([c,cp])}}))));
   if(!s.sections)chordsOf(s).forEach(c=>used.push([c,st.capo]));

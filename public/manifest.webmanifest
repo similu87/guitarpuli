@@ -1,0 +1,15 @@
+{
+  "name": "吉他普利 Guitarpuli",
+  "short_name": "吉他普利",
+  "description": "可移調、可夾 Capo 的吉他和弦譜",
+  "lang": "zh-Hant",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F2F3EF",
+  "theme_color": "#9C6A12",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
