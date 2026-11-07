@@ -7,7 +7,6 @@ capo: 0
 bpm: 124
 time: "4/4"
 feel: straight8
-tuning: "E A E A C# E"
 strum: ""
 level: 1
 language: en

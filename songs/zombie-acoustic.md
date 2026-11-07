@@ -7,7 +7,7 @@ capo: 0
 bpm: 84
 time: "4/4"
 feel: straight16
-strum: "D-D-D-DU-UD-D-DU"
+strum: "↓-↓- ↓-↓↑ -↑↓- ↓-↓↑"
 level: 2
 language: en
 genre: [民謠, 搖滾]
@@ -23,7 +23,7 @@ added: 2026-11-05
 | Asus2 | Asus2 |
 | C♯m7 | C♯m7 - - - - E5 - - | Bsus4 | Bsus4 |
 | Asus2 | Asus2 | Bsus4 | Bsus4 |
-| F♯m | F♯m | Aadd9 | Aadd9 |
+| F♯m | F♯m | Asus2 | Asus2 |
 
 ## 副歌
 | E5 | E5 | Bsus4 | Bsus4 |
@@ -36,3 +36,7 @@ added: 2026-11-05
 
 ## 順序
 前奏 → 主歌 → 副歌 → 主歌 → 副歌 → 間奏 → 副歌
+
+## 指法
+C#m7＝X46454
+Bsus4＝X24422

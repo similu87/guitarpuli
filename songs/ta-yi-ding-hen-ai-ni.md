@@ -54,3 +54,4 @@ Amaj9（Capo 2）＝3X423X
 B/D#（Capo 2）＝x4222x
 D/F#（Capo 2）＝xx2010
 F/A（Capo 3）＝2X0232
+C/E（Capo 2）＝x5333x

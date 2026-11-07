@@ -50,3 +50,5 @@ C/B＝x2555x
 Cadd2＝x32030
 Cadd2/Bb＝x1x030
 Em7＝020030
+Bm7b5＝x2323x
+F/G＝3X321X
