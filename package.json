@@ -7,6 +7,7 @@
     "dev": "node build.mjs && npx --yes serve public"
   },
   "dependencies": {
-    "gray-matter": "4.0.3"
+    "gray-matter": "4.0.3",
+    "@resvg/resvg-js": "2.6.2"
   }
 }

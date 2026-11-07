@@ -1,0 +1,13 @@
+node_modules/
+.DS_Store
+# build.mjs 產生的檔案，不用上傳
+public/songs.json
+public/changelog.json
+public/sitemap.xml
+public/robots.txt
+public/404.html
+public/song/
+public/og/
+public/apple-touch-icon.png
+public/icon-192.png
+public/icon-512.png

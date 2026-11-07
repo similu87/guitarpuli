@@ -6,6 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
+import { makeImages } from './og.mjs';
 
 const SRC = 'songs', PUB = 'public';
 const SITE = (process.env.SITE_URL || 'https://guitarpuli.pages.dev').replace(/\/$/, '');
@@ -49,7 +50,10 @@ const keyFlat = k => { const m = String(k).match(/^([A-G][#b]?)(m?)$/); if (!m) 
 const tKey = (k, d) => { const m = String(k).match(/^([A-G][#b]?)(m?)$/); if (!m) return k; const i = ((nIdx(m[1]) + d) % 12 + 12) % 12; const rel = m[2] ? (i + 3) % 12 : i; return ([5,10,3,8,1].includes(rel) ? FL : SH)[i] + m[2]; };
 // 實際音高 → 夾 Capo 後手上按的和弦名稱（跟網站畫面的預設顯示一樣）
 const shapeName = (c, capo, key) => { if (!capo || !/^[A-G]/.test(c)) return c; const flat = keyFlat(tKey(key, -capo));
-  const tn = n => { const i = nIdx(n); return i < 0 ? n : (flat ? FL : SH)[((i - capo) % 12 + 12) % 12]; };
+  // 按法的調裡音階內的音照調號寫，音階外的黑鍵音寫降記號（跟網站畫面一樣）
+  const sk = tKey(key, -capo), km = String(sk).match(/^([A-G][#b]?)(m?)$/), tonic = km ? (nIdx(km[1]) + (km[2] ? 3 : 0)) % 12 : 0;
+  const dia = [0, 2, 4, 5, 7, 9, 11].map(x => (tonic + x) % 12);
+  const tn = n => { const i = nIdx(n); if (i < 0) return n; const j = ((i - capo) % 12 + 12) % 12; return dia.includes(j) ? (flat ? FL : SH)[j] : ((j - tonic + 12) % 12 === 6 && !flat ? SH : FL)[j]; };
   const m = c.match(/^([A-G][#b]?)([^/]*)(?:\/([A-G][#b]?))?$/); return m ? tn(m[1]) + m[2] + (m[3] ? '/' + tn(m[3]) : '') : c; };
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
@@ -195,15 +199,22 @@ fs.writeFileSync(path.join(PUB, 'songs.json'), JSON.stringify(songs));
 
 /* 2. 每首歌的網頁：用 index.html 當外框，換上標題、說明，並預先放入和弦內容讓搜尋引擎讀得到 */
 const shell = fs.readFileSync(path.join(PUB, 'index.html'), 'utf8');
-if (!shell.includes('<div id="app"></div>') || !shell.includes('<title>吉他普利</title>')) {
-  console.error('public/index.html 找不到 <title> 或 <div id="app"></div>，無法產生歌曲頁'); process.exit(1);
+const META = /<!--site-meta-->[\s\S]*?<!--\/site-meta-->\n?/;
+if (!shell.includes('<div id="app"></div>') || !shell.includes('<title>吉他普利</title>') || !META.test(shell)) {
+  console.error('public/index.html 找不到 <title>、<!--site-meta--> 或 <div id="app"></div>，無法產生歌曲頁'); process.exit(1);
 }
+// 分享預覽圖、主畫面圖示（失敗時不中斷，只是歌曲頁不放 og:image）
+const fav = fs.readFileSync(path.join(PUB, 'favicon.svg'), 'utf8');
+const pu = (fav.match(/<path fill="#fff"[^>]*\/>/) || [''])[0];
+const hasOg = await makeImages({ songs, pub: PUB, pu, shapeName }).catch(e => { console.warn('預覽圖產生失敗：' + e.message); return false; });
+const BCP = { zh: 'zh-Hant', tw: 'nan', yue: 'yue', en: 'en', ja: 'ja', ko: 'ko' };
+const ld = o => `<script type="application/ld+json">${JSON.stringify(o).replace(/</g, '\\u003c')}</script>`;
 fs.rmSync(path.join(PUB, 'song'), { recursive: true, force: true });
 for (const s of songs) {
   const url = `${SITE}/song/${s.id}/`;
   const by = s.artist ? `（${s.artist}）` : '';
   const title = `${s.title}${s.artist ? ' - ' + s.artist : ''} 吉他譜 和弦 | 吉他普利 Guitarpuli`;
-  const desc = `${s.title}${by}吉他和弦譜，原調 ${s.key}${s.capo ? `，建議 Capo ${s.capo}` : ''}，${FEELS[s.feel]}，${s.bpm} BPM。可線上移調、夾 Capo、看和弦圖、開節拍器。`;
+  const desc = `${s.title}${by}吉他和弦譜，原調 ${s.key}${s.capo ? (s.capoUse === 'finger' ? `，夾 Capo ${s.capo}（和弦為實際音高）` : `，建議 Capo ${s.capo}`) : ''}，${FEELS[s.feel]}，${s.bpm} BPM。可線上移調、夾 Capo、看和弦圖、開節拍器。`;
   const head = `<title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${url}">
@@ -212,6 +223,16 @@ for (const s of songs) {
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:url" content="${url}">
+${hasOg ? `<meta property="og:image" content="${SITE}/og/${s.id}.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="${esc(s.title)} 吉他和弦譜">
+<meta name="twitter:card" content="summary_large_image">
+` : ''}${ld({ '@context': 'https://schema.org', '@graph': [
+    { '@type': 'MusicComposition', name: s.title, url, musicalKey: s.key, ...(BCP[s.language] ? { inLanguage: BCP[s.language] } : {}), ...(s.artist ? { recordedAs: { '@type': 'MusicRecording', name: s.title, byArtist: { '@type': 'MusicGroup', name: s.artist } } } : {}), ...(hasOg ? { image: `${SITE}/og/${s.id}.png` } : {}) },
+    { '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: '吉他普利', item: SITE + '/' },
+      { '@type': 'ListItem', position: 2, name: `${s.title} 吉他譜`, item: url } ] } ] })}
 <script>window.PAGE_SONG=${JSON.stringify(s.id)};</script>`;
   const cnt = {}, total = {};
   s.order.forEach(k => total[k] = (total[k] || 0) + 1);
@@ -223,9 +244,67 @@ for (const s of songs) {
     return `<h2>${esc(SECTION_ZH[sec.name] || sec.name)}${total[k] > 1 ? `（第 ${n} 次）` : ''}${sec.capo !== undefined ? `（Capo ${sec.capo}）` : ''}</h2><pre>${rows.map(r => (r.capo !== undefined ? `（Capo ${r.capo}）` : '') + '| ' + r.b.map(b => b.map(c => shapeName(c, capOf(r), s.key)).join(' ')).join(' | ') + ' |' + (r.x ? ' ×' + r.x : '')).join('\n')}</pre>`;
   }).join('');
   const body = `<div id="app"><article class="prose"><h1>${esc(s.title)}</h1><p>${esc(s.artist)} · 原調 ${esc(s.key)}${s.capo ? ` · Capo ${s.capo}` : ''}${s.tuning ? ` · 調弦 ${esc(s.tuning)}` : ''} · ${s.bpm} BPM · ${esc(s.time)} · ${FEELS[s.feel]} · ${LANGS[s.language]}</p>${s.strum ? `<p>刷法：${esc(s.strum)}</p>` : ''}${chart}</article></div>`;
-  const html = shell.replace('<title>吉他普利</title>', head).replace('<div id="app"></div>', body);
+  const html = shell.replace(META, '').replace('<title>吉他普利</title>', head).replace('<div id="app"></div>', body);
   fs.mkdirSync(path.join(PUB, 'song', s.id), { recursive: true });
   fs.writeFileSync(path.join(PUB, 'song', s.id, 'index.html'), html);
+}
+
+/* 404 頁：網址打錯時顯示，可以搜尋歌名、歌手 */
+{
+  const list = songs.map(s => ({ i: s.id, t: s.title, a: s.artist || '' })).sort((a, b) => a.t.localeCompare(b.t, 'zh-Hant'));
+  fs.writeFileSync(path.join(PUB, '404.html'), `<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>找不到這一頁 | 吉他普利 Guitarpuli</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#9C6A12" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#5C3F0B" media="(prefers-color-scheme: dark)">
+<style>
+:root{--bg:#F2F3EF;--surface:#FFFFFF;--ink:#1B2220;--muted:#5D6762;--line:#D8DCD5;--chord:#0D6A64;--brass:#9C6A12;--on-brass:#FFFFFF;color-scheme:light}
+@media (prefers-color-scheme: dark){:root{--bg:#111413;--surface:#191D1C;--ink:#E3E7E3;--muted:#9AA39E;--line:#2C3331;--chord:#62C7BD;--brass:#D9A443;--on-brass:#1A1406;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "Noto Sans TC",system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif}
+main{max-width:560px;margin:0 auto;padding:56px 16px 40px}
+.brand{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none;font:900 22px "Noto Serif TC","Songti TC",serif}
+.brand svg{width:34px;height:34px}
+h1{font:900 32px/1.3 "Noto Serif TC","Songti TC",serif;margin:36px 0 6px}
+p{color:var(--muted);margin:0 0 20px}
+input{width:100%;font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+input:focus{outline:2px solid var(--chord);outline-offset:1px}
+ul{list-style:none;margin:12px 0 24px;padding:0;border-top:1px solid var(--line)}
+li a{display:flex;justify-content:space-between;gap:12px;padding:10px 4px;border-bottom:1px solid var(--line);color:inherit;text-decoration:none}
+li a:hover b{color:var(--chord)}
+li span{color:var(--muted);text-align:right}
+.home{display:inline-block;background:var(--brass);color:var(--on-brass);text-decoration:none;font-weight:700;border-radius:999px;padding:10px 22px}
+.none{color:var(--muted);padding:10px 4px}
+</style>
+</head>
+<body>
+<main>
+<a class="brand" href="/">${fav.replace('<svg ', '<svg aria-hidden="true" ')}吉他普利</a>
+<h1>找不到這一頁</h1>
+<p>網址可能打錯了，或這首歌已經換了網址。搜尋看看：</p>
+<input id="q" type="search" placeholder="搜尋歌名或歌手" aria-label="搜尋歌名或歌手" autocomplete="off">
+<ul id="list"></ul>
+<a class="home" href="/">回首頁</a>
+</main>
+<script>
+const S=${JSON.stringify(list).replace(/</g, '\\u003c')};
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const q=document.getElementById('q'),L=document.getElementById('list');
+function show(){const k=q.value.trim().toLowerCase();const r=k?S.filter(s=>(s.t+' '+s.a).toLowerCase().includes(k)):S.slice(0,8);
+  L.innerHTML=r.length?r.slice(0,20).map(s=>'<li><a href="/song/'+s.i+'/"><b>'+esc(s.t)+'</b><span>'+esc(s.a)+'</span></a></li>').join(''):'<li class="none">找不到符合的歌</li>'}
+q.oninput=show;
+const g=decodeURIComponent(location.pathname).match(/\\/song\\/([^/]+)/);if(g){q.value=g[1].replace(/-/g,' ')}
+show();if(q.value&&!L.querySelector('a')){q.value='';show()}
+</script>
+</body>
+</html>
+`);
 }
 
 /* 3. sitemap.xml + robots.txt */

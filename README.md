@@ -7,8 +7,10 @@ songs/            ← 樂譜檔，一首歌一個 .md
 templates/        ← Obsidian 新歌範本
 public/index.html ← 網站本體
 public/admin/     ← 網頁後台（Decap CMS）
-build.mjs         ← 把 songs/ 轉成 songs.json，格式有錯會擋下來並告訴你哪一行
-netlify.toml      ← Netlify 部署設定
+public/favicon.svg ← 分頁圖示（彈片＋普）
+build.mjs         ← 把 songs/ 轉成 songs.json、歌曲頁、404 頁，格式有錯會擋下來並告訴你哪一行
+og.mjs            ← 建置時產生分享預覽圖（public/og/）和手機主畫面圖示；字型從 GitHub 下載，失敗不影響建置
+netlify.toml      ← 舊的 Netlify 部署設定（現在用 Cloudflare Pages）
 ```
 
 ---
