@@ -4,7 +4,7 @@ title: "失蹤"
 artist: "林憶蓮"
 key: "C"
 capo: 0
-bpm: 90
+bpm: 124
 time: "4/4"
 feel: straight8
 strum: ""
