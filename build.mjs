@@ -121,7 +121,10 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
       const rm = tok.match(REPEAT);
       if (rm) x = Number(rm[1]); else if (/^詞\d+$/.test(tok)) continue;
       // 歌詞字數：字12（這列唱 12 個字）、字12/11/12（這段第 1、2、3 次）、字12+10（×2 的第 1、2 遍）
-      else if (/^字[\d+\/]+$/.test(tok)) wc = tok.slice(1).split('/').map(o => o.split('+').map(Number));
+      else if (/^字[\d+\/\-()（）]+$/.test(tok)) wc = tok.slice(1).replace(/（/g, '(').replace(/）/g, ')').split('/').map(o => o.split('+').map(x => {
+        const pm = x.match(/^(.*?)\((\d+)\)$/), base = pm ? pm[1] : x;
+        if (!base.includes('-') && !pm) return Number(x);
+        const a = base.split('-').map(Number); if (pm) { a.pickup = true; a.push(Number(pm[2])); } return a; }));
       else errors.push(`${where} 第 ${i + 1} 行：行尾看不懂「${tok}」（重複寫 ×2，字數寫 字12）`);
     }
     const bars = parts.map(b => b.trim()).filter(Boolean).map(b => b.split(/\s+/).map(normChord));
@@ -132,7 +135,10 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
     if (!bars.length) return;
     const row = { b: bars };
     if (x && x > 1) row.x = x;
-    if (wc) row.wc = wc;
+    if (wc) { row.wc = wc;
+      // 每小節字數（字4-3-3-2）：個數要跟這列的小節數一樣
+      const bad = wc.flat().find(v => Array.isArray(v) && v.length - (v.pickup ? 1 : 0) !== row.b.length);
+      if (bad) errors.push(`${where} 第 ${i + 1} 行：每小節字數有 ${bad.length - (bad.pickup ? 1 : 0)} 個，但這列有 ${row.b.length} 個小節（括號裡接到下一句的不算）`); }
     if (only !== undefined) row.only = only;
     if (rcapo !== undefined) row.capo = rcapo;
     cur.rows.push(row);
@@ -174,7 +180,8 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
   });
   // 歌詞字數：照順序每一段（不含前奏、間奏、尾奏）一個數字，或一段一個陣列（每一列的字數）
   let lyricCount = null;
-  const instSec = sec => ['intro', 'solo', 'solo12', 'outro'].includes(sec.name) || /^(前奏|間奏|尾奏)/.test(sec.name);
+  const instSec = sec => !sec.rows.some(r => r.wc) && (['intro', 'solo', 'solo12', 'outro'].includes(sec.name) || /^(前奏|間奏|尾奏)/.test(sec.name));
+  sections.forEach(sec => { if (sec.rows.some(r => r.wc) && (['intro', 'solo', 'solo12', 'outro'].includes(sec.name) || /^(前奏|間奏|尾奏)/.test(sec.name))) sec.sung = true; });
   // 譜上每列寫了「字12」就自動算出每一段每一列的字數
   if (sections.some(sec => sec.rows.some(r => r.wc))) {
     const cntN = {}, totN = {}; order.forEach(k => totN[k] = (totN[k] || 0) + 1);
@@ -183,7 +190,7 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
       const per = [];
       sec.rows.filter(r => r.only === undefined || r.only === n || (r.only === 'last' && n === totN[k])).forEach(r => {
         const w = r.wc ? (r.wc[n - 1] || r.wc[r.wc.length - 1]) : [];
-        for (let rep = 0; rep < (r.x || 1); rep++) per.push(Number(w[rep] ?? (w.length === 1 ? w[0] : 0)) || 0);
+        for (let rep = 0; rep < (r.x || 1); rep++) { const v = w[rep] ?? (w.length === 1 ? w[0] : 0); per.push(Array.isArray(v) ? (v.pickup ? [...v.slice(0, -1), { p: v[v.length - 1] }] : v) : Number(v) || 0); }
       });
       lyricCount.push(per);
     });
@@ -191,8 +198,8 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
   sections.forEach(sec => sec.rows.forEach(r => delete r.wc));
   if (d.lyric_count !== undefined && d.lyric_count !== null && d.lyric_count !== '' && !(Array.isArray(d.lyric_count) && !d.lyric_count.length)) {
     const lcv = Array.isArray(d.lyric_count) ? d.lyric_count : null;
-    const ok = lcv && lcv.every(x => Number.isInteger(x) && x >= 0 || Array.isArray(x) && x.every(y => Number.isInteger(y) && y >= 0));
-    const inst = sec => ['intro', 'solo', 'solo12', 'outro'].includes(sec.name) || /^(前奏|間奏|尾奏)/.test(sec.name);
+    const ok = lcv && lcv.every(x => Number.isInteger(x) && x >= 0 || Array.isArray(x) && x.every(y => Number.isInteger(y) && y >= 0 || Array.isArray(y) && y.every(z => Number.isInteger(z) && z >= 0 || z && Number.isInteger(z.p))));
+    const inst = sec => !sec.sung && (['intro', 'solo', 'solo12', 'outro'].includes(sec.name) || /^(前奏|間奏|尾奏)/.test(sec.name));
     const vocalN = order.filter(k => !inst(sections[k])).length;
     if (!ok) errors.push(`${where}：lyric_count 要寫成數字的陣列，例如 [48, 52] 或 [[12, 11], [13, 10]]`);
     else if (lcv.length !== vocalN) errors.push(`${where}：lyric_count 有 ${lcv.length} 個，但順序裡有歌詞的段落有 ${vocalN} 個（前奏、間奏、尾奏不算）`);
