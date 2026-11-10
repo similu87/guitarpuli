@@ -370,6 +370,7 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .rl .bk{flex:1;display:flex;gap:2px;padding-right:.3em}
 .rl .pc{border-radius:99px;background:var(--chord);opacity:.55}
 .rl .pc.cn{background:var(--muted);opacity:.45}
+.bar.now{background:color-mix(in srgb,var(--brass) 8%,transparent)}.rl .bk.now .pc{background:var(--brass);opacity:1}.rl{transition:none}
 .bar.rest .rl .pc{background:var(--muted);opacity:.3}
 .bt{font-family:var(--f-mono);font-weight:700;color:var(--muted);opacity:.75}
 .bar{position:relative}.bars .bar.hasts{padding-left:1.45em}
@@ -415,10 +416,10 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .rep{align-self:center;flex:none;width:2.6em;display:flex;justify-content:center}
 .rep b{font-family:var(--f-mono);font-weight:700;font-size:.9em;line-height:1;background:var(--brass);color:var(--on-brass);border-radius:99px;padding:.28em .5em .3em;letter-spacing:.02em}
 /* 反覆記號：整列彈幾次時，頭尾畫成 ‖: :‖ */
-.rowline.rpt .bars>.bar:first-child{border-left:5px double var(--brass)!important;padding-left:1em}
-.rowline.rpt .bars>.bar:last-child{border-right:5px double var(--brass);padding-right:1em}
-.rowline.rpt .bars>.bar:first-child::before,.rowline.rpt .bars>.bar:last-child::after{content:"";position:absolute;top:50%;width:4px;height:13px;transform:translateY(-62%);background:radial-gradient(circle,var(--brass) 1.9px,transparent 2.2px) 0 0/4px 6.5px repeat-y}
-.rowline.rpt .bars>.bar:first-child::before{left:.3em}.rowline.rpt .bars>.bar:last-child::after{right:.3em}
+.rowline.rpt .bars>.bar:first-child,.rowline.rptL .bars>.bar:first-child{border-left:5px double var(--brass)!important;padding-left:1em}
+.rowline.rpt .bars>.bar:last-child,.rowline.rptR .bars>.bar:last-child{border-right:5px double var(--brass);padding-right:1em}
+.rowline.rpt .bars>.bar:first-child::before,.rowline.rpt .bars>.bar:last-child::after,.rowline.rptL .bars>.bar:first-child::before,.rowline.rptR .bars>.bar:last-child::after{content:"";position:absolute;top:50%;width:4px;height:13px;transform:translateY(-62%);background:radial-gradient(circle,var(--brass) 1.9px,transparent 2.2px) 0 0/4px 6.5px repeat-y}
+.rowline.rpt .bars>.bar:first-child::before,.rowline.rptL .bars>.bar:first-child::before{left:.3em}.rowline.rpt .bars>.bar:last-child::after,.rowline.rptR .bars>.bar:last-child::after{right:.3em}
 .only{display:inline-block;font-size:11.5px;color:var(--on-brass);background:var(--brass);border-radius:4px;padding:0 6px;margin-bottom:3px;letter-spacing:0}
 .nb{display:inline-grid;place-items:center;min-width:1.5em;height:1.5em;padding:0 .2em;border-radius:999px;background:var(--brass);color:var(--on-brass);font-family:var(--f-mono);font-weight:700;font-size:.8em;line-height:1;letter-spacing:0}
 .chip .nb,.sec h3 .nb,.only .nb,.lbox label .nb{font-size:11px;min-width:17px;height:17px;margin-left:2px}
@@ -440,18 +441,18 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .lbox label{justify-content:flex-start;min-height:28px}.lbox label .cnt{margin-left:2px}.lbox .mv{display:inline-flex;gap:4px;margin-left:auto}
 .lbox .mv button{width:26px;height:24px;border:1px solid var(--line);border-radius:6px;background:var(--surface);font-size:12px;line-height:1;padding:0}
 .lbox .mv button:hover{border-color:var(--muted)}
-.lal{display:grid;gap:10px;max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--surface);user-select:none;-webkit-user-select:none}
+.lpaste .lph{display:block;margin:2px 0 4px;font-weight:700;font-size:13.5px;color:var(--brass)}.ledit{margin-top:12px}.ledit>summary{cursor:pointer;color:var(--muted);font-size:14px}.lal{display:grid;gap:10px;max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--surface);user-select:none;-webkit-user-select:none}
 .alsec b{display:block;font-size:12px;color:var(--brass);margin-bottom:2px}.alsec.bad b{color:#C0392B}.alsec b em{font-style:normal;font-weight:400;margin-left:8px}
 .alflow{line-height:2.1;font-size:15px}
 .alrow{white-space:normal}
-.cut{display:inline-grid;place-items:center;min-width:1.5em;height:1.5em;margin:0 3px 0 6px;border-radius:5px;background:var(--brass-soft);color:var(--brass);font:700 11px var(--f-mono);font-style:normal;cursor:grab;touch-action:none;vertical-align:1px}
+.cut{display:inline-grid;place-items:center;min-width:1.5em;height:1.5em;margin:0 3px 0 6px;border-radius:5px;background:var(--brass-soft);color:var(--brass);font:700 11px var(--f-mono);font-style:normal;vertical-align:1px}
 .cut.on{background:var(--brass);color:var(--on-brass);box-shadow:0 0 0 3px var(--brass-soft)}
 .tk.sp{margin-left:.3em}.tk.empty{color:var(--muted);opacity:.6}
 .alhelp{font-size:12.5px;color:var(--muted);margin:8px 0}
 .albar{justify-content:flex-end;flex-wrap:wrap}.albar #almove{display:inline-flex;gap:6px;margin-right:auto}.albar #almove[hidden]{display:none}
 /* 歌詞照列放：每一列和弦下面一行 */
 .lyrow{display:grid;gap:.05em;padding:.1em .7em .25em;color:var(--ink);line-height:1.5}
-.lyrow>span{overflow-wrap:anywhere}.lyrow .nb{margin-right:.4em}
+.lyrow>span{overflow-wrap:anywhere}.blyr{grid-column:1/-1;display:grid;padding:.15em .1em 0;font-family:var(--f-body);font-weight:400;font-size:calc(.95em / var(--fit));line-height:1.45;color:var(--ink);letter-spacing:0}.blyr{justify-self:stretch}.blyr>span{display:block;overflow-wrap:anywhere}.blyr .rpn{display:inline}.blyr>span:has(.pk){display:flex;gap:.4em;justify-content:space-between;align-items:baseline}.blyr>span>.pkw{flex:1}.pk{font-style:normal;color:var(--chord);white-space:nowrap}.pk b{font-weight:400;opacity:.6;margin:0 .15em;font-size:.85em}.blyr>span:has(.pk.nx){justify-content:flex-start}.pk.nx{margin-right:.3em}.lyrow .rpn,.blyr .rpn{font-style:normal;color:var(--brass);font-weight:700;margin-right:.35em;font-size:.85em}.lyrow .nb{margin-right:.4em}
 .lpaste{border:1px dashed var(--line);border-radius:10px;padding:8px 12px;background:var(--bg)}
 .lpaste summary{cursor:pointer;font-weight:700;font-size:13.5px;color:var(--brass)}
 .lpaste p{margin:6px 0;font-size:12.5px;color:var(--muted)}
@@ -525,8 +526,8 @@ textarea{width:100%;border:1px solid var(--line);border-radius:8px;background:va
 .tip svg{display:block;color:var(--ink)}
 .tip small{display:block;color:var(--muted);font-size:11px;width:96px}
 
-body.perform .rail,body.perform .songhead,body.perform .note,body.perform .practice,body.perform .sitefoot,body.perform .toolwrap,body.perform #lyrpanel,body.perform .lyrwarn{display:none}
-body.perform .orderbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding-block:12px;padding-right:52px;border-bottom:1px solid var(--line)}
+body.perform .rail,body.perform .songhead,body.perform .note,body.perform .practice,body.perform .sitefoot,body.perform .toolwrap .viewbtns,body.perform #lyrpanel,body.perform .lyrwarn{display:none}
+body.perform .toolwrap{padding-right:52px}body.perform .orderbar{padding-block:12px}
 body.perform .sheet{font-size:calc(var(--sheet-size) * 1.4)}
 body.perform .exitperf{display:inline-flex;position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px));z-index:30;background:var(--surface)}
 /* social, footer, modal, report */
@@ -610,7 +611,7 @@ home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲明',c
   empty:{library:['曲庫是空的','在任何一首譜按「收藏」，或按右上角「新增譜」抄寫自己的版本，都會集中在這裡。'],'library-saved':['還沒有收藏','在卡片上按愛心，或在譜面頁按「收藏」。'],
     'library-mine':['還沒有自建譜','用 ChordPro 格式輸入歌詞和和弦，只存在你自己的瀏覽器，一樣可以移調、夾 Capo。'],'library-recent':['還沒有瀏覽紀錄','打開任一首譜後會出現在這裡。']},
   back:'返回',origKey:'原調',transpose:'移調',reset:'原調',resetTip:'回原調並套用編者建議的 Capo',capoNone:'無',real:'實音',realTip:'顯示實際音高（關閉時顯示夾 Capo 後手上按的和弦）',
-  size:'字體',metro:'節拍器',sub:'細分',subTip:'依律動加入細分拍',practice:'練習面板',myCover:'我的 Cover',igCover:'到 Instagram 看',repTip:n=>`這一列彈 ${n} 次`,simple:'簡單版',simpleTip:'和弦簡化成三和弦（保留屬七），一小節最多兩個和弦',noteSimple:'簡單版：和弦已簡化，想彈原曲的和弦再按一次「簡單版」',lyrics:'我的歌詞',cols:'兩欄',perform:'全螢幕演奏',endPerform:'離開全螢幕',viewFull:'完整',viewCompact:'精簡',viewFullTip:'照彈奏順序從頭看到尾。連續、一模一樣的段落只顯示一次，歌詞分 1. 2.。',viewCompactTip:'每段只寫一次，照上方的順序彈。點順序裡的段落，會標出那一次的歌詞。',orderLbl:'順序',singN:n=>`唱 ${n} 次`,nthTime:n=>`第 ${n} 次`,onlyIn:(s,n)=>`只有${s}${n}`,onlyLast:s=>`只有最後一次${s}`,lyrEmpty:'（還沒填歌詞）',lyrChanged:s=>`<b>${s}</b> 的譜有更新，這幾段的歌詞可能對不上，請打開「我的歌詞」確認。其他段落不受影響。`,lyrOk:'我確認過了',lyrLines:a=>`${a} 行`,
+  size:'字體',metro:'節拍器',sub:'細分',subTip:'依律動加入細分拍',practice:'練習面板',myCover:'我的 Cover',igCover:'到 Instagram 看',repTip:n=>`這一列彈 ${n} 次`,repTipN:n=>`反覆記號之間彈 ${n} 次`,simple:'簡單版',simpleTip:'和弦簡化成三和弦（保留屬七），一小節最多兩個和弦',noteSimple:'簡單版：和弦已簡化，想彈原曲的和弦再按一次「簡單版」',lyrics:'我的歌詞',cols:'兩欄',perform:'全螢幕演奏',endPerform:'離開全螢幕',viewFull:'完整',viewCompact:'精簡',viewFullTip:'照彈奏順序從頭看到尾。連續、一模一樣的段落只顯示一次，歌詞分 1. 2.。',viewCompactTip:'每段只寫一次，照上方的順序彈。點順序裡的段落，會標出那一次的歌詞。',orderLbl:'順序',singN:n=>`唱 ${n} 次`,nthTime:n=>`第 ${n} 次`,onlyIn:(s,n)=>`只有${s}${n}`,onlyLast:s=>`只有最後一次${s}`,lyrEmpty:'（還沒填歌詞）',lyrChanged:s=>`<b>${s}</b> 的譜有更新，這幾段的歌詞可能對不上，請打開「我的歌詞」確認。其他段落不受影響。`,lyrOk:'我確認過了',lyrLines:a=>`${a} 行`,
   noteCapo:(a,c,s,r)=>r?`調性 <b>${a}</b>，夾 Capo ${c}：譜上照實際音高寫，和弦圖是夾 Capo 後的按法`:`調性 <b>${a}</b>，夾 Capo ${c}：譜上是 <b>${s}</b> 調按法，實際音高高 ${c} 個半音`,noteKey:a=>`目前調性 <b>${a}</b>`,
   noteFinger:(a,c)=>`調性 <b>${a}</b>，夾 Capo ${c}：這首的 Capo 是當多一根手指按和弦用，譜上照實際音高寫，和弦圖格數從 Capo 算起`,tuneLbl:'調弦',tuneStd:'標準調弦',noteTune:(tn,nm)=>`這首用<b>${nm?nm+'（'+tn+'）':tn}</b>調弦：沒有標「編者按法」的和弦圖是標準調弦的按法，只能參考`,
   noteShift:(o,n)=>`（原調 ${o}，${n>0?'升':'降'} ${Math.abs(n)} 個半音）`,noteEditor:(c,s)=>`編者建議 Capo ${c}`,notePub:'公開譜只含和弦與段落；歌詞由你自己輸入，只存在這台裝置',notePubAcct:'公開譜只含和弦與段落；你的歌詞存在你的帳號裡，只有你看得到',
@@ -618,8 +619,8 @@ home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲明',c
   feels:{straight8:'平均八分',swing:'搖擺八分',shuffle:'三連音拖曳',straight16:'平均十六分',triplet:'12/8 三連音'},
   strumNote:{late:'後半拍稍微延後',down:'全部下刷'},
   sec:{solo:'間奏',intro:'前奏',verse:'主歌',verse12:'主歌（12 小節）',solo12:'間奏（12 小節）',prechorus:'導歌',chorus:'副歌',bridge:'橋段',outro:'尾奏'},
-  lyrHelp:n=>`每一格是「某段的第幾次」，一行一句，歌詞會整段顯示在那段和弦下面（兩句一排）。切換完整、精簡時歌詞都從這裡讀，不會跑掉。內容只存在你的瀏覽器，不會上傳到網站。`,lyrHelpAcct:n=>`每一格是「某段的第幾次」，一行一句，歌詞會整段顯示在那段和弦下面（兩句一排）。切換完整、精簡時歌詞都從這裡讀，不會跑掉。歌詞會存到你的帳號，手機和電腦都看得到，其他人看不到。`,lyrPh:'第 1 行歌詞\n第 2 行歌詞\n…',
-  lyrPaste:'貼上整首歌詞，自動分到各段',lyrAlHelp:'每個黃色數字是一列和弦的開頭。哪一列切歪了，按住數字往前或往後拖到正確的字前面就好；手機也可以點數字，再按「往前一字」「往後一字」。灰色的「—」是這一列沒有歌詞。',lyrAlBad:'字數跟設定不同，請檢查這段',lyrPrev:'往前一字',lyrNext:'往後一字',lyrRealign:'調整對齊',lyrCount:'產生字數',lyrCountTip:'把目前每一列的字數複製成 lyric_count，貼進筆記，之後別人貼歌詞就會自動對好',lyrCountCopied:'已複製 lyric_count，貼進筆記就好',lyrDrag:'按住拖到正確的字前面',lyrAlRes:(n,lc,bad)=>`共 ${n} 個字`+(lc?(bad?`，有 ${bad} 段字數跟這首的設定不同，請檢查`:'，字數跟這首的設定都對得上'):''),lyrPasteHelp:'從歌詞網站整首複製貼上，按「分段」。符號、空白、作詞作曲會自動拿掉，然後照每一列和弦切好，歌詞會顯示在每一列和弦下面。有設定字數的歌會直接對好；沒有的照段落名稱（[主歌]、副歌：、Chorus…）和空行配，切歪的地方拖一下就好。',lyrPastePh:'在這裡貼上整首歌詞',lyrSplit:'分段',lyrApply:'放進各段',lyrUnmark:'不是段落開頭',lyrPickHint:'點一下選段落',lyrNone:'沒有讀到歌詞',lyrPickRes:(n,u)=>`共 ${n} 行。${u?`最前面 ${u} 行還沒有段落，`:''}點每段的第一句選段落。`,lyrApplied:'已放進各段 ✓',lyrMvUp:'把第一行移到上一段',lyrMvDown:'把最後一行移到下一段',lyrSave:'儲存歌詞',lyrSaved:'已儲存',lyrClose:'收起',lyrLine:n=>`第 ${n} 行歌詞`,
+  lyrHelp:n=>`內容只存在你的瀏覽器，不會上傳到網站。`,lyrHelpAcct:n=>`歌詞會存到你的帳號，手機和電腦都看得到，其他人看不到。`,lyrPh:'第 1 行歌詞\n第 2 行歌詞\n…',
+  lyrPaste:'貼上整首歌詞，自動分到各段',lyrEditSec:'逐段修改歌詞',lyrAlHelp:'已經放進各段。下面是每一列的歌詞（數字是第幾列，灰色「—」是這列沒歌詞）；字數跟設定不同的段落會標紅色。',lyrAlBad:'字數跟設定不同，請檢查這段',lyrPrev:'往前一字',lyrNext:'往後一字',lyrRealign:'調整對齊',lyrCount:'產生字數',lyrCountTip:'把目前每一列的字數複製成 lyric_count，貼進筆記，之後別人貼歌詞就會自動對好',lyrCountCopied:'已複製 lyric_count，貼進筆記就好',lyrDrag:'按住拖到正確的字前面',lyrAlRes:(n,lc,bad)=>`共 ${n} 個字`+(lc?(bad?`，有 ${bad} 段字數跟這首的設定不同，請檢查`:'，字數跟這首的設定都對得上'):''),lyrPasteHelp:'從歌詞網站整首複製，貼進下面就好，會自動拿掉符號、作詞作曲、括號裡的和聲，照每一列和弦分好，顯示在和弦下面。',lyrPastePh:'在這裡貼上整首歌詞',lyrSplit:'分段',lyrApply:'放進各段',lyrUnmark:'不是段落開頭',lyrPickHint:'點一下選段落',lyrNone:'沒有讀到歌詞',lyrPickRes:(n,u)=>`共 ${n} 行。${u?`最前面 ${u} 行還沒有段落，`:''}點每段的第一句選段落。`,lyrApplied:'已放進各段 ✓',lyrMvUp:'把第一行移到上一段',lyrMvDown:'把最後一行移到下一段',lyrSave:'儲存歌詞',lyrSaved:'已儲存',lyrClose:'收起',lyrLine:n=>`第 ${n} 行歌詞`,
   editTitle:'編輯譜',newTitle:'新增譜',fTitle:'歌名',fArtist:'歌手',fKey:'原調（實際音高）',fCapo:'建議 Capo',capoNo:'不夾',fFeel:'律動',fTime:'拍號',fStrum:'刷法',
   fBody:'歌詞與和弦（寫實際音高的和弦）',hint:'和弦放在方括號裡：<code>[G]歌詞[D]歌詞</code>。段落標題寫 <code>{c: 副歌}</code> 或 <code># 副歌</code>，空一行分段。',
   btnSave:'儲存',btnCancel:'取消',btnDel:'刪除',delConfirm:'再按一次確認刪除',needTitle:'請先填歌名',
@@ -644,7 +645,7 @@ home:'Home',library:'My Library',theme:'Theme',legal:'Copyright',changelog:'Chan
   empty:{library:['Your library is empty','Save any sheet, or use New Sheet to write your own arrangement.'],'library-saved':['Nothing saved yet','Tap the heart on a card or Save on a sheet.'],
     'library-mine':['No sheets of your own yet','Write lyrics and chords in ChordPro. They stay in your browser and still transpose and use a capo.'],'library-recent':['No history yet','Sheets you open will appear here.']},
   back:'Back',origKey:'Original key',transpose:'Transpose',reset:'Reset',resetTip:'Back to the original key and the editor’s capo',capoNone:'None',real:'Concert',realTip:'Show concert pitch (off: show the chord shapes you play with the capo on)',
-  size:'Text',metro:'Metronome',sub:'Subdivide',subTip:'Add subdivisions that follow the feel',practice:'Practice Panel',myCover:'My Cover',igCover:'Watch on Instagram',repTip:n=>`Play this row ${n} times`,simple:'Simple',simpleTip:'Simplify to triads (dominant 7ths kept), at most two chords per bar',noteSimple:'Simple version: chords are simplified. Tap “Simple” again for the original chords.',lyrics:'My Lyrics',cols:'Two Columns',perform:'Full Screen',endPerform:'Exit Full Screen',viewFull:'Full',viewCompact:'Compact',viewFullTip:'Read top to bottom in playing order. Back-to-back identical sections show once, with lyrics as 1. 2.',viewCompactTip:'Each section shows once. Follow the order above. Tap a section in the order to highlight its lyrics.',orderLbl:'ORDER',singN:n=>`${n} times`,nthTime:n=>`time ${n}`,onlyIn:(s,n)=>`${s} ${n} only`,onlyLast:s=>`Last ${s} only`,lyrEmpty:'(no lyrics yet)',lyrChanged:s=>`The chords for <b>${s}</b> were updated, so those lyrics may be out of place. Open My Lyrics to check. Other sections are fine.`,lyrOk:'Looks right',lyrLines:a=>`${a} line${a===1?'':'s'}`,
+  size:'Text',metro:'Metronome',sub:'Subdivide',subTip:'Add subdivisions that follow the feel',practice:'Practice Panel',myCover:'My Cover',igCover:'Watch on Instagram',repTip:n=>`Play this row ${n} times`,repTipN:n=>`Play between the repeat signs ${n} times`,simple:'Simple',simpleTip:'Simplify to triads (dominant 7ths kept), at most two chords per bar',noteSimple:'Simple version: chords are simplified. Tap “Simple” again for the original chords.',lyrics:'My Lyrics',cols:'Two Columns',perform:'Full Screen',endPerform:'Exit Full Screen',viewFull:'Full',viewCompact:'Compact',viewFullTip:'Read top to bottom in playing order. Back-to-back identical sections show once, with lyrics as 1. 2.',viewCompactTip:'Each section shows once. Follow the order above. Tap a section in the order to highlight its lyrics.',orderLbl:'ORDER',singN:n=>`${n} times`,nthTime:n=>`time ${n}`,onlyIn:(s,n)=>`${s} ${n} only`,onlyLast:s=>`Last ${s} only`,lyrEmpty:'(no lyrics yet)',lyrChanged:s=>`The chords for <b>${s}</b> were updated, so those lyrics may be out of place. Open My Lyrics to check. Other sections are fine.`,lyrOk:'Looks right',lyrLines:a=>`${a} line${a===1?'':'s'}`,
   noteCapo:(a,c,s,r)=>r?`Key <b>${a}</b>, Capo ${c}: chords are shown at concert pitch; diagrams show the fingering with the capo on`:`Key <b>${a}</b>, Capo ${c}: chords are <b>${s}</b> shapes; they sound ${c} semitone${c>1?'s':''} higher`,noteKey:a=>`Key: <b>${a}</b>`,
   noteFinger:(a,c)=>`Key <b>${a}</b>, Capo ${c}: the capo works as an extra finger for these voicings, so chords are written at concert pitch; diagram frets are counted from the capo`,tuneLbl:'Tuning',tuneStd:'Standard',noteTune:(tn,nm)=>`This song uses <b>${nm?nm+' ('+tn+')':tn}</b> tuning. Diagrams not marked “Editor’s voicing” show standard-tuning shapes, for reference only`,
   noteShift:(o,n)=>` (original ${o}, ${n>0?'up':'down'} ${Math.abs(n)} ${Math.abs(n)===1?'semitone':'semitones'})`,noteEditor:(c,s)=>`Editor’s pick: Capo ${c}`,notePub:'Public sheets show chords and sections only. Lyrics you add stay on this device.',notePubAcct:'Public sheets show chords and sections only. Your lyrics are saved to your account and only you can see them.',
@@ -652,8 +653,8 @@ home:'Home',library:'My Library',theme:'Theme',legal:'Copyright',changelog:'Chan
   feels:{straight8:'Straight 8ths',swing:'Swing',shuffle:'Shuffle',straight16:'Straight 16ths',triplet:'12/8 Triplet'},
   strumNote:{late:'lay back on the upbeat',down:'all downstrokes'},
   sec:{solo:'Solo',intro:'Intro',verse:'Verse',verse12:'Verse (12-bar)',solo12:'Solo (12-bar)',prechorus:'Pre-Chorus',chorus:'Chorus',bridge:'Bridge',outro:'Outro'},
-  lyrHelp:n=>`Each box is one pass through a section, one line per lyric line. Lyrics show as a block under that section’s chords, two lines per row. Switching between Full and Compact reads from here, so lyrics stay in place. Your lyrics stay in this browser and are never uploaded.`,lyrHelpAcct:n=>`Each box is one pass through a section, one line per lyric line. Lyrics show as a block under that section’s chords, two lines per row. Switching between Full and Compact reads from here, so lyrics stay in place. Lyrics are saved to your account, so they show up on all your devices. Nobody else can see them.`,lyrPh:'Line 1\nLine 2\n…',
-  lyrPaste:'Paste the whole song and split it automatically',lyrAlHelp:'Each yellow number marks the start of a chord row. If a row is split in the wrong place, drag its number to the word it should start with. On a phone, tap a number, then use Back one / Forward one. A gray “—” means that row has no lyrics.',lyrAlBad:'Word count differs from this song’s setting, please check',lyrPrev:'Back one',lyrNext:'Forward one',lyrRealign:'Adjust alignment',lyrCount:'Make word counts',lyrCountTip:'Copy each row’s word count as lyric_count for the note, so anyone pasting lyrics later gets them aligned automatically',lyrCountCopied:'lyric_count copied. Paste it into the note.',lyrDrag:'Drag to the word this row should start with',lyrAlRes:(n,lc,bad)=>`${n} words`+(lc?(bad?`, ${bad} section(s) don’t match this song’s counts, please check`:', all sections match this song’s counts'):''),lyrPasteHelp:'Copy the full lyrics from a lyrics site, paste them here and press Split. Symbols, spaces and credits are removed, then the lyrics are split by chord row and shown under each row. Songs with word counts line up automatically; others are matched by section names ([Verse], Chorus:…) and blank lines. Drag to fix anything that lands in the wrong place.',lyrPastePh:'Paste the whole song here',lyrSplit:'Split',lyrApply:'Fill Sections',lyrUnmark:'Not a section start',lyrPickHint:'Tap to pick a section',lyrNone:'No lyrics found',lyrPickRes:(n,u)=>`${n} lines. ${u?`The first ${u} are not assigned yet. `:''}Tap the first line of each section to choose it.`,lyrApplied:'Filled ✓',lyrMvUp:'Move the first line to the previous section',lyrMvDown:'Move the last line to the next section',lyrSave:'Save Lyrics',lyrSaved:'Saved',lyrClose:'Close',lyrLine:n=>`Line ${n}`,
+  lyrHelp:n=>`Your lyrics stay in this browser and are never uploaded.`,lyrHelpAcct:n=>`Lyrics are saved to your account, so they show up on all your devices. Nobody else can see them.`,lyrPh:'Line 1\nLine 2\n…',
+  lyrPaste:'Paste the whole song and split it automatically',lyrEditSec:'Edit lyrics by section',lyrAlHelp:'Done. Below is what each chord row got (numbers are row numbers; a gray “—” means no lyrics). Sections whose word count doesn’t match are marked red.',lyrAlBad:'Word count differs from this song’s setting, please check',lyrPrev:'Back one',lyrNext:'Forward one',lyrRealign:'Adjust alignment',lyrCount:'Make word counts',lyrCountTip:'Copy each row’s word count as lyric_count for the note, so anyone pasting lyrics later gets them aligned automatically',lyrCountCopied:'lyric_count copied. Paste it into the note.',lyrDrag:'Drag to the word this row should start with',lyrAlRes:(n,lc,bad)=>`${n} words`+(lc?(bad?`, ${bad} section(s) don’t match this song’s counts, please check`:', all sections match this song’s counts'):''),lyrPasteHelp:'Copy the full lyrics from a lyrics site and paste them below. Symbols, credits and bracketed backing vocals are removed, and the lyrics are split by chord row and shown under the chords.',lyrPastePh:'Paste the whole song here',lyrSplit:'Split',lyrApply:'Fill Sections',lyrUnmark:'Not a section start',lyrPickHint:'Tap to pick a section',lyrNone:'No lyrics found',lyrPickRes:(n,u)=>`${n} lines. ${u?`The first ${u} are not assigned yet. `:''}Tap the first line of each section to choose it.`,lyrApplied:'Filled ✓',lyrMvUp:'Move the first line to the previous section',lyrMvDown:'Move the last line to the next section',lyrSave:'Save Lyrics',lyrSaved:'Saved',lyrClose:'Close',lyrLine:n=>`Line ${n}`,
   editTitle:'Edit Sheet',newTitle:'New Sheet',fTitle:'Title',fArtist:'Artist',fKey:'Key (concert pitch)',fCapo:'Suggested capo',capoNo:'None',fFeel:'Feel',fTime:'Time',fStrum:'Strumming',
   fBody:'Lyrics and chords (write chords in concert pitch)',hint:'Put chords in brackets: <code>[G]lyric[D]lyric</code>. Mark sections with <code>{c: Chorus}</code> or <code># Chorus</code>, and leave a blank line between sections.',
   btnSave:'Save',btnCancel:'Cancel',btnDel:'Delete',delConfirm:'Click again to delete',needTitle:'Title required',
@@ -915,7 +916,7 @@ function bestCapo(song,shift){let best=0,bs=-1e9;for(let c=0;c<=7;c++){const v=c
 
 function openSong(song,isMine,keepState){
   stopAll();st.song=song;st.isMine=isMine;if(!keepState)st.lyrOpen=false;
-  const p=LS.get('pref_'+song.id,null);st.shift=p?p.shift:0;st.capo=p?p.capo:(song.capo||0);if(!keepState)st.bpm=song.bpm||90;
+  if(!keepState){st.shift=0;st.capo=song.capo||0;st.bpm=song.bpm||90;st.real=false;st.size=16;LS.set('real_'+song.id,true);document.documentElement.style.setProperty('--sheet-size','16px')}
   if(!isMine)statSong(song.id);
   if(!isMine&&!keepState){const r=LS.get('recent',[]).filter(x=>x!==song.id);r.unshift(song.id);LS.set('recent',r.slice(0,20))}
   const isFav=favs().includes(song.id);
@@ -948,7 +949,7 @@ function act(a){
   if(a==='real'){const s=st.song;if(s&&s.capoUse==='finger')LS.set('real_'+s.id,!isReal(s));else{st.real=!st.real;LS.set('real',st.real)}drawSheet()}
   if(a==='size-'||a==='size+'){st.size=Math.min(26,Math.max(12,st.size+(a==='size+'?1:-1)));LS.set('size',st.size);document.documentElement.style.setProperty('--sheet-size',st.size+'px');fitBars()}
   if(a==='cols'){st.cols=!st.cols;LS.set('cols',st.cols);$('#colsbtn').classList.toggle('on',st.cols);drawSheet()}
-  if(a==='bpm-'||a==='bpm+'){st.bpm=Math.min(240,Math.max(40,st.bpm+(a==='bpm+'?1:-1)));$('#bpmv').textContent=st.bpm;if(st.metro){metroStop();metroStart()}}
+  if(a==='bpm-'||a==='bpm+'){st.bpm=Math.min(240,Math.max(40,st.bpm+(a==='bpm+'?1:-1)));$('#bpmv').textContent=st.bpm;if(st.metro){metroStop();metroStart(true)}}
   if(a==='metro')st.metro?metroStop():metroStart();
   if(a==='sub'){st.sub=!st.sub;LS.set('sub',st.sub);$('#subbtn').classList.toggle('on',st.sub)}
   if(a==='practice'){st.practice=!st.practice;LS.set('practice',st.practice);$('#pracbtn').classList.toggle('on',st.practice);drawSheet()}
@@ -957,7 +958,7 @@ function act(a){
   if(a==='simple'){st.simple=!st.simple;LS.set('simple',st.simple);const b=$('#simplebtn');b.classList.toggle('on',st.simple);b.setAttribute('aria-pressed',st.simple);drawSheet()}
   if(a==='lyr'){st.lyrOpen=!st.lyrOpen;$('#lyrbtn').classList.toggle('on',st.lyrOpen);drawLyrPanel()}
 }
-function drawSheet(){
+function drawSheet(){PS=null;
   const s=st.song;const sounding=tKey(s.key,st.shift);const shape=tKey(sounding,-st.capo);const flat=keyFlat(shape);const total=st.shift-st.capo;
   $('#keyv').textContent=sounding;$('#bpmv').textContent=st.bpm;$('#capo').value=st.capo;
   const real=isReal(s),rb=$('#realbtn');if(rb){rb.classList.toggle('on',real);rb.setAttribute('aria-pressed',real);rb.disabled=!st.capo}
@@ -1013,11 +1014,15 @@ function lyrSecMatch(lab,sec){const zh={verse:'主歌',chorus:'副歌',prechorus
 function lyrParasL(txt){const out=[];let cur={lab:null,raw:[]};const push=()=>{const lines=cleanLyrics(cur.raw.join('\n'));if(lines.length)out.push({lab:cur.lab,lines});cur={lab:null,raw:[]}};
   String(txt).replace(/\r/g,'').split('\n').forEach(l=>{const lab=lyrLabel(l);if(lab){push();cur.lab=lab;return}if(!l.trim()){if(cur.raw.some(x=>x.trim()))push();return}cur.raw.push(l)});push();return out}
 /* 字數：中文、日文假名、韓文一個字算 1，英文一個單字算 1，符號、空白不算 */
+const lcN=b=>b&&typeof b==='object'?+b.p||0:+b||0;
+const lcSum=x=>Array.isArray(x)?x.reduce((a,b)=>a+lcN(b),0):(+x||0);
+/* 一列歌詞照每小節字數切開 */
+function splitBars(text,counts){const re=new RegExp(LTOK.source,'gu'),pos=[];let m;while((m=re.exec(text)))pos.push(m.index);
+  const out=[];let k=0;counts.forEach((c,i)=>{const a=k;k+=(+c||0);const from=a<pos.length?pos[a]:text.length,to=i===counts.length-1?text.length:(k<pos.length?pos[k]:text.length);out.push(text.slice(from,to).trim())});return out}
+const barNums=bc=>bc.map(lcN);
 const LTOK=/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}ー々]|[\p{L}\p{N}][\p{L}\p{N}'’]*/u;
 /* 整首貼上：保留空行分段，每段各自清掉雜訊 */
 function lyrParas(txt){return String(txt).replace(/\r/g,'').split(/\n\s*\n/).map(cleanLyrics).filter(x=>x.length)}
-const AL={drag:-1,move:null};
-addEventListener('pointermove',e=>{if(AL.drag>0&&AL.move)AL.move(e)});addEventListener('pointerup',()=>{AL.drag=-1});addEventListener('pointercancel',()=>{AL.drag=-1});
 function drawLyrPanel(){
   const p=$('#lyrpanel');if(!st.lyrOpen){p.innerHTML='';drawSheet();return}
   const s=st.song,lyr=getLyr(s),tot=occTotals(s),occs=songOccs(s).filter(o=>!isInst(o.sec));
@@ -1025,12 +1030,13 @@ function drawLyrPanel(){
   const boxes=occs.map(o=>{const cur=(lyr.L[o.key]||{})[o.n]||[];const id=`lt-${o.k}-${o.n}`;
     return `<div class="lbox"><label for="${id}"><span>${lab(o)}</span><span class="cnt">${t('lyrLines')(cur.length)}</span></label><textarea id="${id}" rows="${Math.min(Math.max(cur.length,3),8)}" data-key="${esc(o.key)}" data-n="${o.n}">${esc(cur.join('\n'))}</textarea></div>`}).join('');
   p.innerHTML=`<div class="lyrpanel"><p>${user?t('lyrHelpAcct')():t('lyrHelp')()}</p>
-  <details class="lpaste"${st.pasteOpen?' open':''}><summary>${t('lyrPaste')}</summary><p>${t('lyrPasteHelp')}</p><textarea id="lyrall" rows="8" placeholder="${esc(t('lyrPastePh'))}"></textarea>
-  <div class="btns"><button class="btn" id="lyrsplit">${t('lyrSplit')}</button><span class="lres" id="lyrres" role="status"></span></div>
+  <div class="lpaste"><b class="lph">${t('lyrPaste')}</b><p>${t('lyrPasteHelp')}</p><textarea id="lyrall" rows="8" placeholder="${esc(t('lyrPastePh'))}"></textarea>
+  <div class="btns"><span class="lres" id="lyrres" role="status"></span></div>
   <div id="lalwrap" hidden><p class="alhelp">${t('lyrAlHelp')}</p><div class="lal" id="lal"></div>
-  <div class="btns albar"><span id="almove" hidden><button class="btn" id="alprev">◀ ${t('lyrPrev')}</button><button class="btn" id="alnext">${t('lyrNext')} ▶</button></span><button class="btn pri" id="lyrapply">${t('lyrApply')}</button></div></div></details>
-  <div class="lboxes">${boxes}</div>
-  <div class="btns"><button class="btn pri" id="lyrsave">${t('lyrSave')}</button><button class="btn" id="lyrrealign">${t('lyrRealign')}</button>${isAdmin()?`<button class="btn" id="lyrcount" title="${t('lyrCountTip')}">${t('lyrCount')}</button>`:''}<button class="btn" id="lyrclose">${t('lyrClose')}</button></div></div>`;
+  </div></div>
+  <details class="ledit"${st.editOpen?' open':''}><summary>${t('lyrEditSec')}</summary><div class="lboxes">${boxes}</div>
+  <div class="btns"><button class="btn pri" id="lyrsave">${t('lyrSave')}</button></div></details>
+  <div class="btns"><button class="btn" id="lyrclose">${t('lyrClose')}</button></div></div>`;
   const save=ta=>{const l=getLyr(s);const lines=ta.value.split('\n');while(lines.length&&lines[lines.length-1]==='')lines.pop();
     (l.L[ta.dataset.key]=l.L[ta.dataset.key]||{})[ta.dataset.n]=lines;setLyr(s,l);
     ta.previousElementSibling.querySelector('.cnt').textContent=t('lyrLines')(lines.length)};
@@ -1049,28 +1055,25 @@ function drawLyrPanel(){
     const nls=[];for(let i=a;i<b;i++)if(T[i].nl)nls.push(i+1);if(nls.length&&nls[nls.length-1]!==b)nls.push(b);
     if(nls.length===n)return [a,...nls];
     for(let j=1;j<n;j++){const tgt=a+(b-a)*j/n;out.push(Math.max(out[j-1],snap(tgt,out[j-1],b,Math.max(2,Math.round((b-a)/n*.4)))))}out.push(b);return out};
-  const lc=Array.isArray(s.lyricCount)&&s.lyricCount.length===occs.length?s.lyricCount:null;
+  const lc=Array.isArray(s.lyricCount)&&s.lyricCount.length===occs.length?s.lyricCount.map(x=>Array.isArray(x)?x.map(lcSum):x):null;
   const buildCuts=bounds=>{cuts=[];occs.forEach((o,oi)=>{const r=splitRows(bounds[oi],bounds[oi+1],o.lines,lc&&Array.isArray(lc[oi])?lc[oi]:null);r.pop();cuts.push(...r)});cuts.push(T.length);
     while(cuts.length>rowsAll.length+1)cuts.splice(cuts.length-2,1)};
   const rowText=k=>{let s2='';for(let i=cuts[k];i<cuts[k+1];i++){const x=T[i];s2+=(i>cuts[k]&&(x.sp||T[i-1].nl||(/^[A-Za-z0-9]/.test(x.w)&&/[A-Za-z0-9'’]$/.test(T[i-1].w)))?' ':'')+x.w}return s2};
   const occBad=oi=>{if(!lc)return false;const st1=rowsAll.findIndex(r=>r.oi===oi);if(st1<0)return false;const tot=Array.isArray(lc[oi])?lc[oi].reduce((x,y)=>x+y,0):lc[oi];return cuts[st1+occs[oi].lines]-cuts[st1]!==tot};
   const drawAl=()=>{const box=$('#lal');let h='',k=0;
     occs.forEach((o,oi)=>{h+=`<div class="alsec${occBad(oi)?' bad':''}"><b>${lab(o)}${occBad(oi)?`<em>${t('lyrAlBad')}</em>`:''}</b><div class="alflow">`;
-      for(let li=0;li<o.lines;li++,k++){h+=`<span class="alrow"><i class="cut${sel===k?' on':''}" data-c="${k}" title="${t('lyrDrag')}">${li+1}</i>`;
+      for(let li=0;li<o.lines;li++,k++){h+=`<span class="alrow"><i class="cut${sel===k?' on':''}" data-c="${k}" >${li+1}</i>`;
         for(let i=cuts[k];i<cuts[k+1];i++)h+=`<span class="tk${(T[i].sp||(T[i-1]&&T[i-1].nl))&&i>cuts[k]?' sp':''}" data-t="${i}">${esc(T[i].w)}</span>`;
         if(cuts[k]===cuts[k+1])h+=`<span class="tk empty" data-t="${cuts[k]}">—</span>`;h+='</span>'}
       h+='</div></div>'});
-    box.innerHTML=h;$('#almove').hidden=sel<1;
+    box.innerHTML=h;
     const bad=occs.filter((o,oi)=>occBad(oi)).length;
     $('#lyrres').textContent=t('lyrAlRes')(T.length,lc,bad)};
   const moveCut=(c,pos)=>{if(c<1||c>=cuts.length-1)return;pos=Math.max(cuts[c-1],Math.min(cuts[c+1],pos));if(pos!==cuts[c]){cuts[c]=pos;drawAl()}};
   const openAl=bounds=>{buildCuts(bounds);sel=-1;$('#lalwrap').hidden=false;drawAl()};
-  /* 拖分界線：手指／滑鼠按住數字往前後拖，放在哪個字前面，那個字就變成下一列的開頭 */
-  $('#lal').addEventListener('pointerdown',e=>{const c=e.target.closest('.cut');if(!c)return;e.preventDefault();sel=+c.dataset.c;AL.drag=sel;drawAl()});
-  AL.move=e=>{const el=document.elementFromPoint(e.clientX,e.clientY);const tk=el&&el.closest&&el.closest('#lal .tk');if(!tk)return;
-    const r=tk.getBoundingClientRect(),i=+tk.dataset.t+(e.clientX>r.left+r.width/2&&!tk.classList.contains('empty')?1:0);moveCut(AL.drag,i)};
-  $('#alprev').onclick=()=>moveCut(sel,cuts[sel]-1);$('#alnext').onclick=()=>moveCut(sel,cuts[sel]+1);
-  $('#lyrsplit').onclick=()=>{const paras=lyrParasL($('#lyrall').value);const lines=paras.flatMap(x=>x.lines);
+  /* 貼上就自動分段、放進各段 */
+  let pT;$('#lyrall').addEventListener('input',()=>{clearTimeout(pT);pT=setTimeout(()=>{doSplit();if(!$('#lalwrap').hidden)doApply()},350)});
+  const doSplit=()=>{const paras=lyrParasL($('#lyrall').value);const lines=paras.flatMap(x=>x.lines);
     if(!lines.length){$('#lyrres').textContent=t('lyrNone');$('#lalwrap').hidden=true;return}
     T=tokOfLines(lines);
     /* 先決定每一段從第幾個字開始：有 lyric_count 就照字數（對齊到最近的換行）；沒有就照段落名稱、空行依順序配 */
@@ -1084,28 +1087,18 @@ function drawLyrPanel(){
       for(let oi=occs.length-1;oi>0;oi--)if(bounds[oi]===null)bounds[oi]=bounds[oi+1];
       for(let oi=1;oi<=occs.length;oi++)bounds[oi]=Math.max(bounds[oi],bounds[oi-1])}
     openAl(bounds)};
-  /* 從已經存好的歌詞重新開啟對齊（每一行就是一列） */
-  if($('#lyrrealign'))$('#lyrrealign').onclick=()=>{const l=getLyr(s);T=[];const bounds=[];cuts=[];
-    occs.forEach(o=>{bounds.push(T.length);const cur=(l.L[o.key]||{})[o.n]||[];const rowMode=(l.M||{})[o.key]&&(l.M[o.key]||{})[o.n];
-      if(rowMode)for(let li=0;li<o.lines;li++){cuts.push(T.length);T.push(...tokOfLines([cur[li]||'']))}
-      else{const st0=T.length;T.push(...tokOfLines(cur));const r=splitRows(st0,T.length,o.lines,null);r.pop();cuts.push(...r)}});
-    cuts.push(T.length);sel=-1;$('#lalwrap').hidden=false;p.querySelector('.lpaste').open=true;drawAl()};
-  $('#lyrapply').onclick=()=>{const l=getLyr(s);l.M=l.M||{};let k=0;
+  const doApply=()=>{const l=getLyr(s);l.M=l.M||{};let k=0;
     occs.forEach(o=>{const lines=[];for(let li=0;li<o.lines;li++,k++)lines.push(rowText(k));while(lines.length&&!lines[lines.length-1])lines.pop();
-      (l.L[o.key]=l.L[o.key]||{})[o.n]=lines;(l.M[o.key]=l.M[o.key]||{})[o.n]=1});
-    setLyr(s,l);$('#lyrres').textContent=t('lyrApplied');drawLyrPanel()};
-  /* 管理者：把目前每一列的字數做成 lyric_count，貼進筆記 */
-  if($('#lyrcount'))$('#lyrcount').onclick=async()=>{const l=getLyr(s);const arr=occs.map(o=>{const cur=(l.L[o.key]||{})[o.n]||[];const rowMode=((l.M||{})[o.key]||{})[o.n];
-      const per=[];for(let li=0;li<o.lines;li++)per.push(tokOfLines([cur[li]||'']).length);return rowMode?per:per.reduce((a,b)=>a+b,0)});
-    const txt='lyric_count: '+JSON.stringify(arr).replace(/,/g,', ');
-    try{await navigator.clipboard.writeText(txt);$('#lyrres').textContent=t('lyrCountCopied')}catch(e){$('#lyrres').textContent=txt}};
-  p.querySelector('.lpaste').ontoggle=e=>{st.pasteOpen=e.target.open};
+      (l.L[o.key]=l.L[o.key]||{})[o.n]=lines;(l.M[o.key]=l.M[o.key]||{})[o.n]=1;
+      const ta=document.getElementById(`lt-${o.k}-${o.n}`);if(ta){ta.value=lines.join('\n');ta.previousElementSibling.querySelector('.cnt').textContent=t('lyrLines')(lines.length)}});
+    setLyr(s,l);$('#lyrres').textContent+=' '+t('lyrApplied');drawSheet()};
+  p.querySelector('.ledit').ontoggle=e=>{st.editOpen=e.target.open};
   drawSheet();
 }
 
 /* ---------- 段落、順序、歌詞（完整／精簡） ---------- */
 const INST_SEC=new Set(['intro','solo','solo12','outro']);
-const isInst=sec=>INST_SEC.has(sec.name)||/^(前奏|間奏|尾奏)/.test(sec.name);
+const isInst=sec=>!sec.sung&&INST_SEC.has(sec.name)||!sec.sung&&/^(前奏|間奏|尾奏)/.test(sec.name);
 const nb=n=>`<span class="nb">${n}</span>`;
 const rowsOf=sec=>sec.rows.map(r=>Array.isArray(r)?{b:r}:r);
 function secKeys(s){const seen={};return s.sections.map(sec=>{const k=sec.name||'_';seen[k]=(seen[k]||0)+1;return seen[k]>1?k+'#'+seen[k]:k})}
@@ -1160,20 +1153,31 @@ function simpSlots(sl){const sg=[];sl.forEach(c=>{if(c==='-'){if(sg.length)sg[sg
 function ruler(own,beats){const n=own.length,per=n%beats===0?n/beats:1,groups=[];
   for(let b=0;b<n/per;b++){const cells=own.slice(b*per,b*per+per),pcs=[];cells.forEach(o=>{const L=pcs[pcs.length-1];if(L&&L.o===o)L.k++;else pcs.push({o,k:1})});groups.push(pcs)}
   return `<span class="rl" aria-hidden="true">${groups.map(pcs=>`<span class="bk">${pcs.map(p=>`<i class="pc${p.o<0?' cn':''} ${p.k===per?'d4':p.k*2===per?'d8':'d16'}" style="flex:${p.k}"></i>`).join('')}</span>`).join('')}</span>`}
-function barsHtml(r,C){const beats0=beatsOf(st.song&&st.song.time);
-  return `<div class="rowline${r.x?' rpt':''}"><div class="bars">${r.b.map(bar0=>{let bar=bar0,m='';if(bar.length>1&&METER.test(bar[0])){m=bar[0];bar=bar.slice(1)}
+function barsHtml(r,C,BL){const bl=i=>BL&&BL[i]&&BL[i].length?`<div class="blyr">${BL[i].map(x=>`<span>${x}</span>`).join('')}</div>`:'';const beats0=beatsOf(st.song&&st.song.time);
+  return `<div class="rowline${r.x?' rpt':r.grp==='L'?' rptL':r.grp==='R'?' rptR':''}"${r.x?` data-x="${r.x}"`:''}${r.gx?` data-gx="${r.gx}"`:''}><div class="bars">${r.b.map((bar0,bi)=>{let bar=bar0,m='';if(bar.length>1&&METER.test(bar[0])){m=bar[0];bar=bar.slice(1)}
     const beats=m?beatsOf(m):beats0,ts=m?`<svg class="tsig" viewBox="0 0 12 22" role="img" aria-label="${esc(m)}"><title>${esc(m)}</title><text x="6" y="10" text-anchor="middle">${m.split('/')[0]}</text><text x="6" y="21" text-anchor="middle">${m.split('/')[1]}</text></svg>`:'';
-    if(bar.length===1&&bar[0]==='-')return `<div class="bar rest dur${m?' hasts':''}" style="grid-template-columns:1fr">${ts}<span class="nc" title="${t('restBar')}">N.C.</span>${ruler(Array(beats).fill(-1),beats)}</div>`;
+    if(bar.length===1&&bar[0]==='-')return `<div class="bar rest dur${m?' hasts':''}" style="grid-template-columns:1fr">${ts}<span class="nc" title="${t('restBar')}">N.C.</span>${ruler(Array(beats).fill(-1),beats)}${bl(bi)}</div>`;
     let sl=barSlots(bar,beats);if(sl.length===1&&beats>1)sl=[sl[0],...Array(beats-1).fill('-')];if(st.simple)sl=simpSlots(sl);
     /* 和弦依拍數分段：小節開頭的 - 是延續上一個和弦 */
     const sg=[];sl.forEach(c=>{if(c==='-'){if(sg.length)sg[sg.length-1].n++;else sg.push({c:null,n:1})}else sg.push({c,n:1})});
     const cols=sg.map(x=>`minmax(0,${x.n}fr)`).join(' ');
     /* 每一格屬於第幾個和弦（-1＝延續上一小節的和弦） */
     const own=[];sg.forEach((x,k)=>{for(let i=0;i<x.n;i++)own.push(x.c?k:-1)});
-    return `<div class="bar dur${m?' hasts':''}" style="grid-template-columns:${cols}">${ts}${sg.map(x=>x.c?C(x.c):'<span class="cont" aria-hidden="true"></span>').join('')}${ruler(own,beats)}</div>`}).join('')}</div><span class="rep">${r.x?`<b title="${t('repTip')(r.x)}">×${r.x}</b>`:''}</span></div>`}
+    return `<div class="bar dur${m?' hasts':''}" style="grid-template-columns:${cols}">${ts}${sg.map(x=>x.c?C(x.c):'<span class="cont" aria-hidden="true"></span>').join('')}${ruler(own,beats)}${bl(bi)}</div>`}).join('')}</div><span class="rep">${r.x?`<b title="${t('repTip')(r.x)}">×${r.x}</b>`:r.gx?`<b title="${t('repTipN')(r.gx)}">×${r.gx}</b>`:''}</span></div>`}
 /* 歌詞整段放在段落和弦下面，兩句一排（左上1、右上2、左下3、右下4） */
 function lyrBlock(o,label,lyr){const a=((lyr.L[o.key]||{})[o.n]||[]);const has=a.some(x=>x&&x.trim());if(!has&&!st.lyrOpen)return '';
   return `<div class="lyb${has?'':' ph'}" data-occ="${o.k}-${o.n}">${label?`<span class="n">${label}</span>`:''}${has?`<div class="lyg">${a.map(x=>`<span>${esc(x)||'&nbsp;'}</span>`).join('')}</div>`:`<span class="lt">${t('lyrEmpty')}</span>`}</div>`}
+/* 連續一模一樣的列（一列或好幾列一組）只畫一次，頭尾加反覆記號和 ×N */
+function collapseRows(rows){const sig=r=>{const{ri,...o}=r;return JSON.stringify(o)};const S=rows.map(r=>r.x||r.only!==undefined?null:sig(r));
+  const out=[];let i=0;
+  while(i<rows.length){let best=null;
+    for(let L=1;L<=Math.floor((rows.length-i)/2);L++){let k=1;
+      const same=(a,b)=>{for(let j=0;j<L;j++)if(S[a+j]===null||S[a+j]!==S[b+j])return false;return true};
+      while(i+(k+1)*L<=rows.length&&same(i,i+k*L))k++;
+      if(k>1&&(!best||k*L>best.k*best.L))best={L,k}}
+    if(best){out.push({block:rows.slice(i,i+best.L),k:best.k,copies:Array.from({length:best.k},(_,c)=>rows.slice(i+c*best.L,i+(c+1)*best.L))});i+=best.L*best.k}
+    else{out.push({block:[rows[i]],k:1,copies:[[rows[i]]]});i++}}
+  return out}
 function drawStructured(s,C){
   const occs=songOccs(s),tot=occTotals(s),lyr=getLyr(s),changed=lyrChangedKeys(s,lyr),warnKeys=new Set(changed.map(x=>x.key));
   const warnTag=key=>warnKeys.has(key)?`<span class="stag warn">!</span>`:'';
@@ -1181,17 +1185,38 @@ function drawStructured(s,C){
   const capTag=sec=>sec.capo!==undefined?`<span class="ctag">Capo ${capoOf(sec.capo)}</span>`:'';
   /* 用「對齊」放進去的歌詞是一列一行，直接放在每一列和弦下面 */
   const rowMode=o=>!!((lyr.M||{})[o.key]||{})[o.n];
-  const rowLy=(list,ri,reps)=>{const it=[];list.forEach(o=>{if(!rowMode(o))return;const L=(lyr.L[o.key]||{})[o.n]||[];
-    for(let rep=1;rep<=reps;rep++){const li=o.lineOf[ri+':'+rep];if(li===undefined||!L[li])continue;it.push(`<span>${list.filter(rowMode).length>1?nb(o.n):''}${esc(L[li])}</span>`)}});
-    return it.length?`<div class="lyrow">${it.join('')}</div>`:''};
+    const vocal=occs.filter(o=>!isInst(o.sec)),LC=Array.isArray(s.lyricCount)&&s.lyricCount.length===vocal.length?s.lyricCount:null;
+  const barCnt=(o,li)=>{if(!LC)return null;const x=(LC[vocal.indexOf(o)]||[])[li];return Array.isArray(x)?x:null};
+  /* 括號裡接到下一句的字：PK='end' 靠右放在最後一小節；PK='next' 放到下一句第一小節前面 */
+  const parts=(o,li,txt)=>{const bc=barCnt(o,li);if(!bc)return null;const hasP=bc.length&&typeof bc[bc.length-1]==='object';
+    const seg=splitBars(txt,barNums(bc));return {bars:hasP?seg.slice(0,-1):seg,pk:hasP?seg[seg.length-1]:''}};
+  const prevPk=(o,li)=>{let oo=o,l=li-1;if(l<0){const vi=vocal.indexOf(o);if(vi<1)return '';oo=vocal[vi-1];l=oo.lines-1}
+    const L=(lyr.L[oo.key]||{})[oo.n]||[];const P=parts(oo,l,L[l]||'');return P?P.pk:''};
+  const lyItem=(o,li,pre,txt)=>{const P=parts(o,li,txt);if(!P)return `<span>${pre}${esc(txt)}</span>`;
+    const bars=P.bars.map((x,i)=>(i===0?pre:'')+(esc(x)||'&nbsp;'));
+    if(window.PK==='next'){const pp=prevPk(o,li);if(pp)bars[0]=bars[0].replace(/(<\/i>)?([^<]*)$/,(m,a,b)=>(a||'')+`<em class="pk nx">${esc(pp)}<b>→</b></em>`+b);}
+    else if(P.pk)bars[bars.length-1]=`<span class="pkw">${bars[bars.length-1]}</span><em class="pk"><b>→</b>${esc(P.pk)}</em>`;
+    return {bars}};
+  /* 每小節字數的歌詞放進各小節，其他整列放在和弦下面 */
+  const pack=it=>{const txt=it.filter(x=>typeof x==='string'),bi=it.filter(x=>typeof x!=='string');let B=null;
+    if(bi.length){B=[];bi.forEach(x=>x.bars.forEach((h,i)=>(B[i]=B[i]||[]).push(h)))}
+    return {t:txt.length?`<div class="lyrow">${txt.join('')}</div>`:'',b:B}};
+  const rowLyIt=(list,ri,reps,xp='')=>{const it=[];list.forEach(o=>{if(!rowMode(o))return;const L=(lyr.L[o.key]||{})[o.n]||[];
+    for(let rep=1;rep<=reps;rep++){const li=o.lineOf[ri+':'+rep];if(li===undefined||!L[li])continue;it.push(lyItem(o,li,`${list.filter(rowMode).length>1?nb(o.n):''}${xp}${reps>1?`<i class="rpn">${rep}.</i>`:''}`,L[li]))}});
+    return it};
+  /* 合併後的一組：每一列下面依序放每一遍的歌詞 */
+  const grpRows=(rows,one)=>collapseRows(rows).map(g=>g.block.map((r,j)=>{const last=j===g.block.length-1;
+    const rr=g.k<2?r:g.block.length===1?{...r,x:g.k}:{...r,grp:j===0?'L':last?'R':'',gx:last?g.k:0};
+    if(g.k>1&&g.block.length>1&&j===0&&last)rr.grp='';
+    return one(rr,lst=>{const it=[];g.copies.forEach((cp,c)=>it.push(...rowLyIt(lst,cp[j].ri,cp[j].x||1,g.k>1?`<i class="rpn">${c+1}.</i>`:'')));return pack(it)})}).join('')).join('');
   let html='',chips='';
   if(st.view==='compact'){
     const firstSeen=[];occs.forEach(o=>{if(!firstSeen.includes(o.k))firstSeen.push(o.k)});
     s.sections.forEach((_,k)=>{if(!firstSeen.includes(k))firstSeen.push(k)});
     html=firstSeen.map(k=>{const sec=s.sections[k],mine=occs.filter(o=>o.k===k),inst=isInst(sec),key=secKeys(s)[k];
-      const rows=rowsOf(sec).map((r,ri)=>{const only=r.only===undefined?'':`<span class="only">${r.only==='last'?t('onlyLast')(esc(secName(sec.name))):t('onlyIn')(esc(secName(sec.name)),nb(r.only))}</span>`;
+      const rows=grpRows(rowsOf(sec).map((r,ri)=>({...r,ri})),(r,ly)=>{const only=r.only===undefined?'':`<span class="only">${r.only==='last'?t('onlyLast')(esc(secName(sec.name))):t('onlyIn')(esc(secName(sec.name)),nb(r.only))}</span>`;
         const rc=r.capo!==undefined?`<span class="ctag">Capo ${capoOf(r.capo)}</span>`:'';
-        return `<div class="row">${only}${rc}${barsHtml(r,cc(r.capo??sec.capo))}${inst?'':rowLy(mine,ri,r.x||1)}</div>`}).join('');
+        return `<div class="row">${only}${rc}${(L=>barsHtml(r,cc(r.capo??sec.capo),L.b)+L.t)(inst?{t:'',b:null}:ly(mine))}</div>`});
       const ly=inst?'':mine.filter(o=>!rowMode(o)).map(o=>lyrBlock(o,mine.length>1?nb(o.n):'',lyr)).join('');
       return `<section class="sec" id="sec-${k}"><h3>${esc(secName(sec.name))}${tot[k]>1?mine.map(o=>nb(o.n)).join(''):''}${capTag(sec)}${warnTag(key)}</h3>${rows}${ly}</section>`}).join('');
     chips=occs.map(o=>`<button class="chip${isInst(o.sec)?' inst':''}" data-go="sec-${o.k}" data-hl="${o.k}-${o.n}">${esc(secName(o.sec.name))}${tot[o.k]>1?nb(o.n):''}</button>`).join('<span class="arrow">→</span>');
@@ -1200,17 +1225,17 @@ function drawStructured(s,C){
     html=groups.map((g,gi)=>{const o0=g.occs[0],inst=isInst(g.sec);
       let tag=tot[g.k]>1?g.occs.map(o=>nb(o.n)).join(''):'';
       tag+=warnTag(o0.key);
-      const rows=o0.rows.map(r=>{const m=r.capo??g.sec.capo,cp=capoOf(m);let mv='';
+      const rows=grpRows(o0.rows,(r,ly)=>{const m=r.capo??g.sec.capo,cp=capoOf(m);let mv='';
         if(cp!==run){mv=`<div class="capmove">${t('capoMove')(run,cp)}</div>`;run=cp}
-        return `${mv}<div class="row">${r.capo!==undefined?`<span class="ctag">Capo ${cp}</span>`:''}${barsHtml(r,cc(m))}${inst?'':rowLy(g.occs,r.ri,r.x||1)}</div>`}).join('');
+        return `${mv}<div class="row">${r.capo!==undefined?`<span class="ctag">Capo ${cp}</span>`:''}${(L=>barsHtml(r,cc(m),L.b)+L.t)(inst?{t:'',b:null}:ly(g.occs))}</div>`});
       const ly=inst?'':g.occs.filter(o=>!rowMode(o)).map(o=>lyrBlock(o,g.occs.length>1?nb(o.n):'',lyr)).join('');
-      return `<section class="sec" id="grp-${gi}"><h3>${esc(secName(g.sec.name))}${tag}${capTag(g.sec)}</h3>${rows}${ly}</section>`}).join('');
+      return `<section class="sec" id="grp-${gi}" data-rep="${g.occs.length}"><h3>${esc(secName(g.sec.name))}${tag}${capTag(g.sec)}</h3>${rows}${ly}</section>`}).join('');
     chips=groups.map((g,gi)=>`<button class="chip${isInst(g.sec)?' inst':''}" data-go="grp-${gi}">${esc(secName(g.sec.name))}${tot[g.k]>1?g.occs.map(o=>nb(o.n)).join(''):''}</button>`).join('<span class="arrow">→</span>');
   }
   $('#sheet').innerHTML=html;
   const ob=$('#orderbar');ob.hidden=false;ob.innerHTML=`<span class="lbl">${t('orderLbl')}</span>`+chips;
   ob.onclick=e=>{const b=e.target.closest('[data-go]');if(!b)return;const el=document.getElementById(b.dataset.go);if(!el)return;
-    const off=document.body.classList.contains('perform')?ob.offsetHeight+8:($('.toolwrap')?$('.toolwrap').offsetHeight+8:8);
+    const off=$('.toolwrap')?$('.toolwrap').offsetHeight+8:8;
     window.scrollTo({top:el.getBoundingClientRect().top+scrollY-off,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
     document.querySelectorAll('.lyb.hl').forEach(x=>x.classList.remove('hl'));
     if(b.dataset.hl)document.querySelectorAll(`.lyb[data-occ="${b.dataset.hl}"]`).forEach(x=>x.classList.add('hl'))};
@@ -1233,13 +1258,28 @@ function parsePro(txt){const secs=[];let cur={name:'',lines:[]};const push=()=>{
 
 /* metronome */
 let actx,mT,beat=0;
-function metroStart(){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume()}catch(e){return}
-  st.metro=true;beat=0;$('#metrobtn').classList.add('on');$('#metrobtn').textContent='❚❚';click();mT=setInterval(click,60000/st.bpm)}
-function metroStop(){st.metro=false;clearInterval(mT);const b=$('#metrobtn');if(b){b.classList.remove('on');b.textContent='▶'}document.querySelectorAll('#dots i').forEach(d=>d.classList.remove('on'))}
+function metroStart(keep){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume()}catch(e){return}
+  st.metro=true;beat=0;if(!keep)psI=0;$('#metrobtn').classList.add('on');$('#metrobtn').textContent='❚❚';click();mT=setInterval(click,60000/st.bpm)}
+/* 節拍器跟譜：照彈奏順序（含 ×N、反覆記號、連續相同段落）一拍一拍亮小節下的節奏線 */
+var PS=null,psI=0;
+function playSeq(){const out=[];[...document.querySelectorAll('#orderbar [data-go]')].map(c=>document.getElementById(c.dataset.go)).filter(Boolean).forEach(sec=>{const rep=+sec.dataset.rep||1;
+  const rows=[...sec.querySelectorAll('.row > .rowline')];const one=[];let gs=-1;
+  rows.forEach(rl=>{const bars=[...rl.querySelectorAll(':scope>.bars>.bar')];const x=+rl.dataset.x||1;
+    if(rl.classList.contains('rptL'))gs=one.length;
+    for(let i=0;i<x;i++)one.push(...bars);
+    if(rl.classList.contains('rptR')&&gs>=0){const blk=one.slice(gs);for(let k=1;k<(+rl.dataset.gx||2);k++)one.push(...blk);gs=-1}});
+  for(let r=0;r<rep;r++)out.push(...one)});
+  const seq=[];out.forEach(b=>{b.querySelectorAll('.rl .bk').forEach(bk=>seq.push({bar:b,bk}))});return seq}
+function metroFollow(){if(!PS)PS=playSeq();if(!PS.length)return;
+  document.querySelectorAll('.bar.now,.bk.now').forEach(e=>e.classList.remove('now'));
+  const it=PS[psI%PS.length];psI++;it.bar.classList.add('now');it.bk.classList.add('now');
+  const r=it.bar.getBoundingClientRect(),top=($('.toolwrap')?$('.toolwrap').getBoundingClientRect().bottom:0)+8;
+  if(r.top<top||r.bottom>innerHeight-40)scrollTo({top:scrollY+r.top-top-40,behavior:'smooth'})}
+function metroStop(){st.metro=false;clearInterval(mT);PS=null;document.querySelectorAll('.bar.now,.bk.now').forEach(e=>e.classList.remove('now'));const b=$('#metrobtn');if(b){b.classList.remove('on');b.textContent='▶'}document.querySelectorAll('#dots i').forEach(d=>d.classList.remove('on'))}
 function blip(tm,freq,vol){const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=freq;g.gain.setValueAtTime(vol,tm);g.gain.exponentialRampToValueAtTime(.001,tm+.045);o.connect(g).connect(actx.destination);o.start(tm);o.stop(tm+.05)}
 function click(){const tm=actx.currentTime+.01,dur=60/st.bpm;blip(tm,beat%4===0?1600:1000,.35);
   if(st.sub&&st.song)(SUB[st.song.feel]||SUB.straight8).forEach(fr=>blip(tm+fr*dur,2200,.08));
-  document.querySelectorAll('#dots i').forEach((d,i)=>d.classList.toggle('on',i===beat%4));beat++}
+  document.querySelectorAll('#dots i').forEach((d,i)=>d.classList.toggle('on',i===beat%4));beat++;metroFollow()}
 function setPerform(on){document.body.classList.toggle('perform',on);const b=$('#perfbtn');if(b)b.classList.toggle('on',on);
   try{if(on&&!document.fullscreenElement&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{});
     if(!on&&document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}}
