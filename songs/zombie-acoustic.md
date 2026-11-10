@@ -4,7 +4,7 @@ title: "Zombie (Acoustic)"
 artist: "Yungblud"
 key: "E"
 capo: 0
-bpm: 84
+bpm: 75
 time: "4/4"
 feel: straight16
 strum: "↓-↓- ↓-↓↑ -↑↓- ↓-↓↑"
@@ -21,14 +21,14 @@ added: 2026-11-05
 ## 主歌
 | C♯m7 | C♯m7 | Bsus4 | Bsus4 |
 | Asus2 | Asus2 |
-| C♯m7 | C♯m7 - - - - E5 - - | Bsus4 | Bsus4 |
+| C♯m7 | C♯m7 - - E5 | Bsus4 | Bsus4 |
 | Asus2 | Asus2 | Bsus4 | Bsus4 |
 | F♯m | F♯m | Asus2 | Asus2 |
 
 ## 副歌
 | E5 | E5 | Bsus4 | Bsus4 |
 | C♯m7 | C♯m7 | Asus2 | Asus2 |
-末次: | E |
+末次: | E5 |
 
 ## 間奏
 | E5 | E5 | Bsus4 | Bsus4 |
@@ -40,3 +40,5 @@ added: 2026-11-05
 ## 指法
 C#m7＝X46454
 Bsus4＝X24422
+E5＝X79900
+Asus2＝X02200

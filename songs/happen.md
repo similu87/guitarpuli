@@ -4,7 +4,7 @@ title: "Happen"
 artist: "Heize"
 key: "Am"
 capo: 0
-bpm: 88
+bpm: 113
 time: "4/4"
 feel: straight16
 level: 2
