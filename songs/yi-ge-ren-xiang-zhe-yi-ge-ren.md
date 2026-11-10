@@ -4,7 +4,7 @@ title: "一個人想著一個人"
 artist: "曾沛慈"
 key: "Eb"
 capo: 3
-bpm: 66
+bpm: 67
 time: "4/4"
 feel: straight8
 strum: ""
@@ -40,7 +40,7 @@ added: 2026-11-04
 ## 橋段
 | D♭ | Cm | B | B♭ | 2/4 B♭ |
 
-## 尾奏(Capo4)
+## 尾奏(Capo 4)
 | A | G#m C#m | C | B | E |
 
 ## 順序
