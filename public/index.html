@@ -370,7 +370,7 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .rl .bk{flex:1;display:flex;gap:2px;padding-right:.3em}
 .rl .pc{border-radius:99px;background:var(--chord);opacity:.55}
 .rl .pc.cn{background:var(--muted);opacity:.45}
-.bar.now{background:color-mix(in srgb,var(--brass) 8%,transparent)}.rl .bk.now .pc{background:var(--brass);opacity:1}.rl{transition:none}
+.bar.cue{box-shadow:inset 0 0 0 2px var(--brass)}#sheet .bar{cursor:pointer}.bar.now{background:color-mix(in srgb,var(--brass) 8%,transparent)}.rl .bk.now .pc{background:var(--brass);opacity:1}.rl{transition:none}
 .bar.rest .rl .pc{background:var(--muted);opacity:.3}
 .bt{font-family:var(--f-mono);font-weight:700;color:var(--muted);opacity:.75}
 .bar{position:relative}.bars .bar.hasts{padding-left:1.45em}
@@ -413,6 +413,8 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .vbox{width:min(760px,100%)}.vbox h2{display:flex;align-items:baseline;gap:10px}.vbox h2 small{font-family:var(--f-body);font-size:13px;color:var(--muted);font-weight:400}
 .vframe{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000}.vframe iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .hbtn.vidbtn svg{color:#E00000}
+.covers{margin:28px 0 8px;scroll-margin-top:90px}.covers h2{font-size:16px;color:var(--brass);margin:0 0 12px}.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr));gap:16px;align-items:start}.igframe{display:grid;gap:8px;max-width:420px}.igframe iframe{width:100%;aspect-ratio:9/16;max-height:760px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+body.perform .covers{display:none}
 .rep{align-self:center;flex:none;width:2.6em;display:flex;justify-content:center}
 .rep b{font-family:var(--f-mono);font-weight:700;font-size:.9em;line-height:1;background:var(--brass);color:var(--on-brass);border-radius:99px;padding:.28em .5em .3em;letter-spacing:.02em}
 /* 反覆記號：整列彈幾次時，頭尾畫成 ‖: :‖ */
@@ -441,6 +443,7 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .lbox label{justify-content:flex-start;min-height:28px}.lbox label .cnt{margin-left:2px}.lbox .mv{display:inline-flex;gap:4px;margin-left:auto}
 .lbox .mv button{width:26px;height:24px;border:1px solid var(--line);border-radius:6px;background:var(--surface);font-size:12px;line-height:1;padding:0}
 .lbox .mv button:hover{border-color:var(--muted)}
+.wcgen{margin-top:12px;border:1px dashed var(--brass);border-radius:10px;padding:8px 12px}.wcgen>summary{cursor:pointer;font-weight:700;color:var(--brass);font-size:13.5px}.wcgen p{font-size:12.5px;color:var(--muted);margin:6px 0}.wcgen textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--surface);font-size:14px;line-height:1.6}.wcgen .btns{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:6px}.wcout{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px;font-size:13px;white-space:pre-wrap;min-height:2em}.wcprev{display:grid;gap:2px;font-size:12.5px;max-height:320px;overflow:auto}.wcprev>div{display:grid;grid-template-columns:minmax(9em,auto) 4em 1fr auto;gap:8px;padding:2px 4px;border-radius:4px}.wcprev>div.bad{background:color-mix(in srgb,#C0392B 12%,transparent)}.wcprev b{font-weight:600}.wcprev span{color:var(--muted)}.wcprev em{font-style:normal;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.wcprev code{color:var(--brass)}
 .lpaste .lph{display:block;margin:2px 0 4px;font-weight:700;font-size:13.5px;color:var(--brass)}.ledit{margin-top:12px}.ledit>summary{cursor:pointer;color:var(--muted);font-size:14px}.lal{display:grid;gap:10px;max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--surface);user-select:none;-webkit-user-select:none}
 .alsec b{display:block;font-size:12px;color:var(--brass);margin-bottom:2px}.alsec.bad b{color:#C0392B}.alsec b em{font-style:normal;font-weight:400;margin-left:8px}
 .alflow{line-height:2.1;font-size:15px}
@@ -933,11 +936,11 @@ function openSong(song,isMine,keepState){
     </div><div class="viewbtns">${isMine?'':`<div class="seg-toggle" role="group"><button class="${st.view==='full'?'on':''}" data-act="view-full" id="vfull" data-tip="${t('viewFullTip')}">${t('viewFull')}</button><button class="${st.view==='compact'?'on':''}" data-act="view-compact" id="vcompact" data-tip="${t('viewCompactTip')}">${t('viewCompact')}</button></div>`}${isMine?'':`<button class="tb ${st.simple?'on':''}" data-act="simple" id="simplebtn" data-tip="${t('simpleTip')}" aria-pressed="${st.simple}">${t('simple')}</button>`}<button class="tb ${st.practice?'on':''}" data-act="practice" id="pracbtn">${t('practice')}</button>${isMine?'':`<button class="tb ${st.lyrOpen?'on':''}" data-act="lyr" id="lyrbtn">${t('lyrics')}</button>`}<button class="tb ${st.cols?'on':''}" data-act="cols" id="colsbtn">${t('cols')}</button><button class="tb ibtn" data-act="perform" id="perfbtn" aria-label="${t('perform')}" title="${t('perform')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></div>
   </div>
   <p class="note" id="note"></p>
-  <div class="songbody"><div class="songmain"><div id="lyrpanel"></div><div id="lyrwarn"></div><div class="orderbar" id="orderbar" hidden></div><div class="sheet" id="sheet"></div></div><div id="practice"></div></div>
+  <div class="songbody"><div class="songmain"><div id="lyrpanel"></div><div id="lyrwarn"></div><div class="orderbar" id="orderbar" hidden></div><div class="sheet" id="sheet"></div></div><div id="practice"></div></div>${!isMine&&song.videos&&song.videos.length?vidSection(song):''}
   <button class="tb ibtn exitperf" id="exitperf" aria-label="${t('endPerform')}" title="${t('endPerform')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg></button>`;
   $('#exitperf').onclick=()=>setPerform(false);
   $('#capo').onchange=e=>{st.capo=+e.target.value;savePref();drawSheet()};
-  if($('#vidbtn'))$('#vidbtn').onclick=()=>openVideos(song);
+  if($('#vidbtn'))$('#vidbtn').onclick=()=>{const v=$('#covers');if(v)v.scrollIntoView({behavior:'smooth',block:'start'})};
   if($('#favbtn'))$('#favbtn').onclick=()=>{const on=toggleFav(song.id);$('#favbtn').classList.toggle('on',on);$('#favbtn span').textContent=on?t('saved'):t('save')};
   $('.toolwrap').onclick=e=>{const b=e.target.closest('[data-act]');if(b)act(b.dataset.act)};
   st.lyrOpen?drawLyrPanel():drawSheet();
@@ -1023,27 +1026,52 @@ const barNums=bc=>bc.map(lcN);
 const LTOK=/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}ー々]|[\p{L}\p{N}][\p{L}\p{N}'’]*/u;
 /* 整首貼上：保留空行分段，每段各自清掉雜訊 */
 function lyrParas(txt){return String(txt).replace(/\r/g,'').split(/\n\s*\n/).map(cleanLyrics).filter(x=>x.length)}
+/* 管理者：字數產生器。一列和弦一行歌詞，小節之間打 |，唱進下一句的字前面打 >；算出每一列的「字…」貼回筆記。歌詞不會離開這台瀏覽器 */
+function wcGenHtml(){return `<details class="wcgen"${st.wcOpen?' open':''}><summary>字數產生器（管理者）</summary>
+  <p>照彈奏順序，<b>一列和弦一行</b>貼歌詞（×2 的列寫兩行）。小節之間打 <code>|</code>，唱進下一句的字前面打 <code>&gt;</code>，這列沒歌詞就寫一個 <code>-</code>。空行會略過，括號裡的字不算。</p>
+  <textarea id="wcin" rows="10" placeholder="例：
+我想我會 | 開始想念 | 你可是 | 我剛剛>才遇見了
+-"></textarea>
+  <div class="btns"><span class="lres" id="wcres"></span><button class="btn pri" id="wccopy">複製結果</button></div>
+  <pre class="wcout" id="wcout"></pre><div class="wcprev" id="wcprev"></div></details>`}
+function wcGenBind(s){const occs=songOccs(s).filter(o=>!isInst(o.sec)),tot=occTotals(s);
+  const passes=[];occs.forEach(o=>o.rows.forEach(r=>{for(let rep=1;rep<=(r.x||1);rep++)passes.push({o,r,rep})}));
+  const cnt=x=>{const re=new RegExp(LTOK.source,'gu');let n=0;while(re.exec(x))n++;return n};
+  const run=()=>{const lines=$('#wcin').value.replace(/\r/g,'').split('\n').map(l=>l.replace(/[（(][^()（）]*[)）]/g,'').trim()).filter(Boolean);
+    const res={},prev=[];let bad=0;
+    passes.forEach((ps,i)=>{const L=lines[i];const nb=ps.r.b.length;let txt='',ok=true;
+      if(L===undefined){txt=null;ok=false}
+      else if(L==='-'||L==='－')txt='0';
+      else{const [main,pk]=L.split(/[>＞]/);const segs=main.split(/[|｜]/);
+        if(segs.length===1&&pk===undefined)txt=String(cnt(main));
+        else{if(segs.length!==nb)ok=false;txt=segs.map(cnt).join('-')+(pk!==undefined?`(${cnt(pk)})`:'')}}
+      if(!ok&&L!==undefined)bad++;
+      const key=ps.o.k+':'+ps.r.ri;(res[key]=res[key]||{k:ps.o.k,ri:ps.r.ri,occ:{}});if(txt!==null)((res[key].occ[ps.o.n]=res[key].occ[ps.o.n]||[])[ps.rep-1]=txt);
+      prev.push(`<div class="${ok?'':'bad'}"><b>${esc(secName(ps.o.sec.name))}${tot[ps.o.k]>1?ps.o.n:''}・第${ps.r.ri+1}列${(ps.r.x||1)>1?'・第'+ps.rep+'遍':''}</b><span>${nb} 小節</span><em>${L===undefined?'（還沒有）':esc(L)}</em><code>${txt?'字'+txt:''}</code></div>`)});
+    const extra=Math.max(0,lines.length-passes.length);
+    const out=[];s.sections.forEach((sec,k)=>{const rows=Object.values(res).filter(x=>x.k===k&&Object.keys(x.occ).length).sort((a,b)=>a.ri-b.ri);if(!rows.length)return;
+      out.push('### '+secName(sec.name));rows.forEach(x=>{const ns=Object.keys(x.occ).map(Number),mx=Math.max(...ns);const per=[];
+        for(let n=1;n<=mx;n++)per.push(x.occ[n]?[...x.occ[n]].map(v=>v??'0').join('+'):'0');
+        const all=per.every(v=>v===per[0])?[per[0]]:per;
+        out.push(`第 ${x.ri+1} 列：字${all.join('/')}`)})});
+    $('#wcout').textContent=out.join('\n');$('#wcprev').innerHTML=prev.join('');
+    $('#wcres').textContent=`共 ${passes.length} 列，已填 ${Math.min(lines.length,passes.length)} 列`+(bad?`，${bad} 列小節數不對（標紅）`:'')+(extra?`，多了 ${extra} 行`:'')};
+  let tm;$('#wcin').addEventListener('input',()=>{clearTimeout(tm);tm=setTimeout(run,250)});run();
+  $('#wccopy').onclick=async()=>{try{await navigator.clipboard.writeText($('#wcout').textContent);$('#wcres').textContent='已複製 ✓'}catch(e){}};
+  $('.wcgen').ontoggle=e=>{st.wcOpen=e.target.open}}
 function drawLyrPanel(){
   const p=$('#lyrpanel');if(!st.lyrOpen){p.innerHTML='';drawSheet();return}
   const s=st.song,lyr=getLyr(s),tot=occTotals(s),occs=songOccs(s).filter(o=>!isInst(o.sec));
   const lab=o=>esc(secName(o.sec.name))+(tot[o.k]>1?nb(o.n):'');
-  const boxes=occs.map(o=>{const cur=(lyr.L[o.key]||{})[o.n]||[];const id=`lt-${o.k}-${o.n}`;
-    return `<div class="lbox"><label for="${id}"><span>${lab(o)}</span><span class="cnt">${t('lyrLines')(cur.length)}</span></label><textarea id="${id}" rows="${Math.min(Math.max(cur.length,3),8)}" data-key="${esc(o.key)}" data-n="${o.n}">${esc(cur.join('\n'))}</textarea></div>`}).join('');
   p.innerHTML=`<div class="lyrpanel"><p>${user?t('lyrHelpAcct')():t('lyrHelp')()}</p>
   <div class="lpaste"><b class="lph">${t('lyrPaste')}</b><p>${t('lyrPasteHelp')}</p><textarea id="lyrall" rows="8" placeholder="${esc(t('lyrPastePh'))}"></textarea>
   <div class="btns"><span class="lres" id="lyrres" role="status"></span></div>
   <div id="lalwrap" hidden><p class="alhelp">${t('lyrAlHelp')}</p><div class="lal" id="lal"></div>
   </div></div>
-  <details class="ledit"${st.editOpen?' open':''}><summary>${t('lyrEditSec')}</summary><div class="lboxes">${boxes}</div>
-  <div class="btns"><button class="btn pri" id="lyrsave">${t('lyrSave')}</button></div></details>
+  ${isAdmin()||LS.get('admin',false)?wcGenHtml():''}
   <div class="btns"><button class="btn" id="lyrclose">${t('lyrClose')}</button></div></div>`;
-  const save=ta=>{const l=getLyr(s);const lines=ta.value.split('\n');while(lines.length&&lines[lines.length-1]==='')lines.pop();
-    (l.L[ta.dataset.key]=l.L[ta.dataset.key]||{})[ta.dataset.n]=lines;setLyr(s,l);
-    ta.previousElementSibling.querySelector('.cnt').textContent=t('lyrLines')(lines.length)};
-  const bxs=[...p.querySelectorAll('.lboxes textarea')];
-  bxs.forEach(ta=>ta.oninput=()=>{save(ta);drawSheet()});
-  $('#lyrsave').onclick=()=>{bxs.forEach(save);$('#lyrsave').textContent=t('lyrSaved');setTimeout(()=>{if($('#lyrsave'))$('#lyrsave').textContent=t('lyrSave')},1200)};
   $('#lyrclose').onclick=()=>act('lyr');
+  if($('#wcin'))wcGenBind(s);
   /* 對齊：整首歌詞拆成「字」（中文、假名、韓文一個字；英文一個單字），每一列和弦之間有一條分界線，可以拖 */
   const rowsAll=[];occs.forEach((o,oi)=>{for(let li=0;li<o.lines;li++)rowsAll.push({oi,li})});
   let T=[],cuts=[],sel=-1;
@@ -1090,9 +1118,8 @@ function drawLyrPanel(){
   const doApply=()=>{const l=getLyr(s);l.M=l.M||{};let k=0;
     occs.forEach(o=>{const lines=[];for(let li=0;li<o.lines;li++,k++)lines.push(rowText(k));while(lines.length&&!lines[lines.length-1])lines.pop();
       (l.L[o.key]=l.L[o.key]||{})[o.n]=lines;(l.M[o.key]=l.M[o.key]||{})[o.n]=1;
-      const ta=document.getElementById(`lt-${o.k}-${o.n}`);if(ta){ta.value=lines.join('\n');ta.previousElementSibling.querySelector('.cnt').textContent=t('lyrLines')(lines.length)}});
+});
     setLyr(s,l);$('#lyrres').textContent+=' '+t('lyrApplied');drawSheet()};
-  p.querySelector('.ledit').ontoggle=e=>{st.editOpen=e.target.open};
   drawSheet();
 }
 
@@ -1259,7 +1286,7 @@ function parsePro(txt){const secs=[];let cur={name:'',lines:[]};const push=()=>{
 /* metronome */
 let actx,mT,beat=0;
 function metroStart(keep){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume()}catch(e){return}
-  st.metro=true;beat=0;if(!keep)psI=0;$('#metrobtn').classList.add('on');$('#metrobtn').textContent='❚❚';click();mT=setInterval(click,60000/st.bpm)}
+  st.metro=true;beat=0;if(!keep){psI=st.cue??0;st.cue=null;st.pre=beatsOf(st.song&&st.song.time);if(!PS)PS=playSeq();document.querySelectorAll('.bar.cue').forEach(e=>e.classList.remove('cue'));if(PS.length)PS[psI%PS.length].bar.classList.add('cue')}$('#metrobtn').classList.add('on');$('#metrobtn').textContent='❚❚';click();mT=setInterval(click,60000/st.bpm)}
 /* 節拍器跟譜：照彈奏順序（含 ×N、反覆記號、連續相同段落）一拍一拍亮小節下的節奏線 */
 var PS=null,psI=0;
 function playSeq(){const out=[];[...document.querySelectorAll('#orderbar [data-go]')].map(c=>document.getElementById(c.dataset.go)).filter(Boolean).forEach(sec=>{const rep=+sec.dataset.rep||1;
@@ -1270,16 +1297,21 @@ function playSeq(){const out=[];[...document.querySelectorAll('#orderbar [data-g
     if(rl.classList.contains('rptR')&&gs>=0){const blk=one.slice(gs);for(let k=1;k<(+rl.dataset.gx||2);k++)one.push(...blk);gs=-1}});
   for(let r=0;r<rep;r++)out.push(...one)});
   const seq=[];out.forEach(b=>{b.querySelectorAll('.rl .bk').forEach(bk=>seq.push({bar:b,bk}))});return seq}
+/* 點小節：播放中直接跳過去；沒播放就從那一小節開始 */
+function cueBar(bar){if(!PS)PS=playSeq();const idx=[];PS.forEach((x,i)=>{if(x.bar===bar&&(i===0||PS[i-1].bar!==bar))idx.push(i)});if(!idx.length)return;
+  const cur=psI%PS.length,i=idx.find(j=>j>=cur-1)??idx[0];
+  if(st.metro){psI=i;st.pre=0}else{st.cue=i;document.querySelectorAll('.bar.cue,.bar.now').forEach(e=>e.classList.remove('cue','now'));bar.classList.add('cue')}}
+document.addEventListener('click',e=>{const b=e.target.closest('#sheet .bar');if(!b||e.target.closest('.ch,button,a'))return;cueBar(b)});
 function metroFollow(){if(!PS)PS=playSeq();if(!PS.length)return;
-  document.querySelectorAll('.bar.now,.bk.now').forEach(e=>e.classList.remove('now'));
+  document.querySelectorAll('.bar.now,.bk.now,.bar.cue').forEach(e=>e.classList.remove('now','cue'));
   const it=PS[psI%PS.length];psI++;it.bar.classList.add('now');it.bk.classList.add('now');
   const r=it.bar.getBoundingClientRect(),top=($('.toolwrap')?$('.toolwrap').getBoundingClientRect().bottom:0)+8;
   if(r.top<top||r.bottom>innerHeight-40)scrollTo({top:scrollY+r.top-top-40,behavior:'smooth'})}
-function metroStop(){st.metro=false;clearInterval(mT);PS=null;document.querySelectorAll('.bar.now,.bk.now').forEach(e=>e.classList.remove('now'));const b=$('#metrobtn');if(b){b.classList.remove('on');b.textContent='▶'}document.querySelectorAll('#dots i').forEach(d=>d.classList.remove('on'))}
+function metroStop(){st.metro=false;st.pre=0;document.body.classList.remove('precount');clearInterval(mT);PS=null;document.querySelectorAll('.bar.now,.bk.now').forEach(e=>e.classList.remove('now'));const b=$('#metrobtn');if(b){b.classList.remove('on');b.textContent='▶'}document.querySelectorAll('#dots i').forEach(d=>d.classList.remove('on'))}
 function blip(tm,freq,vol){const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=freq;g.gain.setValueAtTime(vol,tm);g.gain.exponentialRampToValueAtTime(.001,tm+.045);o.connect(g).connect(actx.destination);o.start(tm);o.stop(tm+.05)}
 function click(){const tm=actx.currentTime+.01,dur=60/st.bpm;blip(tm,beat%4===0?1600:1000,.35);
   if(st.sub&&st.song)(SUB[st.song.feel]||SUB.straight8).forEach(fr=>blip(tm+fr*dur,2200,.08));
-  document.querySelectorAll('#dots i').forEach((d,i)=>d.classList.toggle('on',i===beat%4));beat++;metroFollow()}
+  document.querySelectorAll('#dots i').forEach((d,i)=>d.classList.toggle('on',i===beat%4));beat++;if(st.pre>0){st.pre--;const pb=$('#metrobtn');if(pb)pb.dataset.pre=st.pre+1;document.body.classList.add('precount');return}document.body.classList.remove('precount');metroFollow()}
 function setPerform(on){document.body.classList.toggle('perform',on);const b=$('#perfbtn');if(b)b.classList.toggle('on',on);
   try{if(on&&!document.fullscreenElement&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{});
     if(!on&&document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}}
@@ -1478,6 +1510,10 @@ function initSync(){
 }
 function closeModal(){$('#modal').hidden=true;$('#modal').dataset.kind='';$('#modal').innerHTML=''}
 /* 我的 Cover 影片：YouTube 直接在網站播放，Instagram 開新分頁 */
+/* 我的 Cover：放在譜的最下面直接播放（YouTube、Instagram 都內嵌） */
+function vidSection(song){return `<section class="covers" id="covers"><h2>${t('myCover')}</h2><div class="cgrid">${song.videos.map(v=>v.t==='yt'
+  ?`<div class="vframe"><iframe src="https://www.youtube-nocookie.com/embed/${v.id}?rel=0" title="${esc(song.title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`
+  :`<div class="igframe"><iframe src="${esc(v.url)}embed/" title="${esc(song.title)} Instagram" loading="lazy" allowfullscreen scrolling="no"></iframe><a class="sbtn ig" href="${esc(v.url)}" target="_blank" rel="noopener">${ico('ig')}${t('igCover')}</a></div>`).join('')}</div></section>`}
 function openVideos(song){const m=$('#modal');m.dataset.kind='video';m.hidden=false;
   m.innerHTML=`<div class="box vbox" role="dialog" aria-modal="true" aria-label="${t('myCover')}"><h2>${t('myCover')}<small>${esc(song.title)}</small></h2>${song.videos.map(v=>v.t==='yt'
     ?`<div class="vframe"><iframe src="https://www.youtube-nocookie.com/embed/${v.id}?rel=0" title="${esc(song.title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`
