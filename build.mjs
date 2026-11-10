@@ -116,11 +116,13 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
     if (!cur) { cur = { name: '', raw: '', rows: [] }; sections.push(cur); }
     const parts = body.split('|');
     // 行尾可以寫 ×2（這列彈兩次）；舊的「詞3」已停用，寫了也不影響
-    let tail = parts.pop().trim(), x;
+    let tail = parts.pop().trim(), x, wc;
     for (const tok of tail ? tail.split(/\s+/) : []) {
       const rm = tok.match(REPEAT);
       if (rm) x = Number(rm[1]); else if (/^詞\d+$/.test(tok)) continue;
-      else errors.push(`${where} 第 ${i + 1} 行：行尾看不懂「${tok}」（重複寫 ×2）`);
+      // 歌詞字數：字12（這列唱 12 個字）、字12/11/12（這段第 1、2、3 次）、字12+10（×2 的第 1、2 遍）
+      else if (/^字[\d+\/]+$/.test(tok)) wc = tok.slice(1).split('/').map(o => o.split('+').map(Number));
+      else errors.push(`${where} 第 ${i + 1} 行：行尾看不懂「${tok}」（重複寫 ×2，字數寫 字12）`);
     }
     const bars = parts.map(b => b.trim()).filter(Boolean).map(b => b.split(/\s+/).map(normChord));
     bars.forEach(b => b.forEach((c, j) => {
@@ -130,6 +132,7 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
     if (!bars.length) return;
     const row = { b: bars };
     if (x && x > 1) row.x = x;
+    if (wc) row.wc = wc;
     if (only !== undefined) row.only = only;
     if (rcapo !== undefined) row.capo = rcapo;
     cur.rows.push(row);
@@ -161,13 +164,47 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
     const n = STRUM_SLOTS[d.feel || 'straight8'] || 8;
     if (strumRaw.length % n) errors.push(`${where}：刷法「${d.strum}」有 ${strumRaw.length} 格，${FEELS[d.feel || 'straight8']}一小節要 ${n} 格（或 ${n * 2} 格兩小節）`);
   }
+  // 我的 Cover 影片：video 可以寫一個或多個網址（YouTube、Instagram）
+  const videos = [];
+  (Array.isArray(d.video) ? d.video : d.video ? [d.video] : []).map(v => String(v).trim()).filter(Boolean).forEach(u => {
+    let m;
+    if ((m = u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|live\/|embed\/))([\w-]{11})/))) videos.push({ t: 'yt', id: m[1] });
+    else if ((m = u.match(/instagram\.com\/(?:[\w.]+\/)?(reel|p|tv)\/([\w-]+)/))) videos.push({ t: 'ig', url: `https://www.instagram.com/${m[1]}/${m[2]}/` });
+    else errors.push(`${where}：影片網址「${u}」看不懂，要是 YouTube 或 Instagram 的影片網址`);
+  });
+  // 歌詞字數：照順序每一段（不含前奏、間奏、尾奏）一個數字，或一段一個陣列（每一列的字數）
+  let lyricCount = null;
+  const instSec = sec => ['intro', 'solo', 'solo12', 'outro'].includes(sec.name) || /^(前奏|間奏|尾奏)/.test(sec.name);
+  // 譜上每列寫了「字12」就自動算出每一段每一列的字數
+  if (sections.some(sec => sec.rows.some(r => r.wc))) {
+    const cntN = {}, totN = {}; order.forEach(k => totN[k] = (totN[k] || 0) + 1);
+    lyricCount = order.filter(k => !instSec(sections[k])).length ? [] : null;
+    order.forEach(k => { const sec = sections[k]; cntN[k] = (cntN[k] || 0) + 1; const n = cntN[k]; if (instSec(sec)) return;
+      const per = [];
+      sec.rows.filter(r => r.only === undefined || r.only === n || (r.only === 'last' && n === totN[k])).forEach(r => {
+        const w = r.wc ? (r.wc[n - 1] || r.wc[r.wc.length - 1]) : [];
+        for (let rep = 0; rep < (r.x || 1); rep++) per.push(Number(w[rep] ?? (w.length === 1 ? w[0] : 0)) || 0);
+      });
+      lyricCount.push(per);
+    });
+  }
+  sections.forEach(sec => sec.rows.forEach(r => delete r.wc));
+  if (d.lyric_count !== undefined && d.lyric_count !== null && d.lyric_count !== '' && !(Array.isArray(d.lyric_count) && !d.lyric_count.length)) {
+    const lcv = Array.isArray(d.lyric_count) ? d.lyric_count : null;
+    const ok = lcv && lcv.every(x => Number.isInteger(x) && x >= 0 || Array.isArray(x) && x.every(y => Number.isInteger(y) && y >= 0));
+    const inst = sec => ['intro', 'solo', 'solo12', 'outro'].includes(sec.name) || /^(前奏|間奏|尾奏)/.test(sec.name);
+    const vocalN = order.filter(k => !inst(sections[k])).length;
+    if (!ok) errors.push(`${where}：lyric_count 要寫成數字的陣列，例如 [48, 52] 或 [[12, 11], [13, 10]]`);
+    else if (lcv.length !== vocalN) errors.push(`${where}：lyric_count 有 ${lcv.length} 個，但順序裡有歌詞的段落有 ${vocalN} 個（前奏、間奏、尾奏不算）`);
+    else lyricCount = lcv;
+  }
   const tuning = normTuning(d.tuning);
   if (tuning === null) errors.push(`${where}：調弦「${d.tuning}」看不懂，要寫 6 個音，從第 6 弦寫到第 1 弦，例如 E A E A C# E`);
   return {
     id, title: String(d.title || id), artist: String(d.artist || ''), key: String(d.key || 'C'),
     capo: Number(d.capo) || 0, bpm: Number(d.bpm) || 90, time: String(d.time || '4/4'),
     feel: d.feel || 'straight8', strum: String(d.strum || ''), strumNote: String(d.strum_note || ''), strumNoteEn: String(d.strum_note_en || ''),
-    diff: Number(d.level) || 1, ...(tuning ? { tuning } : {}), ...(d.capo_use === true || d.capo_use === 'finger' ? { capoUse: 'finger' } : {}), genres, genre: genres[0] || '', shapes, language: d.language || 'other', added, sections, order
+    diff: Number(d.level) || 1, ...(tuning ? { tuning } : {}), ...(d.capo_use === true || d.capo_use === 'finger' ? { capoUse: 'finger' } : {}), genres, genre: genres[0] || '', shapes, ...(videos.length ? { videos } : {}), ...(lyricCount ? { lyricCount } : {}), language: d.language || 'other', added, sections, order
   };
 }).filter(Boolean);
 
