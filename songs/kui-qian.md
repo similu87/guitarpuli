@@ -23,8 +23,8 @@ added: 2026-11-04
 | Gm7 | C7sus4 C7 | F7sus4 - - F6sus4 - - - - | Bbmaj7 Cdim7/Bb |
 
 ## 副歌前
-| Bbmaj9 | Ebmaj7(#11) | Bbmaj9 | Am11 Ab7(b5) |
-| Gm7 | C7sus4 C7 | F7sus4 | Bbmaj7 Bbmaj13 |
+| Bbmaj9 | Ebmaj7(#11) - - Ebmaj7 - - - - | Bbmaj9 | Am11 - - Ab7(b5) - - - - |
+| Gm7 | C7sus4 C7 | F7sus4 - - F6sus4 - - - - | Bbmaj7 Bbmaj13 |
 
 ## 副歌
 | Cm9 Cm9/F | Bbsus2 Bbsus2/G |
@@ -76,4 +76,4 @@ Dm7（Capo 1）＝X46454
 A7（Capo 1）＝464544
 
 ## 順序
-前奏 → 主歌 ×2 → 副歌 → 主歌→ 間奏 → 副歌2  → 副歌3 →尾奏
+前奏 → 主歌 → 副歌前 → 副歌 → 主歌 → 間奏 → 副歌2 → 副歌3 → 尾奏
