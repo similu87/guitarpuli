@@ -209,6 +209,9 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .songhead p{margin:2px 0 0;color:var(--muted);font-size:13px}
 .songhead p .k{font:inherit;color:inherit}
 .songhead .grow{flex:1;min-width:0}
+.hacts{display:flex;align-items:center;gap:8px;flex:none}
+.views{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}.views[hidden]{display:none}.views .i{width:15px;height:15px}.views b{font-weight:500}
+.hbtn.feed{border-color:var(--brass);color:var(--brass);font-weight:700}.hbtn.feed:hover{background:var(--brass);color:var(--on-brass)}
 .hbtn{height:34px;border-radius:8px;border:1px solid var(--line);background:var(--surface);padding:0 12px;display:inline-flex;align-items:center;gap:6px;font-size:13px;flex:none}
 .hbtn.on{color:var(--brass);border-color:var(--brass)}
 .hbtn.on svg{fill:currentColor}
@@ -326,7 +329,8 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 }
 .chordgrid{display:flex;flex-wrap:wrap;gap:2px 6px}
 .cd{text-align:center;width:82px}
-.cd b{font-family:var(--f-mono);color:var(--chord);font-size:14px}
+.cd b{font-family:var(--f-mono);color:var(--chord);font-size:14px;display:block;overflow-wrap:anywhere;line-height:1.25}
+.cd b sup.ext{font-size:.62em;vertical-align:.55em;line-height:0;margin-left:.04em}
 .cd svg{display:block;margin:0 auto;color:var(--ink);width:78px;height:91px}
 .cd small{display:grid;place-items:center;height:91px;color:var(--muted);font-size:11px}
 .rhythm{display:grid;gap:10px;align-content:start;min-width:200px}
@@ -597,6 +601,7 @@ body.perform main{margin-left:0;max-width:none;padding-left:max(24px,env(safe-ar
   .tools{border-radius:9px;flex:1 1 100%}.tg{padding:5px 9px 7px;gap:3px}.tl{font-size:9.5px}
   .tb,.tools select,.viewbtns .seg-toggle button{height:26px;font-size:12px}.tb{min-width:26px;padding:0 7px}.tv{min-width:30px;font-size:13px}
   .viewbtns{margin-left:0;gap:5px}.ibtn{width:28px}
+  .hacts{gap:5px}.hbtn.feed{padding:0 9px}.hbtn.feed span{display:none}.views{font-size:11px;gap:3px}.views .i{width:13px;height:13px}
   .note{font-size:11px;margin-bottom:8px}
   .orderbar{gap:3px 4px;margin-bottom:10px}.orderbar .chip{font-size:11px;padding:1px 7px}.orderbar .arrow{font-size:10px}.orderbar .lbl{font-size:9.5px}
   .chip .nb,.sec h3 .nb{font-size:9px;min-width:13px;height:13px}.sec h3{gap:5px}
@@ -614,7 +619,7 @@ body.perform main{margin-left:0;max-width:none;padding-left:max(24px,env(safe-ar
   .rowline.rpt .bars>.bar:first-child::before,.rowline.rptL .bars>.bar:first-child::before{left:.2em}.rowline.rpt .bars>.bar:last-child::after,.rowline.rptR .bars>.bar:last-child::after{right:.2em}
   .rl{height:2px}.rl .bk{gap:1px;padding-right:.2em}.tup{column-gap:1px;padding-right:.2em}.tup::before{right:.25em}
   .sec{margin-bottom:1em}.row{margin-bottom:.4em}
-  .cd{width:58px}.cd svg{width:56px;height:65px}.cd small{height:65px}.cd b{font-size:12px}
+  .cd{width:58px}.cd svg{width:56px;height:65px}.cd small{height:65px}.cd b{font-size:11px;letter-spacing:-.03em}
   .cd .edtag,.cd b .cpn{font-size:9.5px}
   .grid{grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:12px 10px}
   .cover{padding:6px 7px;border-radius:5px}.cover::after{border-width:6px;box-shadow:0 0 0 8px rgba(255,255,255,.05)}
@@ -660,7 +665,7 @@ home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲明',c
   th:{system:'跟隨系統',light:'淺色',dark:'深色',sepia:'復古紙',amber:'夜間琥珀'},
   allSheets:'全部樂譜',count:n=>`${n} 首`,search:'搜尋歌名或歌手',allKeys:'所有調性',allDiff:'所有難度',allGenre:'所有曲風',
   sortNew:'最新上架',sortTitle:'依歌名',sortEasy:'由易到難',grid:'卡片',list:'列表',noMatch:['找不到符合的譜','換個關鍵字或清除篩選條件。'],
-  colTitle:'歌名',colArtist:'歌手',colKey:'調性',colLevel:'難度',colType:'類別',edit:'編輯',save:'收藏',saved:'已收藏',
+  colTitle:'歌名',colArtist:'歌手',colKey:'調性',colLevel:'難度',colType:'類別',edit:'編輯',feed:'餵食普利',feedTip:'喜歡這份譜？投個幣餵食普利',viewsTip:'這首譜累計被看過的次數',save:'收藏',saved:'已收藏',
   diff:['','初級','中級','進階'],genre:{ballad:'抒情',upbeat:'輕快',folk:'民謠',rock:'搖滾',jazz:'爵士',blues:'藍調',rnb:'R&B',rap:'饒舌',ost:'影視歌曲'},gsub:{ballad:'慢歌、情歌',upbeat:'好跟著唱',folk:'木吉他彈唱',rock:'電吉他、有力',jazz:'慵懶、和弦花',blues:'老派、鬱悶',rnb:'律動、轉音',rap:'有念唱',ost:'劇、電影、動畫'},mineTag:'自建譜',
   flt:'篩選',fltLang:'語言',fltGenre:'曲風',fltDiff:'難度',fltKey:'調性',fltReset:'全部重設',fltClear:'清除全部',fltShow:n=>`顯示 ${n} 首`,fltRemove:'移除',fltGenreHint:'可以複選，符合任一個就會列出',editorShape:'編者按法',altShape:n=>`還有 ${n} 種按法，點圖切換`,hammer:'搥弦',pull:'勾弦',restBar:'N.C.：這一小節不彈（整小節休止）',
   cont:'繼續練習',contEmpty:'打開任一首譜後，會在這裡接著上次的調性和 Capo 繼續練。',byLevel:'依難度',byGenre:'依曲風',byKey:'依調性',
@@ -694,7 +699,7 @@ home:'Home',library:'My Library',theme:'Theme',legal:'Copyright',changelog:'Chan
   th:{system:'System',light:'Light',dark:'Dark',sepia:'Vintage Paper',amber:'Night Amber'},
   allSheets:'All Sheets',count:n=>`${n} ${n===1?'song':'songs'}`,search:'Search songs or artists',allKeys:'All keys',allDiff:'All levels',allGenre:'All genres',
   sortNew:'Newest',sortTitle:'Title',sortEasy:'Easiest first',grid:'Grid',list:'List',noMatch:['No matching sheets','Try another keyword or clear the filters.'],
-  colTitle:'Title',colArtist:'Artist',colKey:'Key',colLevel:'Level',colType:'Type',edit:'Edit',save:'Save',saved:'Saved',
+  colTitle:'Title',colArtist:'Artist',colKey:'Key',colLevel:'Level',colType:'Type',edit:'Edit',feed:'Feed Puli',feedTip:'Like this sheet? Toss a coin to feed Puli',viewsTip:'Total views of this sheet',save:'Save',saved:'Saved',
   diff:['','Beginner','Intermediate','Advanced'],genre:{ballad:'Ballad',upbeat:'Upbeat',folk:'Folk',rock:'Rock',jazz:'Jazz',blues:'Blues',rnb:'R&B',rap:'Rap',ost:'Soundtrack'},gsub:{ballad:'Slow, love songs',upbeat:'Easy to sing along',folk:'Acoustic, storytelling',rock:'Electric, powerful',jazz:'Laid-back, rich chords',blues:'Old-school, moody',rnb:'Groove, runs',rap:'Has rap parts',ost:'TV, film, anime'},mineTag:'My Sheet',
   flt:'Filter',fltLang:'Language',fltGenre:'Genre',fltDiff:'Level',fltKey:'Key',fltReset:'Reset all',fltClear:'Clear all',fltShow:n=>`Show ${n} ${n===1?'song':'songs'}`,fltRemove:'Remove',fltGenreHint:'Pick several; songs matching any are shown',editorShape:'Editor’s voicing',altShape:n=>`${n} more voicing${n>1?'s':''} — tap to switch`,hammer:'hammer-on',pull:'pull-off',restBar:'N.C. (no chord): rest for the whole bar',
   cont:'Continue Practicing',contEmpty:'Open any sheet and it will show up here with your last key and capo.',byLevel:'By Level',byGenre:'By Genre',byKey:'By Key',
@@ -791,7 +796,7 @@ function chordTxt(n){const m=String(n).match(/^([^(\/]+)\(([^)]*)\)(\/.*)?$/);if
 let CUR={};const shapeFor=c=>(CUR[c]&&CUR[c][0])||shapeOf(c);
 const hpNote=sh=>{const f=frets(sh).filter(x=>x.h);return f.length?f.map(x=>`${x.a}→${x.v} ${x.h==='h'?t('hammer'):t('pull')}`).join('、'):''};
 function chordCard(c,shape,cp){shape=shape||c;const alts=CUR[shape],sh=alts?alts[0]:shapeOf(shape),hp=sh?hpNote(sh):'';
-  return `<div class="cd${alts?' ed':''}"${alts&&alts.length>1?` data-alts="${esc(alts.join('|'))}" data-i="0" role="button" tabindex="0" title="${esc(t('altShape')(alts.length-1))}"`:''}><b>${esc(c)}${cp!==undefined?`<small class="cpn">Capo ${cp}</small>`:''}</b>${sh?diagram(sh):`<small>${t('noDiagram')}</small>`}${alts?`<small class="edtag">${t('editorShape')}${alts.length>1?` <span>1/${alts.length}</span>`:''}</small>`:''}${hp?`<small class="hp">${esc(hp)}</small>`:''}</div>`}
+  return `<div class="cd${alts?' ed':''}"${alts&&alts.length>1?` data-alts="${esc(alts.join('|'))}" data-i="0" role="button" tabindex="0" title="${esc(t('altShape')(alts.length-1))}"`:''}><b>${chordTxt(c)}${cp!==undefined?`<small class="cpn">Capo ${cp}</small>`:''}</b>${sh?diagram(sh):`<small>${t('noDiagram')}</small>`}${alts?`<small class="edtag">${t('editorShape')}${alts.length>1?` <span>1/${alts.length}</span>`:''}</small>`:''}${hp?`<small class="hp">${esc(hp)}</small>`:''}</div>`}
 
 /* ---------- state ---------- */
 /* 手機預設用小字、一列四小節，一個畫面看得到大半首歌 */
@@ -802,6 +807,7 @@ const st={layout:LS.get('layout','grid'),f:{q:'',sort:'new',lang:[],genre:[],dif
 const isReal=s=>s&&s.capoUse==='finger'?LS.get('real_'+s.id,true):st.real;
 const favs=()=>LS.get('fav',[]),mine=()=>LS.get('mine',[]);
 function toggleFav(id){const f=favs();const i=f.indexOf(id);i<0?f.unshift(id):f.splice(i,1);LS.set('fav',f);return i<0}
+const DONATE_URL='';   // 餵食普利：收款頁網址，留空就不顯示按鈕
 const heart='<svg class="i" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg>';
 const diffDots=d=>`<span class="diff" title="${t('diff')[d]}">${[1,2,3].map(n=>`<i class="${n<=d?'on':''}"></i>`).join('')}</span>`;
 const secName=n=>t('sec')[n]||n;
@@ -945,7 +951,7 @@ function viewHome(){
       return `<li>${x.s?`<a href="/song/${x.s.id}/">${inner}</a>`:`<button type="button" data-kw="${esc(x.kw)}">${inner}</button>`}</li>`};
     hb.innerHTML=`<section class="hotc"><div class="hh"><h4>${t('stHotWeek')}</h4><span class="hseg" role="group"><button data-ht="song" class="${hotTab!=='search'?'on':''}">${t('stSongs')}</button><button data-ht="search" class="${hotTab==='search'?'on':''}">${t('stSearchTab')}</button></span></div>
       ${rows.length?`<ol class="hotlist">${rows.map(item).join('')}</ol>`:`<p class="none">${t('stNone')}</p>`}</section>
-      <p class="statline">${t('stToday')} <b>${num(S.today_views)}</b>　${t('stVisitorsShort')} <b>${num(S.today_visitors)}</b><br>${t('stTotal')} <b>${num(S.total_views)}</b>　${t('stMembers')} <b>${num(S.members)}</b></p>`;
+`;
     hb.querySelectorAll('[data-ht]').forEach(b=>b.onclick=()=>{hotTab=b.dataset.ht;drawHot()});
     hb.querySelectorAll('[data-kw]').forEach(b=>b.onclick=()=>{$('#q').value=b.dataset.kw;upd();statSearch(b.dataset.kw);$('#q').scrollIntoView({block:'center'})})};
   bindLayout(viewHome);refresh();drawHot();loadStats().then(()=>{if($('#hotbar'))drawHot()});
@@ -976,13 +982,13 @@ function bestCapo(song,shift){let best=0,bs=-1e9;for(let c=0;c<=7;c++){const v=c
 function openSong(song,isMine,keepState){
   stopAll();st.song=song;st.isMine=isMine;if(!keepState)st.lyrOpen=false;
   if(!keepState){st.shift=0;st.capo=song.capo||0;st.bpm=song.bpm||90;st.real=false;st.size=defSize();LS.set('real_'+song.id,true);document.documentElement.style.setProperty('--sheet-size',st.size+'px')}
-  if(!isMine)statSong(song.id);
+  if(!isMine){statSong(song.id);songViews(song.id)}
   if(!isMine&&!keepState){const r=LS.get('recent',[]).filter(x=>x!==song.id);r.unshift(song.id);LS.set('recent',r.slice(0,20))}
   const isFav=favs().includes(song.id);
   $('#app').innerHTML=`
   <div class="songhead"><a class="back" href="${isMine?'/#library-mine':'/#home'}" aria-label="${t('back')}">←</a>
     <div class="grow"><h1>${esc(song.title)}</h1><p>${esc(song.artist||'')}<span class="hmeta">${song.artist?' · ':''}${t('origKey')} <span class="k">${song.key}</span> · ${st.bpm} BPM · ${song.time||'4/4'}${song.tuning?` · ${t('tuneLbl')} <b class="tune">${esc(tuneName(song.tuning)||song.tuning)}</b>`:''} · ${t('feels')[song.feel]||t('feels').straight8}${song.language?' · '+(t('langs')[song.language]||''):''}${song.diff?' · '+t('diff')[song.diff]:''}</span></p></div>
-    ${!isMine&&song.videos&&song.videos.length?`<button class="hbtn vidbtn" id="vidbtn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10 9.2l5 2.8-5 2.8z" fill="currentColor"/></svg><span>${t('myCover')}</span></button>`:''}${isMine?`<a class="hbtn" href="/#edit-${song.id}">${t('edit')}</a>`:`<button class="hbtn ${isFav?'on':''}" id="favbtn">${heart}<span>${isFav?t('saved'):t('save')}</span></button>`}
+    ${!isMine&&song.videos&&song.videos.length?`<button class="hbtn vidbtn" id="vidbtn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10 9.2l5 2.8-5 2.8z" fill="currentColor"/></svg><span>${t('myCover')}</span></button>`:''}${isMine?`<a class="hbtn" href="/#edit-${song.id}">${t('edit')}</a>`:`<div class="hacts"><span class="views" id="views" hidden title="${t('viewsTip')}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg><b></b></span>${DONATE_URL?`<a class="hbtn feed" href="${DONATE_URL}" target="_blank" rel="noopener" title="${t('feedTip')}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M9.5 9.5c0-1.1 1.1-1.8 2.5-1.8s2.5.7 2.5 1.8-1 1.6-2.5 1.9-2.6.9-2.6 2.1 1.2 1.9 2.6 1.9 2.6-.7 2.6-1.8"/></svg><span>${t('feed')}</span></a>`:''}<button class="hbtn ${isFav?'on':''}" id="favbtn">${heart}<span>${isFav?t('saved'):t('save')}</span></button></div>`}
   </div>
   <div class="toolwrap${st.toolsOpen?' open':''}"><button class="tb tooltog" data-act="tools" id="toolsbtn" aria-expanded="${st.toolsOpen}">${t('tools')}<i aria-hidden="true">▾</i></button><span class="tsum" id="tsum"></span><div class="tools" role="toolbar">
     <div class="tg"><span class="tl">${t('transpose')}</span><div class="tc"><button class="tb" data-act="key-" aria-label="−1">−</button><span class="tv" id="keyv"></span><button class="tb" data-act="key+" aria-label="+1">+</button><button class="tb" data-act="key0" title="${t('resetTip')}">${t('reset')}</button></div></div>
@@ -1480,6 +1486,8 @@ const isAdmin=()=>!!(typeof user!=='undefined'&&user&&ADMIN_EMAILS.includes((use
 let STATS=null,statsAt=0,hotTab='song',statsDays=30;
 const hitDone=new Set();
 function statHit(kind,key){if(!sb)return;sb.rpc('stat_hit',{p_kind:kind,p_key:key||''}).then(()=>{},()=>{})}
+/* 每首歌累計觀看次數（Supabase 的 stat_song；還沒建好就不顯示） */
+function songViews(id){if(!sb)return;sb.rpc('stat_song',{p_key:id}).then(({data,error})=>{const v=$('#views');if(error||data==null||!v||!st.song||st.song.id!==id)return;v.querySelector('b').textContent=Number(data).toLocaleString();v.hidden=false},()=>{})}
 function statSong(id){if(hitDone.has('s:'+id))return;hitDone.add('s:'+id);statHit('song',id)}
 function statSearch(q){q=String(q||'').trim().toLowerCase().replace(/\s+/g,' ');if(!q||hitDone.has('q:'+q))return;
   if([...hitDone].some(k=>k.startsWith('q:')&&k.slice(2).startsWith(q)))return; // 刪字回頭的半截不算
