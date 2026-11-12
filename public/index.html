@@ -172,12 +172,12 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .cover .cv-g{font-size:11px;letter-spacing:.12em;opacity:.85}
 .cover .cv-t{font-family:var(--f-disp);font-weight:900;font-size:20px;line-height:1.2;text-wrap:balance;position:relative;z-index:1}
 .cover .cv-k{position:absolute;right:10px;top:8px;font-family:var(--f-mono);font-weight:700;font-size:13px;opacity:.9}
-.card a:hover .cover{filter:brightness(1.08)}
+@media (hover:hover){.card a:hover .cover{filter:brightness(1.08)}}
 .meta{padding-top:8px;display:grid;gap:1px}
 .meta b{font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .meta span{color:var(--muted);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fav{position:absolute;top:6px;left:6px;width:30px;height:30px;border-radius:50%;border:0;background:rgba(0,0,0,.28);color:#fff;display:grid;place-items:center;opacity:0;transition:opacity .15s}
-.card:hover .fav,.fav.on,.fav:focus-visible{opacity:1}
+.fav.on,.fav:focus-visible{opacity:1}@media (hover:hover){.card:hover .fav{opacity:1}}@media (hover:none){.card .fav:not(.on){display:none}}
 .fav svg{width:16px;height:16px}
 .fav.on svg{fill:currentColor}
 .diff{display:inline-flex;gap:2px;vertical-align:middle}
@@ -462,6 +462,7 @@ body.perform .covers{display:none}
 .lpaste p{margin:6px 0;font-size:12.5px;color:var(--muted)}
 .lpaste textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--surface);font-size:14px;resize:vertical}
 .lpaste .btns{display:flex;align-items:center;gap:10px;margin-top:8px}
+.lsearch{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border:1px solid var(--brass);border-radius:999px;color:var(--brass);font-size:13px;font-weight:700;margin:2px 0 6px}.lsearch svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 .lres{font-size:13px;color:var(--chord)}.lres.bad{color:var(--g-rock)}
 .viewbtns .seg-toggle{margin-left:0;overflow:visible}
 .viewbtns .seg-toggle button{height:30px}
@@ -580,7 +581,7 @@ body.perform .exitperf{display:inline-flex;position:fixed;top:calc(12px + env(sa
 body.perform main{margin-left:0;max-width:none;padding-left:max(24px,env(safe-area-inset-left,0px))}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 /* 手機：工具列預設收起，只留一顆「工具」按鈕 */
-.tooltog{display:none}
+.tooltog,.tsum,.tinfo{display:none}
 /* 手機：譜面排緊一點 */
 @media (max-width:720px){
   .tooltog{display:inline-flex;border:1px solid var(--line);background:none}.tooltog i{font-style:normal;font-size:.8em;transition:transform .15s}.toolwrap.open .tooltog i{transform:rotate(180deg)}
@@ -604,6 +605,21 @@ body.perform main{margin-left:0;max-width:none;padding-left:max(24px,env(safe-ar
   .sec{margin-bottom:1em}.row{margin-bottom:.4em}
   .cd{width:58px}.cd svg{width:56px;height:65px}.cd small{height:65px}.cd b{font-size:12px}
   .cd .edtag,.cd b .cpn{font-size:9.5px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:12px 10px}
+  .cover{padding:6px 7px;border-radius:5px}.cover::after{border-width:6px;box-shadow:0 0 0 8px rgba(255,255,255,.05)}
+  .cover .cv-g{font-size:9px;letter-spacing:.04em}.cover .cv-k{font-size:10.5px;right:6px;top:5px}.cover .cv-t{font-size:13px;line-height:1.25}
+  .meta{padding-top:5px}.meta b{font-size:12.5px}.meta span{font-size:11px}.meta .diff i{width:4px;height:7px}
+  .card .fav{width:22px;height:22px;top:4px;left:4px}.card .fav svg{width:12px;height:12px}
+  .songhead{margin-bottom:6px}.songhead .hmeta{display:none}
+  .tsum{display:block;flex:1;min-width:0;font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tsum b{color:var(--brass);font-weight:500}
+  .toolwrap.open .tsum{display:none}
+  .toolwrap.open .tinfo{display:block;order:1;flex:1;min-width:0;margin:0;font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .toolwrap .tools{order:2}.toolwrap .viewbtns{order:3}
+  .tools .tg{padding-inline:7px}.tools .tg:nth-child(-n+2){flex:1 1 40%}.tools .tg:nth-child(3){flex:0 0 auto}.viewbtns{gap:3px;flex:1 1 100%}.viewbtns .tb,.viewbtns .seg-toggle button{padding:0 5px;font-size:11px;min-width:0}.viewbtns .ibtn{width:24px;padding:0;margin-left:auto}.viewbtns .ibtn svg{width:13px;height:13px}.tools .tb{padding:0 6px}.dots{gap:2px}.dots i{width:5px;height:5px}
+  .note{margin:0;display:block;line-height:1.5}.note>span{display:none}.note>.tunenote{display:block;margin-bottom:8px}
+  .orderbar{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-inline:-16px;padding-inline:16px;white-space:nowrap}
+  .orderbar::-webkit-scrollbar{display:none}.orderbar>*{flex:none}
+  .lyrpanel{padding:10px;gap:6px}
 }
 </style>
 </head>
@@ -642,7 +658,7 @@ home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲明',c
     'library-mine':['還沒有自建譜','用 ChordPro 格式輸入歌詞和和弦，只存在你自己的瀏覽器，一樣可以移調、夾 Capo。'],'library-recent':['還沒有瀏覽紀錄','打開任一首譜後會出現在這裡。']},
   back:'返回',origKey:'原調',transpose:'移調',reset:'原調',resetTip:'回原調並套用編者建議的 Capo',capoNone:'無',real:'實音',realTip:'顯示實際音高（關閉時顯示夾 Capo 後手上按的和弦）',
   size:'字體',metro:'節拍器',sub:'細分',subTip:'依律動加入細分拍',practice:'練習面板',tools:'工具',myCover:'我的 Cover',igCover:'到 Instagram 看',repTip:n=>`這一列彈 ${n} 次`,repTipN:n=>`反覆記號之間彈 ${n} 次`,simple:'簡單版',simpleTip:'和弦簡化成三和弦（保留屬七），一小節最多兩個和弦',noteSimple:'簡單版：和弦已簡化，想彈原曲的和弦再按一次「簡單版」',lyrics:'我的歌詞',cols:'兩欄',perform:'全螢幕演奏',endPerform:'離開全螢幕',viewFull:'完整',viewCompact:'精簡',viewFullTip:'照彈奏順序從頭看到尾。連續、一模一樣的段落只顯示一次，歌詞分 1. 2.。',viewCompactTip:'每段只寫一次，照上方的順序彈。點順序裡的段落，會標出那一次的歌詞。',orderLbl:'順序',singN:n=>`唱 ${n} 次`,nthTime:n=>`第 ${n} 次`,onlyIn:(s,n)=>`只有${s}${n}`,onlyLast:s=>`只有最後一次${s}`,lyrEmpty:'（還沒填歌詞）',lyrChanged:s=>`<b>${s}</b> 的譜有更新，這幾段的歌詞可能對不上，請打開「我的歌詞」確認。其他段落不受影響。`,lyrOk:'我確認過了',lyrLines:a=>`${a} 行`,
-  noteCapo:(a,c,s,r)=>r?`調性 <b>${a}</b>，夾 Capo ${c}：譜上照實際音高寫，和弦圖是夾 Capo 後的按法`:`調性 <b>${a}</b>，夾 Capo ${c}：譜上是 <b>${s}</b> 調按法，實際音高高 ${c} 個半音`,noteKey:a=>`目前調性 <b>${a}</b>`,
+  noteCapo:(a,c,s,r)=>r?`調性 <b>${a}</b>，夾 Capo ${c}：譜上照實際音高寫，和弦圖是夾 Capo 後的按法`:`調性 <b>${a}</b>，夾 Capo ${c}：譜上是 <b>${s}</b> 調按法，實際音高高 ${c} 個半音`,noteKey:a=>`目前調性 <b>${a}</b>`,noteCapoM:(a,c,s,r)=>r?`<b>${a}</b> 調 · Capo ${c} · 譜上是實際音高`:`<b>${a}</b> 調 · Capo ${c} · 照 <b>${s}</b> 調指型彈`,lyrFind:'搜尋這首歌的歌詞',sumKey:'調',sumOrig:k=>`（原 ${k}）`,sumShape:'指型',lyrQ:'歌詞',
   noteFinger:(a,c)=>`調性 <b>${a}</b>，夾 Capo ${c}：這首的 Capo 是當多一根手指按和弦用，譜上照實際音高寫，和弦圖格數從 Capo 算起`,tuneLbl:'調弦',tuneStd:'標準調弦',noteTune:(tn,nm)=>`這首用<b>${nm?nm+'（'+tn+'）':tn}</b>調弦：沒有標「編者按法」的和弦圖是標準調弦的按法，只能參考`,
   noteShift:(o,n)=>`（原調 ${o}，${n>0?'升':'降'} ${Math.abs(n)} 個半音）`,noteEditor:(c,s)=>`編者建議 Capo ${c}`,notePub:'公開譜只含和弦與段落；歌詞由你自己輸入，只存在這台裝置',notePubAcct:'公開譜只含和弦與段落；你的歌詞存在你的帳號裡，只有你看得到',
   capoMove:(a,b)=>`${b>a?'↑':'↓'} Capo 從 ${a||'不夾'} 移到 ${b||'不夾'}`,chordsTitle:c=>c?`本曲和弦（Capo ${c}，格數從 Capo 算起）`:'本曲和弦',chordsShort:'本曲和弦',dockOpen:'和弦圖 ▴',dockClose:'收起 ▾',feel:'律動',strum:'刷法',noDiagram:'指法圖待補',noDiagramTip:'這個和弦的指法圖之後補上',
@@ -676,7 +692,7 @@ home:'Home',library:'My Library',theme:'Theme',legal:'Copyright',changelog:'Chan
     'library-mine':['No sheets of your own yet','Write lyrics and chords in ChordPro. They stay in your browser and still transpose and use a capo.'],'library-recent':['No history yet','Sheets you open will appear here.']},
   back:'Back',origKey:'Original key',transpose:'Transpose',reset:'Reset',resetTip:'Back to the original key and the editor’s capo',capoNone:'None',real:'Concert',realTip:'Show concert pitch (off: show the chord shapes you play with the capo on)',
   size:'Text',metro:'Metronome',sub:'Subdivide',subTip:'Add subdivisions that follow the feel',practice:'Practice Panel',tools:'Tools',myCover:'My Cover',igCover:'Watch on Instagram',repTip:n=>`Play this row ${n} times`,repTipN:n=>`Play between the repeat signs ${n} times`,simple:'Simple',simpleTip:'Simplify to triads (dominant 7ths kept), at most two chords per bar',noteSimple:'Simple version: chords are simplified. Tap “Simple” again for the original chords.',lyrics:'My Lyrics',cols:'Two Columns',perform:'Full Screen',endPerform:'Exit Full Screen',viewFull:'Full',viewCompact:'Compact',viewFullTip:'Read top to bottom in playing order. Back-to-back identical sections show once, with lyrics as 1. 2.',viewCompactTip:'Each section shows once. Follow the order above. Tap a section in the order to highlight its lyrics.',orderLbl:'ORDER',singN:n=>`${n} times`,nthTime:n=>`time ${n}`,onlyIn:(s,n)=>`${s} ${n} only`,onlyLast:s=>`Last ${s} only`,lyrEmpty:'(no lyrics yet)',lyrChanged:s=>`The chords for <b>${s}</b> were updated, so those lyrics may be out of place. Open My Lyrics to check. Other sections are fine.`,lyrOk:'Looks right',lyrLines:a=>`${a} line${a===1?'':'s'}`,
-  noteCapo:(a,c,s,r)=>r?`Key <b>${a}</b>, Capo ${c}: chords are shown at concert pitch; diagrams show the fingering with the capo on`:`Key <b>${a}</b>, Capo ${c}: chords are <b>${s}</b> shapes; they sound ${c} semitone${c>1?'s':''} higher`,noteKey:a=>`Key: <b>${a}</b>`,
+  noteCapo:(a,c,s,r)=>r?`Key <b>${a}</b>, Capo ${c}: chords are shown at concert pitch; diagrams show the fingering with the capo on`:`Key <b>${a}</b>, Capo ${c}: chords are <b>${s}</b> shapes; they sound ${c} semitone${c>1?'s':''} higher`,noteKey:a=>`Key: <b>${a}</b>`,noteCapoM:(a,c,s,r)=>r?`Key <b>${a}</b> · Capo ${c} · concert pitch`:`Key <b>${a}</b> · Capo ${c} · play <b>${s}</b> shapes`,lyrFind:'Search for this song’s lyrics',sumKey:'',sumOrig:k=>` (orig. ${k})`,sumShape:'shapes',lyrQ:'lyrics',
   noteFinger:(a,c)=>`Key <b>${a}</b>, Capo ${c}: the capo works as an extra finger for these voicings, so chords are written at concert pitch; diagram frets are counted from the capo`,tuneLbl:'Tuning',tuneStd:'Standard',noteTune:(tn,nm)=>`This song uses <b>${nm?nm+' ('+tn+')':tn}</b> tuning. Diagrams not marked “Editor’s voicing” show standard-tuning shapes, for reference only`,
   noteShift:(o,n)=>` (original ${o}, ${n>0?'up':'down'} ${Math.abs(n)} ${Math.abs(n)===1?'semitone':'semitones'})`,noteEditor:(c,s)=>`Editor’s pick: Capo ${c}`,notePub:'Public sheets show chords and sections only. Lyrics you add stay on this device.',notePubAcct:'Public sheets show chords and sections only. Your lyrics are saved to your account and only you can see them.',
   capoMove:(a,b)=>`${b>a?'↑':'↓'} Move the capo from ${a||'none'} to ${b||'none'}`,chordsTitle:c=>c?`Chords (Capo ${c}; frets counted from the capo)`:'Chords',chordsShort:'Chords',dockOpen:'Diagrams ▴',dockClose:'Hide ▾',feel:'Feel',strum:'Strumming',noDiagram:'Diagram coming',noDiagramTip:'Diagram for this chord is coming',
@@ -954,15 +970,15 @@ function openSong(song,isMine,keepState){
   const isFav=favs().includes(song.id);
   $('#app').innerHTML=`
   <div class="songhead"><a class="back" href="${isMine?'/#library-mine':'/#home'}" aria-label="${t('back')}">←</a>
-    <div class="grow"><h1>${esc(song.title)}</h1><p>${esc(song.artist||'')}${song.artist?' · ':''}${t('origKey')} <span class="k">${song.key}</span> · ${st.bpm} BPM · ${song.time||'4/4'}${song.tuning?` · ${t('tuneLbl')} <b class="tune">${esc(tuneName(song.tuning)||song.tuning)}</b>`:''} · ${t('feels')[song.feel]||t('feels').straight8}${song.language?' · '+(t('langs')[song.language]||''):''}${song.diff?' · '+t('diff')[song.diff]:''}</p></div>
+    <div class="grow"><h1>${esc(song.title)}</h1><p>${esc(song.artist||'')}<span class="hmeta">${song.artist?' · ':''}${t('origKey')} <span class="k">${song.key}</span> · ${st.bpm} BPM · ${song.time||'4/4'}${song.tuning?` · ${t('tuneLbl')} <b class="tune">${esc(tuneName(song.tuning)||song.tuning)}</b>`:''} · ${t('feels')[song.feel]||t('feels').straight8}${song.language?' · '+(t('langs')[song.language]||''):''}${song.diff?' · '+t('diff')[song.diff]:''}</span></p></div>
     ${!isMine&&song.videos&&song.videos.length?`<button class="hbtn vidbtn" id="vidbtn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10 9.2l5 2.8-5 2.8z" fill="currentColor"/></svg><span>${t('myCover')}</span></button>`:''}${isMine?`<a class="hbtn" href="/#edit-${song.id}">${t('edit')}</a>`:`<button class="hbtn ${isFav?'on':''}" id="favbtn">${heart}<span>${isFav?t('saved'):t('save')}</span></button>`}
   </div>
-  <div class="toolwrap${st.toolsOpen?' open':''}"><button class="tb tooltog" data-act="tools" id="toolsbtn" aria-expanded="${st.toolsOpen}">${t('tools')}<i aria-hidden="true">▾</i></button><div class="tools" role="toolbar">
+  <div class="toolwrap${st.toolsOpen?' open':''}"><button class="tb tooltog" data-act="tools" id="toolsbtn" aria-expanded="${st.toolsOpen}">${t('tools')}<i aria-hidden="true">▾</i></button><span class="tsum" id="tsum"></span><div class="tools" role="toolbar">
     <div class="tg"><span class="tl">${t('transpose')}</span><div class="tc"><button class="tb" data-act="key-" aria-label="−1">−</button><span class="tv" id="keyv"></span><button class="tb" data-act="key+" aria-label="+1">+</button><button class="tb" data-act="key0" title="${t('resetTip')}">${t('reset')}</button></div></div>
     <div class="tg"><label class="tl" for="capo">CAPO</label><div class="tc"><select id="capo">${[...Array(8)].map((_,i)=>`<option value="${i}">${i||t('capoNone')}</option>`).join('')}</select><button class="tb ${isReal(song)?'on':''}" data-act="real" id="realbtn" aria-pressed="${isReal(song)}" title="${t('realTip')}">${t('real')}</button></div></div>
     <div class="tg"><span class="tl">${t('size')}</span><div class="tc"><button class="tb" data-act="size-">A−</button><button class="tb" data-act="size+">A+</button></div></div>
     <div class="tg"><span class="tl">${t('metro')}</span><div class="tc"><button class="tb" data-act="bpm-" aria-label="−">−</button><span class="tv" id="bpmv"></span><button class="tb" data-act="bpm+" aria-label="+">+</button><button class="tb" data-act="metro" id="metrobtn" aria-label="${t('metro')}">▶</button><button class="tb ${st.sub?'on':''}" data-act="sub" id="subbtn" title="${t('subTip')}">${t('sub')}</button><span class="dots" id="dots"><i></i><i></i><i></i><i></i></span></div></div>
-    </div><div class="viewbtns">${isMine?'':`<div class="seg-toggle" role="group"><button class="${st.view==='full'?'on':''}" data-act="view-full" id="vfull" data-tip="${t('viewFullTip')}">${t('viewFull')}</button><button class="${st.view==='compact'?'on':''}" data-act="view-compact" id="vcompact" data-tip="${t('viewCompactTip')}">${t('viewCompact')}</button></div>`}${isMine?'':`<button class="tb ${st.simple?'on':''}" data-act="simple" id="simplebtn" data-tip="${t('simpleTip')}" aria-pressed="${st.simple}">${t('simple')}</button>`}<button class="tb ${st.practice?'on':''}" data-act="practice" id="pracbtn">${t('practice')}</button>${isMine?'':`<button class="tb ${st.lyrOpen?'on':''}" data-act="lyr" id="lyrbtn">${t('lyrics')}</button>`}<button class="tb ${st.cols?'on':''}" data-act="cols" id="colsbtn">${t('cols')}</button><button class="tb ibtn" data-act="perform" id="perfbtn" aria-label="${t('perform')}" title="${t('perform')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></div>
+    </div><div class="viewbtns">${isMine?'':`<div class="seg-toggle" role="group"><button class="${st.view==='full'?'on':''}" data-act="view-full" id="vfull" data-tip="${t('viewFullTip')}">${t('viewFull')}</button><button class="${st.view==='compact'?'on':''}" data-act="view-compact" id="vcompact" data-tip="${t('viewCompactTip')}">${t('viewCompact')}</button></div>`}${isMine?'':`<button class="tb ${st.simple?'on':''}" data-act="simple" id="simplebtn" data-tip="${t('simpleTip')}" aria-pressed="${st.simple}">${t('simple')}</button>`}<button class="tb ${st.practice?'on':''}" data-act="practice" id="pracbtn">${t('practice')}</button>${isMine?'':`<button class="tb ${st.lyrOpen?'on':''}" data-act="lyr" id="lyrbtn">${t('lyrics')}</button>`}<button class="tb ${st.cols?'on':''}" data-act="cols" id="colsbtn">${t('cols')}</button><button class="tb ibtn" data-act="perform" id="perfbtn" aria-label="${t('perform')}" title="${t('perform')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></div><p class="tinfo">${song.time||'4/4'}${song.tuning?` · ${t('tuneLbl')} ${esc(tuneName(song.tuning)||song.tuning)}`:''} · ${t('feels')[song.feel]||t('feels').straight8}${song.language?' · '+(t('langs')[song.language]||''):''}${song.diff?' · '+t('diff')[song.diff]:''}</p>
   </div>
   <p class="note" id="note"></p>
   <div class="songbody"><div class="songmain"><div id="lyrpanel"></div><div id="lyrwarn"></div><div class="orderbar" id="orderbar" hidden></div><div class="sheet" id="sheet"></div></div><div id="practice"></div></div>${!isMine&&song.videos&&song.videos.length?vidSection(song):''}
@@ -981,7 +997,7 @@ function act(a){
   if(a==='real'){const s=st.song;if(s&&s.capoUse==='finger')LS.set('real_'+s.id,!isReal(s));else{st.real=!st.real;LS.set('real',st.real)}drawSheet()}
   if(a==='size-'||a==='size+'){st.size=Math.min(26,Math.max(9,st.size+(a==='size+'?1:-1)));LS.set('size',st.size);document.documentElement.style.setProperty('--sheet-size',st.size+'px');fitBars()}
   if(a==='cols'){st.cols=!st.cols;LS.set('cols',st.cols);$('#colsbtn').classList.toggle('on',st.cols);drawSheet()}
-  if(a==='bpm-'||a==='bpm+'){st.bpm=Math.min(240,Math.max(40,st.bpm+(a==='bpm+'?1:-1)));$('#bpmv').textContent=st.bpm;if(st.metro){metroStop();metroStart(true)}}
+  if(a==='bpm-'||a==='bpm+'){st.bpm=Math.min(240,Math.max(40,st.bpm+(a==='bpm+'?1:-1)));$('#bpmv').textContent=st.bpm;if($('#tsbpm'))$('#tsbpm').textContent=st.bpm;if(st.metro){metroStop();metroStart(true)}}
   if(a==='metro')st.metro?metroStop():metroStart();
   if(a==='sub'){st.sub=!st.sub;LS.set('sub',st.sub);$('#subbtn').classList.toggle('on',st.sub)}
   if(a==='tools'){st.toolsOpen=!st.toolsOpen;LS.set('toolsM',st.toolsOpen);$('.toolwrap').classList.toggle('open',st.toolsOpen);$('#toolsbtn').setAttribute('aria-expanded',st.toolsOpen)}
@@ -989,7 +1005,7 @@ function act(a){
   if(a==='perform')setPerform(!document.body.classList.contains('perform'));
   if(a==='view-full'||a==='view-compact'){st.view=a==='view-full'?'full':'compact';LS.set('view',st.view);$('#vfull').classList.toggle('on',st.view==='full');$('#vcompact').classList.toggle('on',st.view==='compact');drawSheet()}
   if(a==='simple'){st.simple=!st.simple;LS.set('simple',st.simple);const b=$('#simplebtn');b.classList.toggle('on',st.simple);b.setAttribute('aria-pressed',st.simple);drawSheet()}
-  if(a==='lyr'){st.lyrOpen=!st.lyrOpen;$('#lyrbtn').classList.toggle('on',st.lyrOpen);drawLyrPanel()}
+  if(a==='lyr'){st.lyrOpen=!st.lyrOpen;if(st.lyrOpen&&MOB()&&st.toolsOpen){st.toolsOpen=false;$('.toolwrap').classList.remove('open');$('#toolsbtn').setAttribute('aria-expanded',false)}$('#lyrbtn').classList.toggle('on',st.lyrOpen);drawLyrPanel()}
 }
 function drawSheet(){PS=null;
   const s=st.song;const sounding=tKey(s.key,st.shift);const shape=tKey(sounding,-st.capo);const flat=keyFlat(shape);const total=st.shift-st.capo;
@@ -997,10 +1013,11 @@ function drawSheet(){PS=null;
   const real=isReal(s),rb=$('#realbtn');if(rb){rb.classList.toggle('on',real);rb.setAttribute('aria-pressed',real);rb.disabled=!st.capo}
   let note=st.capo?`<span>${s.capoUse==='finger'&&real?t('noteFinger')(sounding,st.capo):t('noteCapo')(sounding,st.capo,shape,real)}</span>`:'';
   if(s.tuning)note+=`<span class="tunenote">${t('noteTune')(esc(s.tuning),tuneName(s.tuning))}</span>`;
-  if(s.capo&&!st.shift)note+=`<span>${t('noteEditor')(s.capo,tKey(s.key,-s.capo))}</span>`;
+  if(s.capo&&!st.shift)note+=`<span class="ednote">${t('noteEditor')(s.capo,tKey(s.key,-s.capo))}</span>`;
   if(st.simple&&!st.isMine)note+=`<span class="simplenote">${t('noteSimple')}</span>`;
-  if(!st.isMine)note+=`<span>${user?t('notePubAcct'):t('notePub')}</span>`;
+  if(!st.isMine)note+=`<span class="pubnote">${user?t('notePubAcct'):t('notePub')}</span>`;
   $('#note').innerHTML=note;
+  $('#tsum').innerHTML=`<b>${sounding}</b> ${t('sumKey')}${st.shift?t('sumOrig')(s.key):''}${st.capo?` · Capo ${st.capo} · ${real?t('real'):`<b>${shape}</b> ${t('sumShape')}`}`:''} · <span id="tsbpm">${st.bpm}</span> BPM`;
   /* 段落換 Capo：筆記寫的 (Capo 3) 是編者的夾法；讀者改 Capo 時，這段跟著差一樣的格數 */
   const capoOf=m=>m===undefined||m===null?st.capo:Math.max(0,st.capo+m-(s.capo||0));
   const T2=(c,cp=st.capo)=>tChordK(c,st.shift-cp,tKey(sounding,-cp));   // 夾 Capo 後手上按的和弦
@@ -1094,7 +1111,7 @@ function drawLyrPanel(){
   const s=st.song,lyr=getLyr(s),tot=occTotals(s),occs=songOccs(s).filter(o=>!isInst(o.sec));
   const lab=o=>esc(secName(o.sec.name))+(tot[o.k]>1?nb(o.n):'');
   p.innerHTML=`<div class="lyrpanel"><p>${user?t('lyrHelpAcct')():t('lyrHelp')()}</p>
-  <div class="lpaste"><b class="lph">${t('lyrPaste')}</b><p>${t('lyrPasteHelp')}</p><textarea id="lyrall" rows="8" placeholder="${esc(t('lyrPastePh'))}"></textarea>
+  <div class="lpaste"><b class="lph">${t('lyrPaste')}</b><p>${t('lyrPasteHelp')}</p><a class="lsearch" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent([s.title,s.artist,t('lyrQ')].filter(Boolean).join(' '))}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>${t('lyrFind')}</a><textarea id="lyrall" rows="8" placeholder="${esc(t('lyrPastePh'))}"></textarea>
   <div class="btns"><span class="lres" id="lyrres" role="status"></span></div>
   <div id="lalwrap" hidden><p class="alhelp">${t('lyrAlHelp')}</p><div class="lal" id="lal"></div>
   </div></div>
@@ -1577,7 +1594,7 @@ $('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()})
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#modal').hidden)closeModal()});
 
 /* ---------- tooltip ---------- */
-document.addEventListener('mouseover',e=>{const c=e.target.closest('.ch');const tip=$('#tip');if(!c){tip.hidden=true;return}
+if(matchMedia('(hover:hover)').matches)document.addEventListener('mouseover',e=>{const c=e.target.closest('.ch');const tip=$('#tip');if(!c){tip.hidden=true;return}
   const name=c.textContent;const sh=shapeFor(c.dataset.s||name);tip.innerHTML=`<b>${esc(name)}</b>${sh?diagram(sh):`<small>${t('noDiagramTip')}</small>`}`;tip.hidden=false;
   const r=c.getBoundingClientRect();const w=tip.offsetWidth,h=tip.offsetHeight;let x=r.left+r.width/2-w/2,y=r.top-h-8;if(y<8)y=r.bottom+8;x=Math.max(8,Math.min(innerWidth-w-8,x));tip.style.left=x+'px';tip.style.top=y+'px'});
 window.addEventListener('scroll',()=>{$('#tip').hidden=true},{passive:true});
