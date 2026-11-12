@@ -80,6 +80,14 @@ begin
   );
 end $$;
 
+-- 每首歌累計觀看次數（歌曲頁「收藏」旁邊顯示）
+create or replace function public.stat_song(p_key text)
+returns integer language sql stable security definer set search_path = public as $$
+  select coalesce(sum(n), 0)::int from stat_daily where kind = 'song' and key = lower(btrim(coalesce(p_key, '')));
+$$;
+
 revoke all on function public.stat_hit(text, text), public.stat_public(text[]), public.stat_admin(integer), public.stat_is_admin() from public;
+revoke all on function public.stat_song(text) from public;
+grant execute on function public.stat_song(text) to anon, authenticated;
 grant execute on function public.stat_hit(text, text), public.stat_public(text[]) to anon, authenticated;
 grant execute on function public.stat_admin(integer), public.stat_is_admin() to authenticated;
