@@ -371,10 +371,15 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .rl .bk{flex:1;display:flex;gap:2px;padding-right:.3em}
 .rl .pc{border-radius:99px;background:var(--chord);opacity:.55}
 .rl .pc.cn{background:var(--muted);opacity:.45}
+.tup{grid-row:1;justify-self:stretch;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));column-gap:2px;padding:.85em .3em 0 0;align-self:end;position:relative;min-width:0}
+.tup>.ch{font-size:calc(1em * var(--ts,.8));white-space:nowrap;line-height:1.2}
+.tup::before{content:"";position:absolute;left:-.15em;right:.35em;top:.1em;height:.32em;border:1px solid var(--muted);border-bottom:0;opacity:.75}
+.tup::after{content:attr(data-n);position:absolute;left:calc(50% - .1em);top:-.25em;transform:translateX(-50%);font:700 .55em/1 var(--f-mono);color:var(--muted);background:var(--bg);padding:0 .25em}
+.rowline.wide{--bpr:1}.rowline.wide .bars>.bar{border-left:2px solid var(--muted)}
 .bar.cue{box-shadow:inset 0 0 0 2px var(--brass)}#sheet .bar{cursor:pointer}.bar.now{background:color-mix(in srgb,var(--brass) 8%,transparent)}.rl .bk.now .pc{background:var(--brass);opacity:1}.rl{transition:none}
 .bar.rest .rl .pc{background:var(--muted);opacity:.3}
 .bt{font-family:var(--f-mono);font-weight:700;color:var(--muted);opacity:.75}
-.bar{position:relative}.bars .bar.hasts{padding-left:1.45em}
+.bar{position:relative}.bars .bar.hasts{padding-left:1.45em!important}
 .tsig{position:absolute;left:.35em;top:50%;transform:translateY(-50%);width:.75em;height:1.4em;overflow:visible}.tsig text{font-family:var(--f-mono);font-weight:700;font-size:11px;fill:var(--brass)}
 .bar.rest{display:flex;justify-content:center}
 .sheet .bar,.sheet .rowline{break-inside:avoid}
@@ -419,8 +424,10 @@ body.perform .covers{display:none}
 .rep{align-self:center;flex:none;width:2.6em;display:flex;justify-content:center}
 .rep b{font-family:var(--f-mono);font-weight:700;font-size:.9em;line-height:1;background:var(--brass);color:var(--on-brass);border-radius:99px;padding:.36em .5em .26em;letter-spacing:.02em}
 /* 反覆記號：整列彈幾次時，頭尾畫成 ‖: :‖ */
-.rowline.rpt .bars>.bar:first-child,.rowline.rptL .bars>.bar:first-child{border-left:5px double var(--brass)!important;padding-left:1em}
-.rowline.rpt .bars>.bar:last-child,.rowline.rptR .bars>.bar:last-child{border-right:5px double var(--brass);padding-right:1em}
+.rowline.rpt .bars>.bar:first-child,.rowline.rptL .bars>.bar:first-child{border-left:5px double var(--brass)!important;padding-left:1em!important}
+.rowline.rpt .bars>.bar:last-child,.rowline.rptR .bars>.bar:last-child{border-right:5px double var(--brass);padding-right:1em!important}
+/* 每一行的頭尾小節留一樣的空間，有反覆記號的列和沒有的列和弦、節奏線才對得齊 */
+.sheet:not([data-bpr]) .rowline:not(.wide) .bar:nth-child(4n+1),.sheet[data-bpr="2"] .rowline:not(.wide) .bar:nth-child(2n+1),.sheet[data-bpr="1"] .bar,.rowline.wide .bar{padding-left:calc(1em + 3px)}.sheet:not([data-bpr]) .rowline:not(.wide) .bar:nth-child(4n),.sheet[data-bpr="2"] .rowline:not(.wide) .bar:nth-child(2n),.sheet[data-bpr="1"] .bar,.rowline.wide .bar,.rowline .bars>.bar:last-child{padding-right:calc(1em + 3px)}
 .rowline.rpt .bars>.bar:first-child::before,.rowline.rpt .bars>.bar:last-child::after,.rowline.rptL .bars>.bar:first-child::before,.rowline.rptR .bars>.bar:last-child::after{content:"";position:absolute;top:50%;width:4px;height:13px;transform:translateY(-62%);background:radial-gradient(circle,var(--brass) 1.9px,transparent 2.2px) 0 0/4px 6.5px repeat-y}
 .rowline.rpt .bars>.bar:first-child::before,.rowline.rptL .bars>.bar:first-child::before{left:.3em}.rowline.rpt .bars>.bar:last-child::after,.rowline.rptR .bars>.bar:last-child::after{right:.3em}
 .only{display:inline-block;font-size:11.5px;color:var(--on-brass);background:var(--brass);border-radius:4px;padding:0 6px;margin-bottom:3px;letter-spacing:0}
@@ -445,10 +452,10 @@ body.perform .covers{display:none}
 .lbox .mv button{width:26px;height:24px;border:1px solid var(--line);border-radius:6px;background:var(--surface);font-size:12px;line-height:1;padding:0}
 .lbox .mv button:hover{border-color:var(--muted)}
 .wcgen{margin-top:12px;border:1px dashed var(--brass);border-radius:10px;padding:8px 12px}.wcgen>summary{cursor:pointer;font-weight:700;color:var(--brass);font-size:13.5px}.wcgen p{font-size:12.5px;color:var(--muted);margin:6px 0}.wcgen textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--surface);font-size:14px;line-height:1.6}.wcgen .btns{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:6px}.wcout{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px;font-size:13px;white-space:pre-wrap;min-height:2em}.wcprev{display:grid;gap:2px;font-size:12.5px;max-height:320px;overflow:auto}.wcprev>div{display:grid;grid-template-columns:minmax(9em,auto) 4em 1fr auto;gap:8px;padding:2px 4px;border-radius:4px}.wcprev>div.bad{background:color-mix(in srgb,#C0392B 12%,transparent)}.wcprev b{font-weight:600}.wcprev span{color:var(--muted)}.wcprev em{font-style:normal;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.wcprev code{color:var(--brass)}
-.lpaste .lph{display:block;margin:2px 0 4px;font-weight:700;font-size:13.5px;color:var(--brass)}.ledit{margin-top:12px}.ledit>summary{cursor:pointer;color:var(--muted);font-size:14px}.lal{display:grid;gap:10px;max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--surface);user-select:none;-webkit-user-select:none}
+.lpaste .lph{display:block;margin:2px 0 4px;font-weight:700;font-size:13.5px;color:var(--brass)}.ledit{margin-top:12px}.ledit>summary{cursor:pointer;color:var(--muted);font-size:14px}.lal{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--surface);user-select:none;-webkit-user-select:none}
 .alsec b{display:block;font-size:12px;color:var(--brass);margin-bottom:2px}.alsec.bad b{color:#C0392B}.alsec b em{font-style:normal;font-weight:400;margin-left:8px}
-.alflow{line-height:2.1;font-size:15px}
-.alrow{white-space:normal}
+.alflow{line-height:2.1;font-size:15px;overflow-wrap:anywhere;min-width:0}
+.alrow{white-space:normal;display:block}
 .cut{display:inline-grid;place-items:center;min-width:1.5em;height:1.5em;margin:0 3px 0 6px;border-radius:5px;background:var(--brass-soft);color:var(--brass);font:700 11px var(--f-mono);font-style:normal;vertical-align:1px}
 .cut.on{background:var(--brass);color:var(--on-brass);box-shadow:0 0 0 3px var(--brass-soft)}
 .tk.sp{margin-left:.3em}.tk.empty{color:var(--muted);opacity:.6}
@@ -478,7 +485,7 @@ body.perform .covers{display:none}
 .seg .c{min-height:1.35em;padding-right:.5em;font-family:var(--f-mono);font-weight:700;color:var(--chord);white-space:nowrap}
 .seg .l{white-space:pre}
 
-.lyrpanel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:18px;display:grid;gap:8px}
+.lyrpanel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:18px;display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
 .lyrpanel p{margin:0;font-size:12.5px;color:var(--muted)}
 textarea{width:100%;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:10px 12px;font-size:14px;line-height:1.6;resize:vertical}
 .btns{display:flex;gap:8px;flex-wrap:wrap}
@@ -589,19 +596,23 @@ body.perform main{margin-left:0;max-width:none;padding-left:max(24px,env(safe-ar
   .toolwrap:not(.open) .tools,.toolwrap:not(.open) .viewbtns{display:none}
   .tools{border-radius:9px;flex:1 1 100%}.tg{padding:5px 9px 7px;gap:3px}.tl{font-size:9.5px}
   .tb,.tools select,.viewbtns .seg-toggle button{height:26px;font-size:12px}.tb{min-width:26px;padding:0 7px}.tv{min-width:30px;font-size:13px}
-  .viewbtns{margin-left:0;gap:5px}#colsbtn{display:none}.ibtn{width:28px}
+  .viewbtns{margin-left:0;gap:5px}.ibtn{width:28px}
   .note{font-size:11px;margin-bottom:8px}
   .orderbar{gap:3px 4px;margin-bottom:10px}.orderbar .chip{font-size:11px;padding:1px 7px}.orderbar .arrow{font-size:10px}.orderbar .lbl{font-size:9.5px}
   .chip .nb,.sec h3 .nb{font-size:9px;min-width:13px;height:13px}.sec h3{gap:5px}
   .rowline.rpt .bars>.bar:first-child::before,.rowline.rpt .bars>.bar:last-child::after,.rowline.rptL .bars>.bar:first-child::before,.rowline.rptR .bars>.bar:last-child::after{width:3px;height:9px;background:radial-gradient(circle,var(--brass) 1.3px,transparent 1.6px) 0 0/3px 4.5px repeat-y}
   .bar{padding:.15em .3em;border-right-width:1.5px}
   .sheet:not([data-bpr]) .bar:nth-child(4n+1),.sheet[data-bpr="2"] .bar:nth-child(2n+1),.sheet[data-bpr="1"] .bar{border-left-width:1.5px}
-  .rowline{gap:3px}.rep{width:1.9em}.rep b{font-size:.68em;padding:.4em .45em .28em}
+  .rowline{gap:2px}.rep{width:1.35em}.rep b{font-size:.56em;padding:.35em .3em .22em;letter-spacing:0}
+  /* 歌曲頁的譜往兩邊多用一點空間 */
+  main:has(.songhead) #sheet{margin-inline:-8px}
   .bar.dur>.ch{font-size:1em}.ch{letter-spacing:-.02em}
-  .rowline.rpt .bars>.bar:first-child,.rowline.rptL .bars>.bar:first-child{border-left-width:3px!important;padding-left:.7em}
-  .rowline.rpt .bars>.bar:last-child,.rowline.rptR .bars>.bar:last-child{border-right-width:3px;padding-right:.7em}
+  .rowline.rpt .bars>.bar:first-child,.rowline.rptL .bars>.bar:first-child{border-left-width:3px!important;padding-left:.7em!important}
+  .rowline.rpt .bars>.bar:last-child,.rowline.rptR .bars>.bar:last-child{border-right-width:3px;padding-right:.7em!important}
+  .sheet:not([data-bpr]) .rowline:not(.wide) .bar:nth-child(4n+1),.sheet[data-bpr="2"] .rowline:not(.wide) .bar:nth-child(2n+1),.sheet[data-bpr="1"] .bar,.rowline.wide .bar{padding-left:calc(.7em + 1.5px)}.sheet:not([data-bpr]) .rowline:not(.wide) .bar:nth-child(4n),.sheet[data-bpr="2"] .rowline:not(.wide) .bar:nth-child(2n),.sheet[data-bpr="1"] .bar,.rowline.wide .bar,.rowline .bars>.bar:last-child{padding-right:calc(.7em + 1.5px)}
+  .rowline.wide .bars>.bar{border-left-width:1.5px}
   .rowline.rpt .bars>.bar:first-child::before,.rowline.rptL .bars>.bar:first-child::before{left:.2em}.rowline.rpt .bars>.bar:last-child::after,.rowline.rptR .bars>.bar:last-child::after{right:.2em}
-  .rl{height:2px}.rl .bk{gap:1px;padding-right:.2em}
+  .rl{height:2px}.rl .bk{gap:1px;padding-right:.2em}.tup{column-gap:1px;padding-right:.2em}.tup::before{right:.25em}
   .sec{margin-bottom:1em}.row{margin-bottom:.4em}
   .cd{width:58px}.cd svg{width:56px;height:65px}.cd small{height:65px}.cd b{font-size:12px}
   .cd .edtag,.cd b .cpn{font-size:9.5px}
@@ -658,7 +669,7 @@ home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲明',c
     'library-mine':['還沒有自建譜','用 ChordPro 格式輸入歌詞和和弦，只存在你自己的瀏覽器，一樣可以移調、夾 Capo。'],'library-recent':['還沒有瀏覽紀錄','打開任一首譜後會出現在這裡。']},
   back:'返回',origKey:'原調',transpose:'移調',reset:'原調',resetTip:'回原調並套用編者建議的 Capo',capoNone:'無',real:'實音',realTip:'顯示實際音高（關閉時顯示夾 Capo 後手上按的和弦）',
   size:'字體',metro:'節拍器',sub:'細分',subTip:'依律動加入細分拍',practice:'練習面板',tools:'工具',myCover:'我的 Cover',igCover:'到 Instagram 看',repTip:n=>`這一列彈 ${n} 次`,repTipN:n=>`反覆記號之間彈 ${n} 次`,simple:'簡單版',simpleTip:'和弦簡化成三和弦（保留屬七），一小節最多兩個和弦',noteSimple:'簡單版：和弦已簡化，想彈原曲的和弦再按一次「簡單版」',lyrics:'我的歌詞',cols:'兩欄',perform:'全螢幕演奏',endPerform:'離開全螢幕',viewFull:'完整',viewCompact:'精簡',viewFullTip:'照彈奏順序從頭看到尾。連續、一模一樣的段落只顯示一次，歌詞分 1. 2.。',viewCompactTip:'每段只寫一次，照上方的順序彈。點順序裡的段落，會標出那一次的歌詞。',orderLbl:'順序',singN:n=>`唱 ${n} 次`,nthTime:n=>`第 ${n} 次`,onlyIn:(s,n)=>`只有${s}${n}`,onlyLast:s=>`只有最後一次${s}`,lyrEmpty:'（還沒填歌詞）',lyrChanged:s=>`<b>${s}</b> 的譜有更新，這幾段的歌詞可能對不上，請打開「我的歌詞」確認。其他段落不受影響。`,lyrOk:'我確認過了',lyrLines:a=>`${a} 行`,
-  noteCapo:(a,c,s,r)=>r?`調性 <b>${a}</b>，夾 Capo ${c}：譜上照實際音高寫，和弦圖是夾 Capo 後的按法`:`調性 <b>${a}</b>，夾 Capo ${c}：譜上是 <b>${s}</b> 調按法，實際音高高 ${c} 個半音`,noteKey:a=>`目前調性 <b>${a}</b>`,noteCapoM:(a,c,s,r)=>r?`<b>${a}</b> 調 · Capo ${c} · 譜上是實際音高`:`<b>${a}</b> 調 · Capo ${c} · 照 <b>${s}</b> 調指型彈`,lyrFind:'搜尋這首歌的歌詞',sumKey:'調',sumOrig:k=>`（原 ${k}）`,sumShape:'指型',lyrQ:'歌詞',
+  noteCapo:(a,c,s,r)=>r?`調性 <b>${a}</b>，夾 Capo ${c}：譜上照實際音高寫，和弦圖是夾 Capo 後的按法`:`調性 <b>${a}</b>，夾 Capo ${c}：譜上是 <b>${s}</b> 調按法，實際音高高 ${c} 個半音`,noteKey:a=>`目前調性 <b>${a}</b>`,noteCapoM:(a,c,s,r)=>r?`<b>${a}</b> 調 · Capo ${c} · 譜上是實際音高`:`<b>${a}</b> 調 · Capo ${c} · 照 <b>${s}</b> 調指型彈`,lyrFind:'搜尋這首歌的歌詞',tupTip:n=>`${n} 連音：這幾個和弦平分這一拍`,sumKey:'調',sumOrig:k=>`（原 ${k}）`,sumShape:'指型',lyrQ:'歌詞',
   noteFinger:(a,c)=>`調性 <b>${a}</b>，夾 Capo ${c}：這首的 Capo 是當多一根手指按和弦用，譜上照實際音高寫，和弦圖格數從 Capo 算起`,tuneLbl:'調弦',tuneStd:'標準調弦',noteTune:(tn,nm)=>`這首用<b>${nm?nm+'（'+tn+'）':tn}</b>調弦：沒有標「編者按法」的和弦圖是標準調弦的按法，只能參考`,
   noteShift:(o,n)=>`（原調 ${o}，${n>0?'升':'降'} ${Math.abs(n)} 個半音）`,noteEditor:(c,s)=>`編者建議 Capo ${c}`,notePub:'公開譜只含和弦與段落；歌詞由你自己輸入，只存在這台裝置',notePubAcct:'公開譜只含和弦與段落；你的歌詞存在你的帳號裡，只有你看得到',
   capoMove:(a,b)=>`${b>a?'↑':'↓'} Capo 從 ${a||'不夾'} 移到 ${b||'不夾'}`,chordsTitle:c=>c?`本曲和弦（Capo ${c}，格數從 Capo 算起）`:'本曲和弦',chordsShort:'本曲和弦',dockOpen:'和弦圖 ▴',dockClose:'收起 ▾',feel:'律動',strum:'刷法',noDiagram:'指法圖待補',noDiagramTip:'這個和弦的指法圖之後補上',
@@ -692,7 +703,7 @@ home:'Home',library:'My Library',theme:'Theme',legal:'Copyright',changelog:'Chan
     'library-mine':['No sheets of your own yet','Write lyrics and chords in ChordPro. They stay in your browser and still transpose and use a capo.'],'library-recent':['No history yet','Sheets you open will appear here.']},
   back:'Back',origKey:'Original key',transpose:'Transpose',reset:'Reset',resetTip:'Back to the original key and the editor’s capo',capoNone:'None',real:'Concert',realTip:'Show concert pitch (off: show the chord shapes you play with the capo on)',
   size:'Text',metro:'Metronome',sub:'Subdivide',subTip:'Add subdivisions that follow the feel',practice:'Practice Panel',tools:'Tools',myCover:'My Cover',igCover:'Watch on Instagram',repTip:n=>`Play this row ${n} times`,repTipN:n=>`Play between the repeat signs ${n} times`,simple:'Simple',simpleTip:'Simplify to triads (dominant 7ths kept), at most two chords per bar',noteSimple:'Simple version: chords are simplified. Tap “Simple” again for the original chords.',lyrics:'My Lyrics',cols:'Two Columns',perform:'Full Screen',endPerform:'Exit Full Screen',viewFull:'Full',viewCompact:'Compact',viewFullTip:'Read top to bottom in playing order. Back-to-back identical sections show once, with lyrics as 1. 2.',viewCompactTip:'Each section shows once. Follow the order above. Tap a section in the order to highlight its lyrics.',orderLbl:'ORDER',singN:n=>`${n} times`,nthTime:n=>`time ${n}`,onlyIn:(s,n)=>`${s} ${n} only`,onlyLast:s=>`Last ${s} only`,lyrEmpty:'(no lyrics yet)',lyrChanged:s=>`The chords for <b>${s}</b> were updated, so those lyrics may be out of place. Open My Lyrics to check. Other sections are fine.`,lyrOk:'Looks right',lyrLines:a=>`${a} line${a===1?'':'s'}`,
-  noteCapo:(a,c,s,r)=>r?`Key <b>${a}</b>, Capo ${c}: chords are shown at concert pitch; diagrams show the fingering with the capo on`:`Key <b>${a}</b>, Capo ${c}: chords are <b>${s}</b> shapes; they sound ${c} semitone${c>1?'s':''} higher`,noteKey:a=>`Key: <b>${a}</b>`,noteCapoM:(a,c,s,r)=>r?`Key <b>${a}</b> · Capo ${c} · concert pitch`:`Key <b>${a}</b> · Capo ${c} · play <b>${s}</b> shapes`,lyrFind:'Search for this song’s lyrics',sumKey:'',sumOrig:k=>` (orig. ${k})`,sumShape:'shapes',lyrQ:'lyrics',
+  noteCapo:(a,c,s,r)=>r?`Key <b>${a}</b>, Capo ${c}: chords are shown at concert pitch; diagrams show the fingering with the capo on`:`Key <b>${a}</b>, Capo ${c}: chords are <b>${s}</b> shapes; they sound ${c} semitone${c>1?'s':''} higher`,noteKey:a=>`Key: <b>${a}</b>`,noteCapoM:(a,c,s,r)=>r?`Key <b>${a}</b> · Capo ${c} · concert pitch`:`Key <b>${a}</b> · Capo ${c} · play <b>${s}</b> shapes`,lyrFind:'Search for this song’s lyrics',tupTip:n=>`${n}-tuplet: these chords split the beat evenly`,sumKey:'',sumOrig:k=>` (orig. ${k})`,sumShape:'shapes',lyrQ:'lyrics',
   noteFinger:(a,c)=>`Key <b>${a}</b>, Capo ${c}: the capo works as an extra finger for these voicings, so chords are written at concert pitch; diagram frets are counted from the capo`,tuneLbl:'Tuning',tuneStd:'Standard',noteTune:(tn,nm)=>`This song uses <b>${nm?nm+' ('+tn+')':tn}</b> tuning. Diagrams not marked “Editor’s voicing” show standard-tuning shapes, for reference only`,
   noteShift:(o,n)=>` (original ${o}, ${n>0?'up':'down'} ${Math.abs(n)} ${Math.abs(n)===1?'semitone':'semitones'})`,noteEditor:(c,s)=>`Editor’s pick: Capo ${c}`,notePub:'Public sheets show chords and sections only. Lyrics you add stay on this device.',notePubAcct:'Public sheets show chords and sections only. Your lyrics are saved to your account and only you can see them.',
   capoMove:(a,b)=>`${b>a?'↑':'↓'} Move the capo from ${a||'none'} to ${b||'none'}`,chordsTitle:c=>c?`Chords (Capo ${c}; frets counted from the capo)`:'Chords',chordsShort:'Chords',dockOpen:'Diagrams ▴',dockClose:'Hide ▾',feel:'Feel',strum:'Strumming',noDiagram:'Diagram coming',noDiagramTip:'Diagram for this chord is coming',
@@ -738,7 +749,7 @@ const gTag=s=>gOf(s).map(g=>t('genre')[g]).join(' · ');
 let SONGS=[];
 
 /* ---------- chord shapes ---------- */
-const SHAPES={C:'x32010',D:'xx0232',E:'022100',G:'320003',A:'x02220',Am:'x02210',Em:'022000',Dm:'xx0231',F:'133211',Bm:'x24432',
+const SHAPES={'D#m7':'x68676','C#m7':'x46454','G#m7':'4x444x','D#dim':'x6787x',Fdim:'x89(10)9x',Cdim:'x3454x',C:'x32010',D:'xx0232',E:'022100',G:'320003',A:'x02220',Am:'x02210',Em:'022000',Dm:'xx0231',F:'133211',Bm:'x24432',
  E7:'020100',A7:'x02020',D7:'xx0212',G7:'320001',B7:'x21202',C7:'x32310',Bb:'x13331',Bb7:'x13131',F7:'131211','F#m':'244222','C#m':'x46654',
  Gm:'355333',Cm:'x35543',Fm:'133111',Eb:'x68886',Ab:'466544',Db:'x46664','G#m':'466444',Bbm:'x13321',Fmaj7:'xx3210',Cmaj7:'x32000',
  Gmaj7:'320002',Dmaj7:'xx0222',Amaj7:'x02120',Am7:'x02010',Em7:'020000',Dm7:'xx0211',Bm7:'x20202','F#7':'242322','C#7':'x46464',
@@ -751,7 +762,7 @@ const OPEN=new Set(['C','D','E','G','A','Am','Em','Dm','E7','A7','D7','G7','B7',
 const ENH={'C#':'Db','Db':'C#','D#':'Eb','Eb':'D#','F#':'Gb','Gb':'F#','G#':'Ab','Ab':'G#','A#':'Bb','Bb':'A#'};
 function shapeOf(c){if(SHAPES[c])return SHAPES[c];const[h,b]=c.split('/');const alt=r=>{const m=r.match(/^([A-G][#b]?)(.*)$/);return m&&ENH[m[1]]?ENH[m[1]]+m[2]:null};for(const x of [h,alt(h)].filter(Boolean))for(const y of (b?[b,ENH[b]].filter(Boolean):['']))if(SHAPES[b?x+'/'+y:x])return SHAPES[b?x+'/'+y:x];return null}
 /* 指法：6 碼；(2h3) 搥弦、(3p2) 勾弦：先按前一格，再搥／勾到後一格 */
-function frets(sh){return (String(sh).match(/\(\d{1,2}[hp]\d{1,2}\)|x|\d/g)||[]).map(t=>{if(t==='x')return {v:-1};const m=t.match(/^\((\d+)([hp])(\d+)\)$/);return m?{v:+m[3],a:+m[1],h:m[2]}:{v:+t}})}
+function frets(sh){return (String(sh).match(/\(\d{1,2}[hp]\d{1,2}\)|\(\d{1,2}\)|x|\d/g)||[]).map(t=>{if(t==='x')return {v:-1};if(/^\(\d+\)$/.test(t))return {v:+t.slice(1,-1)};const m=t.match(/^\((\d+)([hp])(\d+)\)$/);return m?{v:+m[3],a:+m[1],h:m[2]}:{v:+t}})}
 function diagram(sh){const f=frets(sh);const pos=f.flatMap(x=>[x.v,x.a]).filter(n=>n>0);const max=Math.max(0,...pos);const base=max>4?Math.min(...pos):1;
   let s=`<svg width="96" height="112" viewBox="0 0 96 112" role="img" aria-label="${esc(sh)}">`;const X=i=>23+i*13,Y=r=>26+r*17;
   s+=base===1?`<line x1="23" y1="26" x2="88" y2="26" stroke="currentColor" stroke-width="4"/>`:`<text x="16" y="${Y(.5)+4}" font-size="9.5" font-weight="700" fill="var(--brass,currentColor)" text-anchor="end">${base}fr</text>`;
@@ -785,7 +796,7 @@ function chordCard(c,shape,cp){shape=shape||c;const alts=CUR[shape],sh=alts?alts
 /* ---------- state ---------- */
 /* 手機預設用小字、一列四小節，一個畫面看得到大半首歌 */
 const MOB=()=>matchMedia('(max-width:720px)').matches,defSize=()=>MOB()?12:16;
-const st={layout:LS.get('layout','grid'),f:{q:'',sort:'new',lang:[],genre:[],diff:[],key:[]},cols:LS.get('cols',true),size:defSize(),
+const st={layout:LS.get('layout','grid'),f:{q:'',sort:'new',lang:[],genre:[],diff:[],key:[]},cols:LS.get('cols',true),colsM:LS.get('colsM',false),size:defSize(),
   practice:LS.get(MOB()?'practiceM':'practice',!MOB()),toolsOpen:LS.get('toolsM',false),dockOpen:LS.get('dockOpen',false),real:LS.get('real',false),sub:LS.get('sub',true),view:LS.get('view','full'),simple:LS.get('simple',false),shift:0,capo:0,bpm:90,metro:false,song:null,lyrOpen:false};
 /* capo_use: finger 的歌（Capo 當多一根手指用）預設顯示實際音高，讀者切換後只記在這首 */
 const isReal=s=>s&&s.capoUse==='finger'?LS.get('real_'+s.id,true):st.real;
@@ -978,7 +989,7 @@ function openSong(song,isMine,keepState){
     <div class="tg"><label class="tl" for="capo">CAPO</label><div class="tc"><select id="capo">${[...Array(8)].map((_,i)=>`<option value="${i}">${i||t('capoNone')}</option>`).join('')}</select><button class="tb ${isReal(song)?'on':''}" data-act="real" id="realbtn" aria-pressed="${isReal(song)}" title="${t('realTip')}">${t('real')}</button></div></div>
     <div class="tg"><span class="tl">${t('size')}</span><div class="tc"><button class="tb" data-act="size-">A−</button><button class="tb" data-act="size+">A+</button></div></div>
     <div class="tg"><span class="tl">${t('metro')}</span><div class="tc"><button class="tb" data-act="bpm-" aria-label="−">−</button><span class="tv" id="bpmv"></span><button class="tb" data-act="bpm+" aria-label="+">+</button><button class="tb" data-act="metro" id="metrobtn" aria-label="${t('metro')}">▶</button><button class="tb ${st.sub?'on':''}" data-act="sub" id="subbtn" title="${t('subTip')}">${t('sub')}</button><span class="dots" id="dots"><i></i><i></i><i></i><i></i></span></div></div>
-    </div><div class="viewbtns">${isMine?'':`<div class="seg-toggle" role="group"><button class="${st.view==='full'?'on':''}" data-act="view-full" id="vfull" data-tip="${t('viewFullTip')}">${t('viewFull')}</button><button class="${st.view==='compact'?'on':''}" data-act="view-compact" id="vcompact" data-tip="${t('viewCompactTip')}">${t('viewCompact')}</button></div>`}${isMine?'':`<button class="tb ${st.simple?'on':''}" data-act="simple" id="simplebtn" data-tip="${t('simpleTip')}" aria-pressed="${st.simple}">${t('simple')}</button>`}<button class="tb ${st.practice?'on':''}" data-act="practice" id="pracbtn">${t('practice')}</button>${isMine?'':`<button class="tb ${st.lyrOpen?'on':''}" data-act="lyr" id="lyrbtn">${t('lyrics')}</button>`}<button class="tb ${st.cols?'on':''}" data-act="cols" id="colsbtn">${t('cols')}</button><button class="tb ibtn" data-act="perform" id="perfbtn" aria-label="${t('perform')}" title="${t('perform')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></div><p class="tinfo">${song.time||'4/4'}${song.tuning?` · ${t('tuneLbl')} ${esc(tuneName(song.tuning)||song.tuning)}`:''} · ${t('feels')[song.feel]||t('feels').straight8}${song.language?' · '+(t('langs')[song.language]||''):''}${song.diff?' · '+t('diff')[song.diff]:''}</p>
+    </div><div class="viewbtns">${isMine?'':`<div class="seg-toggle" role="group"><button class="${st.view==='full'?'on':''}" data-act="view-full" id="vfull" data-tip="${t('viewFullTip')}">${t('viewFull')}</button><button class="${st.view==='compact'?'on':''}" data-act="view-compact" id="vcompact" data-tip="${t('viewCompactTip')}">${t('viewCompact')}</button></div>`}${isMine?'':`<button class="tb ${st.simple?'on':''}" data-act="simple" id="simplebtn" data-tip="${t('simpleTip')}" aria-pressed="${st.simple}">${t('simple')}</button>`}<button class="tb ${st.practice?'on':''}" data-act="practice" id="pracbtn">${t('practice')}</button>${isMine?'':`<button class="tb ${st.lyrOpen?'on':''}" data-act="lyr" id="lyrbtn">${t('lyrics')}</button>`}<button class="tb ${(MOB()?st.colsM:st.cols)?'on':''}" data-act="cols" id="colsbtn">${t('cols')}</button><button class="tb ibtn" data-act="perform" id="perfbtn" aria-label="${t('perform')}" title="${t('perform')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></div><p class="tinfo">${song.time||'4/4'}${song.tuning?` · ${t('tuneLbl')} ${esc(tuneName(song.tuning)||song.tuning)}`:''} · ${t('feels')[song.feel]||t('feels').straight8}${song.language?' · '+(t('langs')[song.language]||''):''}${song.diff?' · '+t('diff')[song.diff]:''}</p>
   </div>
   <p class="note" id="note"></p>
   <div class="songbody"><div class="songmain"><div id="lyrpanel"></div><div id="lyrwarn"></div><div class="orderbar" id="orderbar" hidden></div><div class="sheet" id="sheet"></div></div><div id="practice"></div></div>${!isMine&&song.videos&&song.videos.length?vidSection(song):''}
@@ -996,7 +1007,7 @@ function act(a){
   if(a==='key0'){st.shift=0;st.capo=st.song.capo||0;savePref();drawSheet()}
   if(a==='real'){const s=st.song;if(s&&s.capoUse==='finger')LS.set('real_'+s.id,!isReal(s));else{st.real=!st.real;LS.set('real',st.real)}drawSheet()}
   if(a==='size-'||a==='size+'){st.size=Math.min(26,Math.max(9,st.size+(a==='size+'?1:-1)));LS.set('size',st.size);document.documentElement.style.setProperty('--sheet-size',st.size+'px');fitBars()}
-  if(a==='cols'){st.cols=!st.cols;LS.set('cols',st.cols);$('#colsbtn').classList.toggle('on',st.cols);drawSheet()}
+  if(a==='cols'){if(MOB()){st.colsM=!st.colsM;LS.set('colsM',st.colsM);$('#colsbtn').classList.toggle('on',st.colsM);fitBars()}else{st.cols=!st.cols;LS.set('cols',st.cols);$('#colsbtn').classList.toggle('on',st.cols);drawSheet()}}
   if(a==='bpm-'||a==='bpm+'){st.bpm=Math.min(240,Math.max(40,st.bpm+(a==='bpm+'?1:-1)));$('#bpmv').textContent=st.bpm;if($('#tsbpm'))$('#tsbpm').textContent=st.bpm;if(st.metro){metroStop();metroStart(true)}}
   if(a==='metro')st.metro?metroStop():metroStart();
   if(a==='sub'){st.sub=!st.sub;LS.set('sub',st.sub);$('#subbtn').classList.toggle('on',st.sub)}
@@ -1138,7 +1149,7 @@ function drawLyrPanel(){
   const drawAl=()=>{const box=$('#lal');let h='',k=0;
     occs.forEach((o,oi)=>{h+=`<div class="alsec${occBad(oi)?' bad':''}"><b>${lab(o)}${occBad(oi)?`<em>${t('lyrAlBad')}</em>`:''}</b><div class="alflow">`;
       for(let li=0;li<o.lines;li++,k++){h+=`<span class="alrow"><i class="cut${sel===k?' on':''}" data-c="${k}" >${li+1}</i>`;
-        for(let i=cuts[k];i<cuts[k+1];i++)h+=`<span class="tk${(T[i].sp||(T[i-1]&&T[i-1].nl))&&i>cuts[k]?' sp':''}" data-t="${i}">${esc(T[i].w)}</span>`;
+        for(let i=cuts[k];i<cuts[k+1];i++)h+=`<span class="tk${(T[i].sp||(T[i-1]&&T[i-1].nl))&&i>cuts[k]?' sp':''}" data-t="${i}">${esc(T[i].w)}</span><wbr>`;
         if(cuts[k]===cuts[k+1])h+=`<span class="tk empty" data-t="${cuts[k]}">—</span>`;h+='</span>'}
       h+='</div></div>'});
     box.innerHTML=h;
@@ -1157,6 +1168,10 @@ function drawLyrPanel(){
     else{const used=new Set();let last=-1;const owner=[];
       const next=lb=>{for(let j=last+1;j<occs.length;j++)if(!used.has(j)&&(!lb||lyrSecMatch(lb,occs[j].sec)))return j;return last+1<occs.length?last+1:last};
       paras.forEach((pa,pi)=>{const j=(paras.length>1||pa.lab)?next(pa.lab):0;used.add(j);last=Math.max(last,j);owner.push({j,n:tokOfLines(pa.lines).length})});
+      /* 只有一整段、沒有段落名稱：照「一行歌詞配一列和弦」的比例分到各段（切在換行） */
+      if(paras.length===1&&!paras[0].lab&&occs.length>1){const ls=[0];T.forEach((x,i)=>{if(x.nl&&i<T.length-1)ls.push(i+1)});
+        const R=occs.reduce((a,o)=>a+o.lines,0)||1;let r=0;bounds=[0];occs.forEach((o,oi)=>{r+=o.lines;bounds.push(oi===occs.length-1?T.length:ls[Math.min(ls.length-1,Math.round(ls.length*r/R))]??T.length)});
+        for(let oi=1;oi<=occs.length;oi++)bounds[oi]=Math.max(bounds[oi],bounds[oi-1]);openAl(bounds);return}
       bounds=Array(occs.length+1).fill(null);bounds[0]=0;let c=0;const start={};owner.forEach(x=>{if(!(x.j in start))start[x.j]=c;c+=x.n});
       for(let oi=1;oi<occs.length;oi++)bounds[oi]=oi in start?start[oi]:null;bounds[occs.length]=T.length;
       for(let oi=occs.length-1;oi>0;oi--)if(bounds[oi]===null)bounds[oi]=bounds[oi+1];
@@ -1204,24 +1219,30 @@ const METER=/^\d{1,2}\/(4|8)$/;
 /* 小節排版：每一拍一格、格寬一樣，拍點才會對齊。
    整首歌用同一種排法（兩欄、一欄都照使用者選的）：先算最長的和弦需要多寬，放不下就（1）一行改排兩小節（2）整首一起縮小字。 */
 function fitBars(){const sh=$('#sheet');if(!sh||!sh.querySelector('.bar'))return;
-  sh.classList.remove('solo');sh.removeAttribute('data-bpr');sh.style.setProperty('--fit',1);
-  const mob=MOB();sh.querySelectorAll('.ch[style*="translate"]').forEach(x=>x.style.transform='');
+  sh.classList.remove('solo');sh.removeAttribute('data-bpr');sh.style.setProperty('--fit',1);sh.querySelectorAll('.rowline.wide').forEach(x=>x.classList.remove('wide'));
+  /* 連音：每個和弦對齊自己那一段節奏線；字縮到放得下（最小 55%），還是太擠就讓這一列一行一小節，其他列不動 */
+  const fitTup=()=>{const need=t=>{t.style.setProperty('--ts',1);const n=t.children.length,cs=getComputedStyle(t),w=(t.clientWidth-parseFloat(cs.paddingRight)-parseFloat(cs.columnGap)*(n-1))/n;return Math.min(1,...[...t.children].map(c=>w/(c.scrollWidth+2)))};
+    sh.querySelectorAll('.tup').forEach(t=>{let k=need(t);if(k<.7&&(sh.dataset.bpr||'4')!=='1'){const rl=t.closest('.rowline');if(rl){rl.classList.add('wide');k=need(t)}}t.style.setProperty('--ts',Math.max(.55,Math.min(.9,k)).toFixed(3))})};
+  const mob=MOB();sh.querySelectorAll('.ch[style*="translate"],.tup[style*="translate"]').forEach(x=>x.style.transform='');
   /* 手機：只佔一兩拍的長和弦名可以往左借前面的空位，所以是看「整個小節的和弦名排不排得下」 */
   const mbar=bar=>{const cs=getComputedStyle(bar);return {chs:[...bar.children].filter(x=>x.classList.contains('ch')),L:parseFloat(cs.paddingLeft),R:bar.clientWidth-parseFloat(cs.paddingRight),gap:parseFloat(cs.fontSize)*.4}};
   const ratioM=()=>{let r=0;sh.querySelectorAll('.bar.dur').forEach(bar=>{const {chs,L,R,gap}=mbar(bar);let sum=0;chs.forEach((x,k)=>{sum+=x.offsetWidth+(k?gap:0);const last=k===chs.length-1,bound=(last?R:chs[k+1].offsetLeft-gap)-L;if(bound>0&&sum/bound>r)r=sum/bound})});return r};
   const nudge=()=>sh.querySelectorAll('.bar.dur').forEach(bar=>{const {chs,R,gap}=mbar(bar);let lim=R;for(let k=chs.length-1;k>=0;k--){const x=chs[k],at=Math.min(x.offsetLeft,lim-x.offsetWidth),dx=x.offsetLeft-at;if(dx>.5)x.style.transform='translateX(-'+dx.toFixed(1)+'px)';lim=at-gap}});
   /* 每個小節需要的寬度＝所有和弦名字加上間距；整首取最擠的那個小節 */
   /* 每個和弦的名字要放得進自己那幾拍的寬度（加一點間距）；整首取最擠的那個 */
-  const ratio=()=>{let r=0;sh.querySelectorAll('.bar.dur').forEach(bar=>{const cells=[...bar.children].filter(x=>x.classList.contains('ch')||x.classList.contains('cont'));if(!cells.length)return;
+  const ratio=()=>{let r=0;sh.querySelectorAll('.bar.dur').forEach(bar=>{const cells=[...bar.children].filter(x=>x.classList.contains('ch')||x.classList.contains('cont')||x.classList.contains('tup'));if(!cells.length)return;
       const fr=(bar.style.gridTemplateColumns.match(/[\d.]+fr/g)||[]).map(parseFloat),tot=fr.reduce((a,b)=>a+b,0);
       const cs=getComputedStyle(bar),inner=bar.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight),gap=parseFloat(cs.fontSize)*.4;
       cells.forEach((x,i)=>{if(!x.classList.contains('ch')||!fr[i])return;const need=(x.scrollWidth+(i<cells.length-1?gap:0))/(inner*fr[i]/tot);if(need>r)r=need})});return r};
-  if(mob){let r=ratioM();if(r>1/.68){sh.setAttribute('data-bpr','2');r=ratioM()}if(r>1/.7){sh.setAttribute('data-bpr','1');r=ratioM()}if(r>1)sh.style.setProperty('--fit',Math.max(.6,1/r*.97).toFixed(3));nudge();return}
+  /* 手機按「兩欄」：每個和弦名字都對齊自己的節奏線（不借位），放不下就縮字或改一行兩小節 */
+  if(mob&&st.colsM){let r=ratio();if(r>1/.68){sh.setAttribute('data-bpr','2');r=ratio()}if(r>1/.7){sh.setAttribute('data-bpr','1');r=ratio()}if(r>1)sh.style.setProperty('--fit',Math.max(.6,1/r*.97).toFixed(3));fitTup();return}
+  /* 手機預設：盡量一行四小節，太長的和弦名可以往左借前面的空位 */
+  if(mob){let r=ratioM();if(r>1/.68){sh.setAttribute('data-bpr','2');r=ratioM()}if(r>1/.7){sh.setAttribute('data-bpr','1');r=ratioM()}if(r>1)sh.style.setProperty('--fit',Math.max(.6,1/r*.97).toFixed(3));nudge();fitTup();return}
   let r=ratio();
   /* 稍微放不下時先整首一起縮字（最多 85%，所有和弦一樣大），還是不夠才改成一行兩小節 */
   if(r>1/.85){sh.setAttribute('data-bpr','2');r=ratio()}
   if(r>1/.7){sh.setAttribute('data-bpr','1');r=ratio()}
-  if(r>1)sh.style.setProperty('--fit',Math.max(.6,1/r*.98).toFixed(3))}
+  if(r>1)sh.style.setProperty('--fit',Math.max(.6,1/r*.98).toFixed(3));fitTup()}
 let fitT;addEventListener('resize',()=>{clearTimeout(fitT);fitT=setTimeout(()=>{const d=!!document.querySelector('.practice.docked'),want=st.practice&&st.cols&&matchMedia('(min-width:980px)').matches;if(st.song&&$('#sheet')&&d!==want)drawSheet();else fitBars()},150)});if(document.fonts)document.fonts.ready.then(()=>fitBars());
 /* 簡單版：和弦簡化成三和弦（保留屬七），一小節最多兩個和弦（留前兩個，各彈半小節） */
 function simpChord(c){const m=String(c).match(/^([A-G][#b]?)([^/]*)(\/.*)?$/);if(!m)return c;let q=m[2].replace(/\(.*?\)/g,'');
@@ -1240,10 +1261,15 @@ function barsHtml(r,C,BL){const bl=i=>BL&&BL[i]&&BL[i].length?`<div class="blyr"
     let sl=barSlots(bar,beats);if(sl.length===1&&beats>1)sl=[sl[0],...Array(beats-1).fill('-')];if(st.simple)sl=simpSlots(sl);
     /* 和弦依拍數分段：小節開頭的 - 是延續上一個和弦 */
     const sg=[];sl.forEach(c=>{if(c==='-'){if(sg.length)sg[sg.length-1].n++;else sg.push({c:null,n:1})}else sg.push({c,n:1})});
-    const cols=sg.map(x=>`minmax(0,${x.n}fr)`).join(' ');
     /* 每一格屬於第幾個和弦（-1＝延續上一小節的和弦） */
     const own=[];sg.forEach((x,k)=>{for(let i=0;i<x.n;i++)own.push(x.c?k:-1)});
-    return `<div class="bar dur${m?' hasts':''}" style="grid-template-columns:${cols}">${ts}${sg.map(x=>x.c?C(x.c):'<span class="cont" aria-hidden="true"></span>').join('')}${ruler(own,beats)}${bl(bi)}</div>`}).join('')}</div><span class="rep">${r.x?`<b title="${t('repTip')(r.x)}">×${r.x}</b>`:r.gx?`<b title="${t('repTipN')(r.gx)}">×${r.gx}</b>`:''}</span></div>`}
+    /* 連音：一拍（或幾拍）平分成 3、5、6、7 個和弦，併成一格，上面畫括號和數字 */
+    const tripFeel=/\/8$/.test(m||(st.song&&st.song.time)||'')||['triplet','shuffle'].includes(st.song&&st.song.feel),per=!tripFeel&&sl.length%beats===0?sl.length/beats:0,cells=[];let pos=0;
+    for(let i=0;i<sg.length;){const x=sg[i];let done=false;
+      if(per&&x.c&&pos%per===0)for(const n of [3,5,6,7]){const grp=sg.slice(i,i+n);if(grp.length===n&&grp.every(y=>y.c&&y.n===x.n)&&(x.n*n)%per===0&&per%x.n===0&&(x.n*n/per)<=2&&!Number.isInteger(Math.log2(per/x.n))){cells.push({g:grp.map(y=>y.c),n:x.n*n,k:n});pos+=x.n*n;i+=n;done=true;break}}
+      if(!done){cells.push(x);pos+=x.n;i++}}
+    const cols=cells.map(x=>`minmax(0,${x.n}fr)`).join(' ');
+    return `<div class="bar dur${m?' hasts':''}" style="grid-template-columns:${cols}">${ts}${cells.map(x=>x.g?`<span class="tup" data-n="${x.k}" style="--n:${x.k}" title="${t('tupTip')(x.k)}">${x.g.map(c=>C(c)).join('')}</span>`:x.c?C(x.c):'<span class="cont" aria-hidden="true"></span>').join('')}${ruler(own,beats)}${bl(bi)}</div>`}).join('')}</div><span class="rep">${r.x?`<b title="${t('repTip')(r.x)}">×${r.x}</b>`:r.gx?`<b title="${t('repTipN')(r.gx)}">×${r.gx}</b>`:''}</span></div>`}
 /* 歌詞整段放在段落和弦下面，兩句一排（左上1、右上2、左下3、右下4） */
 function lyrBlock(o,label,lyr){const a=((lyr.L[o.key]||{})[o.n]||[]);const has=a.some(x=>x&&x.trim());if(!has&&!st.lyrOpen)return '';
   return `<div class="lyb${has?'':' ph'}" data-occ="${o.k}-${o.n}">${label?`<span class="n">${label}</span>`:''}${has?`<div class="lyg">${a.map(x=>`<span>${esc(x)||'&nbsp;'}</span>`).join('')}</div>`:`<span class="lt">${t('lyrEmpty')}</span>`}</div>`}
@@ -1353,7 +1379,7 @@ function playSeq(){const out=[];[...document.querySelectorAll('#orderbar [data-g
 /* 點小節：播放中直接跳過去；沒播放就從那一小節開始 */
 function cueBar(bar){if(!PS)PS=playSeq();const idx=[];PS.forEach((x,i)=>{if(x.bar===bar&&(i===0||PS[i-1].bar!==bar))idx.push(i)});if(!idx.length)return;
   const cur=psI%PS.length,i=idx.find(j=>j>=cur-1)??idx[0];
-  if(st.metro){psI=i;st.pre=0}else{st.cue=i;document.querySelectorAll('.bar.cue,.bar.now').forEach(e=>e.classList.remove('cue','now'));bar.classList.add('cue')}}
+  if(st.metro){psI=i;st.pre=0}else if(bar.classList.contains('cue')){st.cue=null;bar.classList.remove('cue')}else{st.cue=i;document.querySelectorAll('.bar.cue,.bar.now').forEach(e=>e.classList.remove('cue','now'));bar.classList.add('cue')}}
 document.addEventListener('click',e=>{const b=e.target.closest('#sheet .bar');if(!b||e.target.closest('.ch,button,a'))return;cueBar(b)});
 function metroFollow(){if(!PS)PS=playSeq();if(!PS.length)return;
   document.querySelectorAll('.bar.now,.bk.now,.bar.cue').forEach(e=>e.classList.remove('now','cue'));
