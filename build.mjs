@@ -33,6 +33,7 @@ const parseFrets = f => { const s = f.replace(/\s+/g, '').replace(/[ＸX×]/g, '
   return out.length === 6 ? out.join('') : null; };
 const ORDER_NAMES = ['順序', 'order', 'Order', 'ORDER'];
 // Obsidian 習慣寫法 → 網站寫法：♯→#、♭→b、△ 接數字是大七系列（△7→maj7、△9→maj9、△13→maj13）、單獨的 △（大三和弦）拿掉、—→-
+const gcd = (a, b) => b ? gcd(b, a % b) : a;
 const normChord = c => c.replace(/♯/g, '#').replace(/♭/g, 'b').replace(/△(\d+)/g, 'maj$1').replace(/△/g, '').replace(/^[—–]$/, '-');
 const CAPO = /\s*[（(]\s*capo\s*(\d+)\s*[)）]/i;          // 段落標題或「末次」後面的 (Capo 3)：這一段換 Capo
 const ONLY = /^(?:第\s*(\d+)\s*次[^:：|(（]*|末次|最後一次)\s*(?:[（(]\s*capo\s*(\d+)\s*[)）])?\s*[:：]\s*/i;
@@ -127,7 +128,18 @@ const songs = fs.readdirSync(SRC).filter(f => f.endsWith('.md') && !f.startsWith
         const a = base.split('-').map(Number); if (pm) { a.pickup = true; a.push(Number(pm[2])); } return a; }));
       else errors.push(`${where} 第 ${i + 1} 行：行尾看不懂「${tok}」（重複寫 ×2，字數寫 字12）`);
     }
-    const bars = parts.map(b => b.trim()).filter(Boolean).map(b => b.split(/\s+/).map(normChord));
+    const bars = parts.map(b => b.trim()).filter(Boolean).map(b => {
+      // NC／N.C.：整小節不彈（網站顯示 N.C.）
+      if (/^N\.?C\.?$/i.test(b)) return ['-'];
+      // 連音：(A B C) 一組和弦平分它佔的格數（佔 1 格，後面每個 - 多 1 格）；整個小節的格數乘上組內和弦數，拍點才對得齊
+      const toks = b.match(/\((?:[^()]|\([^()]*\))*\)|\S+/g).map(t => t.startsWith('(') ? { g: t.slice(1, -1).trim().split(/\s+/).map(normChord) } : normChord(t));
+      if (!toks.some(t => t.g)) return toks;
+      const f = toks.filter(t => t.g).reduce((a, t) => a * t.g.length / gcd(a, t.g.length), 1), out = [];
+      for (let k = 0; k < toks.length; k++) { const t = toks[k];
+        if (!t.g) { out.push(t, ...Array(f - 1).fill('-')); continue; }
+        let span = 1; while (toks[k + 1] === '-') { span++; k++; }
+        const each = span * f / t.g.length; t.g.forEach(c => out.push(c, ...Array(each - 1).fill('-'))); }
+      return out; });
     bars.forEach(b => b.forEach((c, j) => {
       if (j === 0 && METER.test(c)) { if (b.length < 2) errors.push(`${where} 第 ${i + 1} 行：拍號「${c}」後面要接和弦或 -`); return; }
       if (!CHORD.test(c) && c !== '%' && c !== '-') errors.push(`${where} 第 ${i + 1} 行：看不懂的和弦「${c}」`);
