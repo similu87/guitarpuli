@@ -6,6 +6,7 @@ key: "Eb"
 capo: 0
 bpm: 79
 time: "4/4"
+tuning: "Eb Ab Db Gb Bb Eb"
 feel: straight16
 strum: ""
 strum_note: ""
@@ -24,7 +25,7 @@ added: 2026-11-13
 
 ## 導歌
 | A♭△7 Gm7 | Fm7 | E♭△7 | C7 |
-| Fm7 Gm7 | A♭△7 Adim | B♭7 | A♭/B♭ |
+| Fm7 Gm7 | A♭△7 Adim7 | B♭7 | A♭/B♭ |
 
 ## 副歌
 | B△7 | F♯△7 | G♯m7 | F♯△7 |
@@ -36,3 +37,10 @@ added: 2026-11-13
 
 ## 順序
 前奏 → 主歌 → 導歌 → 副歌 → 主歌 → 導歌 → 副歌2
+
+## 指法
+D♭/E♭＝0x423x
+A♭/B♭＝7x7657
+Adim7＝6x565x
+Bmaj7＝x35453
+F#maj7＝3x443x
