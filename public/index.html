@@ -431,7 +431,7 @@ body.perform .covers{display:none}
 .rowline.rpt .bars>.bar:first-child,.rowline.rptL .bars>.bar:first-child{border-left:5px double var(--brass)!important;padding-left:1em!important}
 .rowline.rpt .bars>.bar:last-child,.rowline.rptR .bars>.bar:last-child{border-right:5px double var(--brass);padding-right:1em!important}
 /* 每一行的頭尾小節留一樣的空間，有反覆記號的列和沒有的列和弦、節奏線才對得齊 */
-.sheet:not([data-bpr]) .rowline:not(.wide) .bar:nth-child(4n+1),.sheet[data-bpr="2"] .rowline:not(.wide) .bar:nth-child(2n+1),.sheet[data-bpr="1"] .bar,.rowline.wide .bar{padding-left:calc(1em + 3px)}.sheet:not([data-bpr]) .rowline:not(.wide) .bar:nth-child(4n),.sheet[data-bpr="2"] .rowline:not(.wide) .bar:nth-child(2n),.sheet[data-bpr="1"] .bar,.rowline.wide .bar,.rowline .bars>.bar:last-child{padding-right:calc(1em + 3px)}
+.sheet:not([data-bpr]) .rowline:not(.wide) .bar:nth-child(4n+1),.sheet[data-bpr="2"] .rowline:not(.wide) .bar:nth-child(2n+1),.sheet[data-bpr="1"] .bar,.rowline.wide .bar{padding-left:calc(1em + 3px)}.sheet:not([data-bpr]) .rowline:not(.wide) .bar:nth-child(4n),.sheet[data-bpr="2"] .rowline:not(.wide) .bar:nth-child(2n),.sheet[data-bpr="1"] .bar,.rowline.wide .bar{padding-right:calc(1em + 3px)}
 .rowline.rpt .bars>.bar:first-child::before,.rowline.rpt .bars>.bar:last-child::after,.rowline.rptL .bars>.bar:first-child::before,.rowline.rptR .bars>.bar:last-child::after{content:"";position:absolute;top:50%;width:4px;height:13px;transform:translateY(-62%);background:radial-gradient(circle,var(--brass) 1.9px,transparent 2.2px) 0 0/4px 6.5px repeat-y}
 .rowline.rpt .bars>.bar:first-child::before,.rowline.rptL .bars>.bar:first-child::before{left:.3em}.rowline.rpt .bars>.bar:last-child::after,.rowline.rptR .bars>.bar:last-child::after{right:.3em}
 .only{display:inline-block;font-size:11.5px;color:var(--on-brass);background:var(--brass);border-radius:4px;padding:0 6px;margin-bottom:3px;letter-spacing:0}
@@ -543,7 +543,7 @@ textarea{width:100%;border:1px solid var(--line);border-radius:8px;background:va
 .tip small{display:block;color:var(--muted);font-size:11px;width:96px}
 
 body.perform .rail,body.perform .songhead,body.perform .note,body.perform .practice,body.perform .sitefoot,body.perform .toolwrap .viewbtns,body.perform #lyrpanel,body.perform .lyrwarn{display:none}
-body.perform .toolwrap{padding-right:52px}body.perform .orderbar{padding-block:12px}
+body.perform .toolwrap{padding-right:52px}body.perform #perfbtn{display:none}body.perform .orderbar{padding-block:12px}
 body.perform .sheet{font-size:calc(var(--sheet-size) * 1.4)}
 body.perform .exitperf{display:inline-flex;position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px));z-index:30;background:var(--surface)}
 /* social, footer, modal, report */
@@ -555,10 +555,10 @@ body.perform .exitperf{display:inline-flex;position:fixed;top:calc(12px + env(sa
 .rail .bottom{min-height:38px}
 @media (max-width:720px){.rail .m-hide{display:none}.rail .bottom{min-height:46px}}
 .sitefoot{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;color:var(--muted);font-size:13px}
-.sitefoot .follow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sitefoot .follow{display:flex;gap:8px;align-items:center;flex-wrap:nowrap}
 .sitefoot .follow b{color:var(--ink);font-size:13.5px;margin-right:4px}
-.sbtn{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 16px 0 12px;border-radius:999px;color:#fff;font-weight:700;font-size:13.5px}
-.sbtn svg.i{width:19px;height:19px}
+.sbtn{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px 0 9px;border-radius:999px;color:#fff;font-weight:700;font-size:12.5px;white-space:nowrap}
+.sbtn svg.i{width:16px;height:16px}
 .sbtn.ig{background:linear-gradient(45deg,#F58529,#DD2A7B 55%,#8134AF)}
 .sbtn.yt{background:#E00000}
 .sbtn:hover{filter:brightness(1.08)}
@@ -596,7 +596,10 @@ body.perform main{margin-left:0;max-width:none;padding-left:max(24px,env(safe-ar
 /* 手機：譜面排緊一點 */
 @media (max-width:720px){
   .tooltog{display:inline-flex;border:1px solid var(--line);background:none}.tooltog i{font-style:normal;font-size:.8em;transition:transform .15s}.toolwrap.open .tooltog i{transform:rotate(180deg)}
-  .toolwrap{padding-block:6px;gap:6px;margin-bottom:6px}
+  /* 工具列貼齊螢幕左右（底下的譜不會從兩邊透出來），放大鈕放在「工具」那一排右邊 */
+  .toolwrap{padding:6px 16px;gap:6px;margin:0 -16px 6px;box-shadow:0 6px 10px -10px rgba(0,0,0,.25)}
+  .toolwrap #perfbtn{order:2;flex:none;width:30px;height:28px;margin-left:auto;background:none;border:1px solid var(--line)}
+  .toolwrap #perfbtn svg{width:14px;height:14px}
   .toolwrap:not(.open) .tools,.toolwrap:not(.open) .viewbtns{display:none}
   .tools{border-radius:9px;flex:1 1 100%}.tg{padding:5px 9px 7px;gap:3px}.tl{font-size:9.5px}
   .tb,.tools select,.viewbtns .seg-toggle button{height:26px;font-size:12px}.tb{min-width:26px;padding:0 7px}.tv{min-width:30px;font-size:13px}
@@ -614,7 +617,7 @@ body.perform main{margin-left:0;max-width:none;padding-left:max(24px,env(safe-ar
   .bar.dur>.ch{font-size:1em}.ch{letter-spacing:-.02em}
   .rowline.rpt .bars>.bar:first-child,.rowline.rptL .bars>.bar:first-child{border-left-width:3px!important;padding-left:.7em!important}
   .rowline.rpt .bars>.bar:last-child,.rowline.rptR .bars>.bar:last-child{border-right-width:3px;padding-right:.7em!important}
-  .sheet:not([data-bpr]) .rowline:not(.wide) .bar:nth-child(4n+1),.sheet[data-bpr="2"] .rowline:not(.wide) .bar:nth-child(2n+1),.sheet[data-bpr="1"] .bar,.rowline.wide .bar{padding-left:calc(.7em + 1.5px)}.sheet:not([data-bpr]) .rowline:not(.wide) .bar:nth-child(4n),.sheet[data-bpr="2"] .rowline:not(.wide) .bar:nth-child(2n),.sheet[data-bpr="1"] .bar,.rowline.wide .bar,.rowline .bars>.bar:last-child{padding-right:calc(.7em + 1.5px)}
+  .sheet:not([data-bpr]) .rowline:not(.wide) .bar:nth-child(4n+1),.sheet[data-bpr="2"] .rowline:not(.wide) .bar:nth-child(2n+1),.sheet[data-bpr="1"] .bar,.rowline.wide .bar{padding-left:calc(.7em + 1.5px)}.sheet:not([data-bpr]) .rowline:not(.wide) .bar:nth-child(4n),.sheet[data-bpr="2"] .rowline:not(.wide) .bar:nth-child(2n),.sheet[data-bpr="1"] .bar,.rowline.wide .bar{padding-right:calc(.7em + 1.5px)}
   .rowline.wide .bars>.bar{border-left-width:1.5px}
   .rowline.rpt .bars>.bar:first-child::before,.rowline.rptL .bars>.bar:first-child::before{left:.2em}.rowline.rpt .bars>.bar:last-child::after,.rowline.rptR .bars>.bar:last-child::after{right:.2em}
   .rl{height:2px}.rl .bk{gap:1px;padding-right:.2em}.tup{column-gap:1px;padding-right:.2em}.tup::before{right:.25em}
@@ -630,7 +633,7 @@ body.perform main{margin-left:0;max-width:none;padding-left:max(24px,env(safe-ar
   .tsum{display:block;flex:1;min-width:0;font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tsum b{color:var(--brass);font-weight:500}
   .toolwrap.open .tsum{display:none}
   .toolwrap.open .tinfo{display:block;order:1;flex:1;min-width:0;margin:0;font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .toolwrap .tools{order:2}.toolwrap .viewbtns{order:3}
+  .toolwrap .tools{order:3}.toolwrap .viewbtns{order:4}.viewbtns>.tb{flex:1 1 auto}
   .tools .tg{padding-inline:7px}.tools .tg:nth-child(-n+2){flex:1 1 40%}.tools .tg:nth-child(3){flex:0 0 auto}.viewbtns{gap:3px;flex:1 1 100%}.viewbtns .tb,.viewbtns .seg-toggle button{padding:0 5px;font-size:11px;min-width:0}.viewbtns .ibtn{width:24px;padding:0;margin-left:auto}.viewbtns .ibtn svg{width:13px;height:13px}.tools .tb{padding:0 6px}.dots{gap:2px}.dots i{width:5px;height:5px}
   .note{margin:0;display:block;line-height:1.5}.note>span{display:none}.note>.tunenote{display:block;margin-bottom:8px}
   .orderbar{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-inline:-16px;padding-inline:16px;white-space:nowrap}
@@ -981,7 +984,7 @@ function bestCapo(song,shift){let best=0,bs=-1e9;for(let c=0;c<=7;c++){const v=c
 
 function openSong(song,isMine,keepState){
   stopAll();st.song=song;st.isMine=isMine;if(!keepState)st.lyrOpen=false;
-  if(!keepState){st.shift=0;st.capo=song.capo||0;st.bpm=song.bpm||90;st.real=false;st.size=defSize();LS.set('real_'+song.id,true);document.documentElement.style.setProperty('--sheet-size',st.size+'px')}
+  if(!keepState){st.pracOff=false;st.pracChk=false;st.shift=0;st.capo=song.capo||0;st.bpm=song.bpm||90;st.real=false;st.size=defSize();LS.set('real_'+song.id,true);document.documentElement.style.setProperty('--sheet-size',st.size+'px')}
   if(!isMine){statSong(song.id);songViews(song.id)}
   if(!isMine&&!keepState){const r=LS.get('recent',[]).filter(x=>x!==song.id);r.unshift(song.id);LS.set('recent',r.slice(0,20))}
   const isFav=favs().includes(song.id);
@@ -992,10 +995,10 @@ function openSong(song,isMine,keepState){
   </div>
   <div class="toolwrap${st.toolsOpen?' open':''}"><button class="tb tooltog" data-act="tools" id="toolsbtn" aria-expanded="${st.toolsOpen}">${t('tools')}<i aria-hidden="true">▾</i></button><span class="tsum" id="tsum"></span><div class="tools" role="toolbar">
     <div class="tg"><span class="tl">${t('transpose')}</span><div class="tc"><button class="tb" data-act="key-" aria-label="−1">−</button><span class="tv" id="keyv"></span><button class="tb" data-act="key+" aria-label="+1">+</button><button class="tb" data-act="key0" title="${t('resetTip')}">${t('reset')}</button></div></div>
-    <div class="tg"><label class="tl" for="capo">CAPO</label><div class="tc"><select id="capo">${[...Array(8)].map((_,i)=>`<option value="${i}">${i||t('capoNone')}</option>`).join('')}</select><button class="tb ${isReal(song)?'on':''}" data-act="real" id="realbtn" aria-pressed="${isReal(song)}" title="${t('realTip')}">${t('real')}</button></div></div>
+    <div class="tg"><label class="tl" for="capo">CAPO</label><div class="tc"><select id="capo">${[...Array(13)].map((_,i)=>`<option value="${i}">${i||t('capoNone')}</option>`).join('')}</select><button class="tb ${isReal(song)?'on':''}" data-act="real" id="realbtn" aria-pressed="${isReal(song)}" title="${t('realTip')}">${t('real')}</button></div></div>
     <div class="tg"><span class="tl">${t('size')}</span><div class="tc"><button class="tb" data-act="size-">A−</button><button class="tb" data-act="size+">A+</button></div></div>
     <div class="tg"><span class="tl">${t('metro')}</span><div class="tc"><button class="tb" data-act="bpm-" aria-label="−">−</button><span class="tv" id="bpmv"></span><button class="tb" data-act="bpm+" aria-label="+">+</button><button class="tb" data-act="metro" id="metrobtn" aria-label="${t('metro')}">▶</button><button class="tb ${st.sub?'on':''}" data-act="sub" id="subbtn" title="${t('subTip')}">${t('sub')}</button><span class="dots" id="dots"><i></i><i></i><i></i><i></i></span></div></div>
-    </div><div class="viewbtns">${isMine?'':`<div class="seg-toggle" role="group"><button class="${st.view==='full'?'on':''}" data-act="view-full" id="vfull" data-tip="${t('viewFullTip')}">${t('viewFull')}</button><button class="${st.view==='compact'?'on':''}" data-act="view-compact" id="vcompact" data-tip="${t('viewCompactTip')}">${t('viewCompact')}</button></div>`}${isMine?'':`<button class="tb ${st.simple?'on':''}" data-act="simple" id="simplebtn" data-tip="${t('simpleTip')}" aria-pressed="${st.simple}">${t('simple')}</button>`}<button class="tb ${st.practice?'on':''}" data-act="practice" id="pracbtn">${t('practice')}</button>${isMine?'':`<button class="tb ${st.lyrOpen?'on':''}" data-act="lyr" id="lyrbtn">${t('lyrics')}</button>`}<button class="tb ${(MOB()?st.colsM:st.cols)?'on':''}" data-act="cols" id="colsbtn">${t('cols')}</button><button class="tb ibtn" data-act="perform" id="perfbtn" aria-label="${t('perform')}" title="${t('perform')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></div><p class="tinfo">${song.time||'4/4'}${song.tuning?` · ${t('tuneLbl')} ${esc(tuneName(song.tuning)||song.tuning)}`:''} · ${t('feels')[song.feel]||t('feels').straight8}${song.language?' · '+(t('langs')[song.language]||''):''}${song.diff?' · '+t('diff')[song.diff]:''}</p>
+    </div><div class="viewbtns">${isMine?'':`<div class="seg-toggle" role="group"><button class="${st.view==='full'?'on':''}" data-act="view-full" id="vfull" data-tip="${t('viewFullTip')}">${t('viewFull')}</button><button class="${st.view==='compact'?'on':''}" data-act="view-compact" id="vcompact" data-tip="${t('viewCompactTip')}">${t('viewCompact')}</button></div>`}${isMine?'':`<button class="tb ${st.simple?'on':''}" data-act="simple" id="simplebtn" data-tip="${t('simpleTip')}" aria-pressed="${st.simple}">${t('simple')}</button>`}<button class="tb ${st.practice?'on':''}" data-act="practice" id="pracbtn">${t('practice')}</button>${isMine?'':`<button class="tb ${st.lyrOpen?'on':''}" data-act="lyr" id="lyrbtn">${t('lyrics')}</button>`}<button class="tb ${(MOB()?st.colsM:st.cols)?'on':''}" data-act="cols" id="colsbtn">${t('cols')}</button></div><button class="tb ibtn" data-act="perform" id="perfbtn" aria-label="${t('perform')}" title="${t('perform')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button><p class="tinfo">${song.time||'4/4'}${song.tuning?` · ${t('tuneLbl')} ${esc(tuneName(song.tuning)||song.tuning)}`:''} · ${t('feels')[song.feel]||t('feels').straight8}${song.language?' · '+(t('langs')[song.language]||''):''}${song.diff?' · '+t('diff')[song.diff]:''}</p>
   </div>
   <p class="note" id="note"></p>
   <div class="songbody"><div class="songmain"><div id="lyrpanel"></div><div id="lyrwarn"></div><div class="orderbar" id="orderbar" hidden></div><div class="sheet" id="sheet"></div></div><div id="practice"></div></div>${!isMine&&song.videos&&song.videos.length?vidSection(song):''}
@@ -1018,7 +1021,7 @@ function act(a){
   if(a==='metro')st.metro?metroStop():metroStart();
   if(a==='sub'){st.sub=!st.sub;LS.set('sub',st.sub);$('#subbtn').classList.toggle('on',st.sub)}
   if(a==='tools'){st.toolsOpen=!st.toolsOpen;LS.set('toolsM',st.toolsOpen);$('.toolwrap').classList.toggle('open',st.toolsOpen);$('#toolsbtn').setAttribute('aria-expanded',st.toolsOpen)}
-  if(a==='practice'){st.practice=!st.practice;LS.set(MOB()?'practiceM':'practice',st.practice);$('#pracbtn').classList.toggle('on',st.practice);drawSheet()}
+  if(a==='practice'){if(st.pracOff)st.pracOff=false;else{st.practice=!st.practice;LS.set(MOB()?'practiceM':'practice',st.practice)}drawSheet()}
   if(a==='perform')setPerform(!document.body.classList.contains('perform'));
   if(a==='view-full'||a==='view-compact'){st.view=a==='view-full'?'full':'compact';LS.set('view',st.view);$('#vfull').classList.toggle('on',st.view==='full');$('#vcompact').classList.toggle('on',st.view==='compact');drawSheet()}
   if(a==='simple'){st.simple=!st.simple;LS.set('simple',st.simple);const b=$('#simplebtn');b.classList.toggle('on',st.simple);b.setAttribute('aria-pressed',st.simple);drawSheet()}
@@ -1044,12 +1047,13 @@ function drawSheet(){PS=null;
   const caps=new Set(used.map(u=>u[1]));
   CUR={};if(!st.isMine&&!st.shift&&!st.simple)(s.shapes||[]).forEach(e=>{if(caps.has(e.capo))CUR[T2(e.c,e.capo)]=e.f});
   const strumNote=lang==='en'?(s.strumNoteEn||''):(s.strumNote||'');
-  const dock=st.practice&&st.cols&&matchMedia('(min-width:980px)').matches;
+  /* 和弦太密的歌：電腦版第一次打開先收起練習面板，讓譜有空間一排四小節（只影響這次，不改記住的設定） */
+  const P=st.practice&&!st.pracOff,dock=P&&st.cols&&matchMedia('(min-width:980px)').matches;if($('#pracbtn'))$('#pracbtn').classList.toggle('on',P);
   const uniq=used.map(([c,cp])=>[N(c,cp),T2(c,cp),cp]).filter((c,i,a)=>a.findIndex(x=>x[0]===c[0]&&x[2]===c[2])===i);
   const dockBar=dock?`<div class="pdock"><b>${t('chordsShort')}</b><span class="pchips">${uniq.map(([n])=>`<span>${esc(n)}</span>`).join('')}</span><span class="psum">${t('feels')[s.feel]||t('feels').straight8}${s.strum?' · '+esc(s.strum):''}</span><button type="button" class="tb" id="dockbtn" aria-expanded="${st.dockOpen}">${st.dockOpen?t('dockClose'):t('dockOpen')}</button></div>`:'';
-  $('#practice').innerHTML=st.practice?`<div class="practice${dock?' docked'+(st.dockOpen?' open':''):''}">${dockBar}<div class="pchords"><h4>${t('chordsTitle')(st.capo)}</h4><div class="chordgrid">${uniq.map(([n,sh,cp])=>chordCard(n,sh,cp!==st.capo?cp:undefined)).join('')}</div></div>
+  $('#practice').innerHTML=P?`<div class="practice${dock?' docked'+(st.dockOpen?' open':''):''}">${dockBar}<div class="pchords"><h4>${t('chordsTitle')(st.capo)}</h4><div class="chordgrid">${uniq.map(([n,sh,cp])=>chordCard(n,sh,cp!==st.capo?cp:undefined)).join('')}</div></div>
     <div class="rhythm">${s.tuning?`<div><h4>${t('tuneLbl')}</h4><div class="v">${esc(tuneName(s.tuning)||s.tuning)}${tuneName(s.tuning)?`<small>${esc(s.tuning)}</small>`:''}</div></div>`:''}<div><h4>${t('feel')}</h4><div class="v">${t('feels')[s.feel]||t('feels').straight8}<small>${s.time||'4/4'}</small></div></div>${s.strum?`<div><h4>${t('strum')}</h4>${strumHtml(s.strum,s.feel)}${strumNote?`<div class="snote">${strumNote}</div>`:''}</div>`:''}</div></div>`:'';
-  $('.songbody').classList.toggle('withside',st.practice&&!dock);document.body.classList.toggle('docked',dock);
+  $('.songbody').classList.toggle('withside',P&&!dock);document.body.classList.toggle('docked',dock);
   if($('#dockbtn'))$('#dockbtn').onclick=e=>{e.stopPropagation();st.dockOpen=!st.dockOpen;LS.set('dockOpen',st.dockOpen);drawSheet()};
   $('#practice').onclick=e=>{const d=e.target.closest('[data-alts]');if(!d)return;const al=d.dataset.alts.split('|'),i=(+d.dataset.i+1)%al.length;d.dataset.i=i;
     d.querySelector('svg').outerHTML=diagram(al[i]);d.querySelector('.edtag span').textContent=`${i+1}/${al.length}`;const hp=hpNote(al[i]),h=d.querySelector('.hp');if(h)h.remove();if(hp)d.insertAdjacentHTML('beforeend',`<small class="hp">${esc(hp)}</small>`)};
@@ -1064,6 +1068,7 @@ function drawSheet(){PS=null;
       :`<div class="ln"><span class="l">${esc(segs.map(g=>g.l).join(''))}</span></div>`).join('')}</section>`).join('');
   }else{
     drawStructured(s,C);fitBars();
+    if(!MOB()&&P&&!dock&&!st.pracChk){st.pracChk=true;if(sheet.dataset.dense){st.pracOff=true;drawSheet()}}
   }
 }
 /* 歌詞網站複製來的雜訊：作詞作曲、時間碼、（間奏）標記、裝飾符號、網址 */
@@ -1224,7 +1229,10 @@ function barSlots(bar,beats){
 const METER=/^\d{1,2}\/(4|8)$/;
 /* 小節排版：每一拍一格、格寬一樣，拍點才會對齊。
    整首歌用同一種排法（兩欄、一欄都照使用者選的）：先算最長的和弦需要多寬，放不下就（1）一行改排兩小節（2）整首一起縮小字。 */
-function fitBars(){const sh=$('#sheet');if(!sh||!sh.querySelector('.bar'))return;
+/* 重排時先把譜的高度固定住，量完再放開，捲動位置才不會被拉回上面 */
+function fitBars(){const sh=$('#sheet');if(!sh||!sh.querySelector('.bar'))return;const y=scrollY;sh.style.minHeight=sh.offsetHeight+'px';
+  try{fitBars0()}finally{sh.style.minHeight='';if(Math.abs(scrollY-y)>1)scrollTo(0,y)}}
+function fitBars0(){const sh=$('#sheet');
   sh.classList.remove('solo');sh.removeAttribute('data-bpr');sh.style.setProperty('--fit',1);sh.querySelectorAll('.rowline.wide').forEach(x=>x.classList.remove('wide'));
   /* 連音：每個和弦對齊自己那一段節奏線；字縮到放得下（最小 55%），還是太擠就讓這一列一行一小節，其他列不動 */
   const fitTup=()=>{const need=t=>{t.style.setProperty('--ts',1);const n=t.children.length,cs=getComputedStyle(t),w=(t.clientWidth-parseFloat(cs.paddingRight)-parseFloat(cs.columnGap)*(n-1))/n;return Math.min(1,...[...t.children].map(c=>w/(c.scrollWidth+2)))};
@@ -1244,12 +1252,13 @@ function fitBars(){const sh=$('#sheet');if(!sh||!sh.querySelector('.bar'))return
   if(mob&&st.colsM){let r=ratio();if(r>1/.68){sh.setAttribute('data-bpr','2');r=ratio()}if(r>1/.7){sh.setAttribute('data-bpr','1');r=ratio()}if(r>1)sh.style.setProperty('--fit',Math.max(.6,1/r*.97).toFixed(3));fitTup();return}
   /* 手機預設：盡量一行四小節，太長的和弦名可以往左借前面的空位 */
   if(mob){let r=ratioM();if(r>1/.68){sh.setAttribute('data-bpr','2');r=ratioM()}if(r>1/.7){sh.setAttribute('data-bpr','1');r=ratioM()}if(r>1)sh.style.setProperty('--fit',Math.max(.6,1/r*.97).toFixed(3));nudge();fitTup();return}
-  let r=ratio();
-  /* 稍微放不下時先整首一起縮字（最多 85%，所有和弦一樣大），還是不夠才改成一行兩小節 */
-  if(r>1/.85){sh.setAttribute('data-bpr','2');r=ratio()}
-  if(r>1/.7){sh.setAttribute('data-bpr','1');r=ratio()}
-  if(r>1)sh.style.setProperty('--fit',Math.max(.6,1/r*.98).toFixed(3));fitTup()}
-let fitT;addEventListener('resize',()=>{clearTimeout(fitT);fitT=setTimeout(()=>{const d=!!document.querySelector('.practice.docked'),want=st.practice&&st.cols&&matchMedia('(min-width:980px)').matches;if(st.song&&$('#sheet')&&d!==want)drawSheet();else fitBars()},150)});if(document.fonts)document.fonts.ready.then(()=>fitBars());
+  /* 電腦版：維持一行四小節。稍微放不下就整首一起縮字（所有和弦一樣大）；
+     和弦很密（縮到 85% 還放不下）時，長和弦名往左借前面的空位，再整首縮字，縮到 60% 還不夠才改一行兩小節 */
+  let r=ratio();const dense=r>1/.85;sh.dataset.dense=dense?'1':'';
+  if(dense){r=ratioM();if(r>1/.6){sh.setAttribute('data-bpr','2');r=ratioM()}}
+  if(r>1)sh.style.setProperty('--fit',Math.max(.6,1/r*.97).toFixed(3));if(dense)nudge();fitTup()}
+/* 只有寬度變了才重排：iPhone 捲到底時網址列伸縮只改高度，重排會讓頁面瞬間變短、捲動位置被拉回上面 */
+let fitT,fitW=innerWidth;addEventListener('resize',()=>{if(innerWidth===fitW)return;clearTimeout(fitT);fitT=setTimeout(()=>{fitW=innerWidth;const d=!!document.querySelector('.practice.docked'),want=st.practice&&!st.pracOff&&st.cols&&matchMedia('(min-width:980px)').matches;if(st.song&&$('#sheet')&&d!==want)drawSheet();else fitBars()},150)});if(document.fonts)document.fonts.ready.then(()=>fitBars());
 /* 簡單版：和弦簡化成三和弦（保留屬七），一小節最多兩個和弦（留前兩個，各彈半小節） */
 function simpChord(c){const m=String(c).match(/^([A-G][#b]?)([^/]*)(\/.*)?$/);if(!m)return c;let q=m[2].replace(/\(.*?\)/g,'');
   q=/^(m7b5|m7-5|ø)/.test(q)||/^dim/.test(q)?'dim':/^(aug|\+)/.test(q)?'aug':/^m(?!aj)/.test(q)?'m':/^(7|9|11|13)/.test(q)?'7':'';return m[1]+q}
@@ -1413,7 +1422,7 @@ function viewEdit(id){
   <div class="edit"><div class="form">
     <div class="two"><label>${t('fTitle')}<input id="ed-title" value="${esc(s.title)}"></label><label>${t('fArtist')}<input id="ed-artist" value="${esc(s.artist)}"></label></div>
     <div class="three"><label>${t('fKey')}<select id="ed-key">${keys.map(k=>`<option ${k===s.key?'selected':''}>${k}</option>`).join('')}</select></label>
-      <label>${t('fCapo')}<select id="ed-capo">${[...Array(8)].map((_,i)=>`<option value="${i}" ${i==s.capo?'selected':''}>${i||t('capoNo')}</option>`).join('')}</select></label>
+      <label>${t('fCapo')}<select id="ed-capo">${[...Array(13)].map((_,i)=>`<option value="${i}" ${i==s.capo?'selected':''}>${i||t('capoNo')}</option>`).join('')}</select></label>
       <label>BPM<input id="ed-bpm" type="number" min="40" max="240" value="${s.bpm}"></label></div>
     <div class="three"><label>${t('fFeel')}<select id="ed-feel">${Object.keys(SUB).map(k=>`<option value="${k}" ${k===s.feel?'selected':''}>${t('feels')[k]}</option>`).join('')}</select></label>
       <label>${t('fTime')}<select id="ed-time">${['4/4','3/4','6/8','12/8','2/4'].map(x=>`<option ${x===s.time?'selected':''}>${x}</option>`).join('')}</select></label>
@@ -1520,7 +1529,7 @@ async function viewStats(){
 
 /* ---------- footer ---------- */
 function renderFooter(){
-  $('#sitefoot').innerHTML=`<div class="follow"><b>${t('follow')}</b>
+  $('#sitefoot').innerHTML=`<div class="follow">
     <a class="sbtn ig" href="${IG_URL}" target="_blank" rel="noopener">${ico('ig')}Instagram</a>
     <a class="sbtn yt" href="${YT_URL}" target="_blank" rel="noopener">${ico('yt')}YouTube</a></div>
     <div class="links"><a href="/#report">${t('report')}</a><a href="/#legal">${t('legal')}</a>${CLOG.length?`<a class="ver" href="/#changelog" title="${t('changelog')}">${esc(CLOG[0].v)}</a>`:''}<span>© Guitarpuli</span></div>`;
