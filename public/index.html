@@ -96,7 +96,9 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .pagehead h1{font-family:var(--f-disp);font-weight:900;font-size:24px;margin:0;letter-spacing:.02em}
 .pagehead .count{color:var(--muted);font-size:13px}
 .search{flex:1 1 260px;max-width:420px;margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:0 12px;height:38px;color:var(--muted)}
-.search input{border:0;background:none;outline:none;flex:1;min-width:0;color:var(--ink)}
+.search input{border:0;background:none;outline:none;flex:1;width:0;min-width:0;color:var(--ink)}
+/* 手機：搜尋框自己一行、跟下面的卡片同寬。input 寬度設 0，Safari 才不會用輸入框原本的寬度把搜尋框撐出畫面 */
+@media (max-width:720px){.search{flex:1 1 100%;max-width:none;min-width:0;margin-left:0}}
 .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:20px}
 .filters select{height:32px;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:0 8px;font-size:13px}
 .filters #f-sort{margin-left:auto}.filters .seg-toggle{margin-left:0}
@@ -339,6 +341,7 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .tunenote{color:var(--brass)}
 .ch .stk{display:inline-flex;flex-direction:column;font-size:.55em;line-height:1;vertical-align:baseline;transform:translateY(-62%);margin-left:.06em;letter-spacing:-.02em}
 .ch sup.ext{font-size:.6em;vertical-align:.6em;line-height:0;margin-left:.06em;letter-spacing:-.02em}
+.ptimes{font-size:1em;font-weight:400;color:var(--muted);letter-spacing:.04em}
 .snote{font-size:12.5px;color:var(--muted);margin-top:2px}
 .strum{font-family:var(--f-mono);font-size:17px;letter-spacing:.08em;color:var(--chord)}
 .sgrid{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));border:1px solid var(--line);border-radius:6px;overflow:hidden;max-width:420px}
@@ -676,7 +679,7 @@ home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲明',c
   empty:{library:['曲庫是空的','在任何一首譜按「收藏」，或按右上角「新增譜」抄寫自己的版本，都會集中在這裡。'],'library-saved':['還沒有收藏','在卡片上按愛心，或在譜面頁按「收藏」。'],
     'library-mine':['還沒有自建譜','用 ChordPro 格式輸入歌詞和和弦，只存在你自己的瀏覽器，一樣可以移調、夾 Capo。'],'library-recent':['還沒有瀏覽紀錄','打開任一首譜後會出現在這裡。']},
   back:'返回',origKey:'原調',transpose:'移調',reset:'原調',resetTip:'回原調並套用編者建議的 Capo',capoNone:'無',real:'實音',realTip:'顯示實際音高（關閉時顯示夾 Capo 後手上按的和弦）',
-  size:'字體',metro:'節拍器',sub:'細分',subTip:'依律動加入細分拍',practice:'練習面板',tools:'工具',myCover:'我的 Cover',igCover:'到 Instagram 看',repTip:n=>`這一列彈 ${n} 次`,repTipN:n=>`反覆記號之間彈 ${n} 次`,simple:'簡單版',simpleTip:'和弦簡化成三和弦（保留屬七），一小節最多兩個和弦',noteSimple:'簡單版：和弦已簡化，想彈原曲的和弦再按一次「簡單版」',lyrics:'我的歌詞',cols:'兩欄',perform:'全螢幕演奏',endPerform:'離開全螢幕',viewFull:'完整',viewCompact:'精簡',viewFullTip:'照彈奏順序從頭看到尾。連續、一模一樣的段落只顯示一次，歌詞分 1. 2.。',viewCompactTip:'每段只寫一次，照上方的順序彈。點順序裡的段落，會標出那一次的歌詞。',orderLbl:'順序',singN:n=>`唱 ${n} 次`,nthTime:n=>`第 ${n} 次`,onlyIn:(s,n)=>`只有${s}${n}`,onlyLast:s=>`只有最後一次${s}`,lyrEmpty:'（還沒填歌詞）',lyrChanged:s=>`<b>${s}</b> 的譜有更新，這幾段的歌詞可能對不上，請打開「我的歌詞」確認。其他段落不受影響。`,lyrOk:'我確認過了',lyrLines:a=>`${a} 行`,
+  size:'字體',playTimes:n=>`彈 ${n} 次`,metro:'節拍器',sub:'細分',subTip:'依律動加入細分拍',practice:'練習面板',tools:'工具',myCover:'我的 Cover',igCover:'到 Instagram 看',repTip:n=>`這一列彈 ${n} 次`,repTipN:n=>`反覆記號之間彈 ${n} 次`,simple:'簡單版',simpleTip:'和弦簡化成三和弦（保留屬七），一小節最多兩個和弦',noteSimple:'簡單版：和弦已簡化，想彈原曲的和弦再按一次「簡單版」',lyrics:'我的歌詞',cols:'兩欄',perform:'全螢幕演奏',endPerform:'離開全螢幕',viewFull:'完整',viewCompact:'精簡',viewFullTip:'照彈奏順序從頭看到尾。連續、一模一樣的段落只顯示一次，歌詞分 1. 2.。',viewCompactTip:'每段只寫一次，照上方的順序彈。點順序裡的段落，會標出那一次的歌詞。',orderLbl:'順序',singN:n=>`唱 ${n} 次`,nthTime:n=>`第 ${n} 次`,onlyIn:(s,n)=>`只有${s}${n}`,onlyLast:s=>`只有最後一次${s}`,lyrEmpty:'（還沒填歌詞）',lyrChanged:s=>`<b>${s}</b> 的譜有更新，這幾段的歌詞可能對不上，請打開「我的歌詞」確認。其他段落不受影響。`,lyrOk:'我確認過了',lyrLines:a=>`${a} 行`,
   noteCapo:(a,c,s,r)=>r?`調性 <b>${a}</b>，夾 Capo ${c}：譜上照實際音高寫，和弦圖是夾 Capo 後的按法`:`調性 <b>${a}</b>，夾 Capo ${c}：譜上是 <b>${s}</b> 調按法，實際音高高 ${c} 個半音`,noteKey:a=>`目前調性 <b>${a}</b>`,noteCapoM:(a,c,s,r)=>r?`<b>${a}</b> 調 · Capo ${c} · 譜上是實際音高`:`<b>${a}</b> 調 · Capo ${c} · 照 <b>${s}</b> 調指型彈`,lyrFind:'搜尋這首歌的歌詞',tupTip:n=>`${n} 連音：這幾個和弦平分這一拍`,sumKey:'調',sumOrig:k=>`（原 ${k}）`,sumShape:'指型',lyrQ:'歌詞',
   noteFinger:(a,c)=>`調性 <b>${a}</b>，夾 Capo ${c}：這首的 Capo 是當多一根手指按和弦用，譜上照實際音高寫，和弦圖格數從 Capo 算起`,tuneLbl:'調弦',tuneStd:'標準調弦',noteTune:(tn,nm)=>`這首用<b>${nm?nm+'（'+tn+'）':tn}</b>調弦：沒有標「編者按法」的和弦圖是標準調弦的按法，只能參考`,
   noteShift:(o,n)=>`（原調 ${o}，${n>0?'升':'降'} ${Math.abs(n)} 個半音）`,noteEditor:(c,s)=>`編者建議 Capo ${c}`,notePub:'公開譜只含和弦與段落；歌詞由你自己輸入，只存在這台裝置',notePubAcct:'公開譜只含和弦與段落；你的歌詞存在你的帳號裡，只有你看得到',
@@ -710,7 +713,7 @@ home:'Home',library:'My Library',theme:'Theme',legal:'Copyright',changelog:'Chan
   empty:{library:['Your library is empty','Save any sheet, or use New Sheet to write your own arrangement.'],'library-saved':['Nothing saved yet','Tap the heart on a card or Save on a sheet.'],
     'library-mine':['No sheets of your own yet','Write lyrics and chords in ChordPro. They stay in your browser and still transpose and use a capo.'],'library-recent':['No history yet','Sheets you open will appear here.']},
   back:'Back',origKey:'Original key',transpose:'Transpose',reset:'Reset',resetTip:'Back to the original key and the editor’s capo',capoNone:'None',real:'Concert',realTip:'Show concert pitch (off: show the chord shapes you play with the capo on)',
-  size:'Text',metro:'Metronome',sub:'Subdivide',subTip:'Add subdivisions that follow the feel',practice:'Practice Panel',tools:'Tools',myCover:'My Cover',igCover:'Watch on Instagram',repTip:n=>`Play this row ${n} times`,repTipN:n=>`Play between the repeat signs ${n} times`,simple:'Simple',simpleTip:'Simplify to triads (dominant 7ths kept), at most two chords per bar',noteSimple:'Simple version: chords are simplified. Tap “Simple” again for the original chords.',lyrics:'My Lyrics',cols:'Two Columns',perform:'Full Screen',endPerform:'Exit Full Screen',viewFull:'Full',viewCompact:'Compact',viewFullTip:'Read top to bottom in playing order. Back-to-back identical sections show once, with lyrics as 1. 2.',viewCompactTip:'Each section shows once. Follow the order above. Tap a section in the order to highlight its lyrics.',orderLbl:'ORDER',singN:n=>`${n} times`,nthTime:n=>`time ${n}`,onlyIn:(s,n)=>`${s} ${n} only`,onlyLast:s=>`Last ${s} only`,lyrEmpty:'(no lyrics yet)',lyrChanged:s=>`The chords for <b>${s}</b> were updated, so those lyrics may be out of place. Open My Lyrics to check. Other sections are fine.`,lyrOk:'Looks right',lyrLines:a=>`${a} line${a===1?'':'s'}`,
+  size:'Text',playTimes:n=>`play ${n}×`,metro:'Metronome',sub:'Subdivide',subTip:'Add subdivisions that follow the feel',practice:'Practice Panel',tools:'Tools',myCover:'My Cover',igCover:'Watch on Instagram',repTip:n=>`Play this row ${n} times`,repTipN:n=>`Play between the repeat signs ${n} times`,simple:'Simple',simpleTip:'Simplify to triads (dominant 7ths kept), at most two chords per bar',noteSimple:'Simple version: chords are simplified. Tap “Simple” again for the original chords.',lyrics:'My Lyrics',cols:'Two Columns',perform:'Full Screen',endPerform:'Exit Full Screen',viewFull:'Full',viewCompact:'Compact',viewFullTip:'Read top to bottom in playing order. Back-to-back identical sections show once, with lyrics as 1. 2.',viewCompactTip:'Each section shows once. Follow the order above. Tap a section in the order to highlight its lyrics.',orderLbl:'ORDER',singN:n=>`${n} times`,nthTime:n=>`time ${n}`,onlyIn:(s,n)=>`${s} ${n} only`,onlyLast:s=>`Last ${s} only`,lyrEmpty:'(no lyrics yet)',lyrChanged:s=>`The chords for <b>${s}</b> were updated, so those lyrics may be out of place. Open My Lyrics to check. Other sections are fine.`,lyrOk:'Looks right',lyrLines:a=>`${a} line${a===1?'':'s'}`,
   noteCapo:(a,c,s,r)=>r?`Key <b>${a}</b>, Capo ${c}: chords are shown at concert pitch; diagrams show the fingering with the capo on`:`Key <b>${a}</b>, Capo ${c}: chords are <b>${s}</b> shapes; they sound ${c} semitone${c>1?'s':''} higher`,noteKey:a=>`Key: <b>${a}</b>`,noteCapoM:(a,c,s,r)=>r?`Key <b>${a}</b> · Capo ${c} · concert pitch`:`Key <b>${a}</b> · Capo ${c} · play <b>${s}</b> shapes`,lyrFind:'Search for this song’s lyrics',tupTip:n=>`${n}-tuplet: these chords split the beat evenly`,sumKey:'',sumOrig:k=>` (orig. ${k})`,sumShape:'shapes',lyrQ:'lyrics',
   noteFinger:(a,c)=>`Key <b>${a}</b>, Capo ${c}: the capo works as an extra finger for these voicings, so chords are written at concert pitch; diagram frets are counted from the capo`,tuneLbl:'Tuning',tuneStd:'Standard',noteTune:(tn,nm)=>`This song uses <b>${nm?nm+' ('+tn+')':tn}</b> tuning. Diagrams not marked “Editor’s voicing” show standard-tuning shapes, for reference only`,
   noteShift:(o,n)=>` (original ${o}, ${n>0?'up':'down'} ${Math.abs(n)} ${Math.abs(n)===1?'semitone':'semitones'})`,noteEditor:(c,s)=>`Editor’s pick: Capo ${c}`,notePub:'Public sheets show chords and sections only. Lyrics you add stay on this device.',notePubAcct:'Public sheets show chords and sections only. Your lyrics are saved to your account and only you can see them.',
@@ -1040,7 +1043,7 @@ function drawSheet(){PS=null;
   $('#tsum').innerHTML=`<b>${sounding}</b> ${t('sumKey')}${st.shift?t('sumOrig')(s.key):''}${st.capo?` · Capo ${st.capo} · ${real?t('real'):`<b>${shape}</b> ${t('sumShape')}`}`:''} · <span id="tsbpm">${st.bpm}</span> BPM`;
   /* 段落換 Capo：筆記寫的 (Capo 3) 是編者的夾法；讀者改 Capo 時，這段跟著差一樣的格數 */
   const capoOf=m=>m===undefined||m===null?st.capo:Math.max(0,st.capo+m-(s.capo||0));
-  const T2=(c,cp=st.capo)=>tChordK(c,st.shift-cp,tKey(sounding,-cp));   // 夾 Capo 後手上按的和弦
+  const T2=(c,cp=st.capo)=>tChordK(c,st.shift-cp,shape);   // 夾 Capo 後手上按的和弦（段落換 Capo 是轉調，按法的調號跟整首一樣）
   const N=(c,cp=st.capo)=>real?tChord(c,st.shift,keyFlat(sounding)):T2(c,cp); // 譜上顯示：預設是按法，按「實音」顯示實際音高
   const used=[];(s.sections||[]).forEach(sec=>rowsOf(sec).forEach(r=>r.b.forEach(b=>(st.simple?b.map(simpChord):b).forEach(c=>{if(/^[A-G]/.test(c)){const cp=capoOf(r.capo??sec.capo);if(!used.some(u=>u[0]===c&&u[1]===cp))used.push([c,cp])}}))));
   if(!s.sections)chordsOf(s).forEach(c=>used.push([c,st.capo]));
@@ -1239,7 +1242,7 @@ function fitBars0(){const sh=$('#sheet');
     sh.querySelectorAll('.tup').forEach(t=>{let k=need(t);if(k<.7&&(sh.dataset.bpr||'4')!=='1'){const rl=t.closest('.rowline');if(rl){rl.classList.add('wide');k=need(t)}}t.style.setProperty('--ts',Math.max(.55,Math.min(.9,k)).toFixed(3))})};
   const mob=MOB();sh.querySelectorAll('.ch[style*="translate"],.tup[style*="translate"]').forEach(x=>x.style.transform='');
   /* 手機：只佔一兩拍的長和弦名可以往左借前面的空位，所以是看「整個小節的和弦名排不排得下」 */
-  const mbar=bar=>{const cs=getComputedStyle(bar);return {chs:[...bar.children].filter(x=>x.classList.contains('ch')),L:parseFloat(cs.paddingLeft),R:bar.clientWidth-parseFloat(cs.paddingRight),gap:parseFloat(cs.fontSize)*.4}};
+  const mbar=bar=>{const cs=getComputedStyle(bar);return {chs:[...bar.children].filter(x=>x.classList.contains('ch')),L:parseFloat(cs.paddingLeft),R:bar.clientWidth-parseFloat(cs.paddingRight),gap:Math.max(5,parseFloat(cs.fontSize)*.5)}};
   const ratioM=()=>{let r=0;sh.querySelectorAll('.bar.dur').forEach(bar=>{const {chs,L,R,gap}=mbar(bar);let sum=0;chs.forEach((x,k)=>{sum+=x.offsetWidth+(k?gap:0);const last=k===chs.length-1,bound=(last?R:chs[k+1].offsetLeft-gap)-L;if(bound>0&&sum/bound>r)r=sum/bound})});return r};
   const nudge=()=>sh.querySelectorAll('.bar.dur').forEach(bar=>{const {chs,R,gap}=mbar(bar);let lim=R;for(let k=chs.length-1;k>=0;k--){const x=chs[k],at=Math.min(x.offsetLeft,lim-x.offsetWidth),dx=x.offsetLeft-at;if(dx>.5)x.style.transform='translateX(-'+dx.toFixed(1)+'px)';lim=at-gap}});
   /* 每個小節需要的寬度＝所有和弦名字加上間距；整首取最擠的那個小節 */
@@ -1251,7 +1254,10 @@ function fitBars0(){const sh=$('#sheet');
   /* 手機按「兩欄」：每個和弦名字都對齊自己的節奏線（不借位），放不下就縮字或改一行兩小節 */
   if(mob&&st.colsM){let r=ratio();if(r>1/.68){sh.setAttribute('data-bpr','2');r=ratio()}if(r>1/.7){sh.setAttribute('data-bpr','1');r=ratio()}if(r>1)sh.style.setProperty('--fit',Math.max(.6,1/r*.97).toFixed(3));fitTup();return}
   /* 手機預設：盡量一行四小節，太長的和弦名可以往左借前面的空位 */
-  if(mob){let r=ratioM();if(r>1/.68){sh.setAttribute('data-bpr','2');r=ratioM()}if(r>1/.7){sh.setAttribute('data-bpr','1');r=ratioM()}if(r>1)sh.style.setProperty('--fit',Math.max(.6,1/r*.97).toFixed(3));nudge();fitTup();return}
+  /* 和弦對不齊自己的拍子時先整首縮字（最小 70%），還是放不下才往左借位；借位時和弦之間一定留空隙 */
+  if(mob){let r=ratioM();if(r>1/.68){sh.setAttribute('data-bpr','2');r=ratioM()}if(r>1/.7){sh.setAttribute('data-bpr','1');r=ratioM()}
+    const rs=ratio();let f=rs>1?Math.max(.7,1/rs*.97):1;if(r*f>1)f=Math.max(.6,1/r*.97);
+    if(f<1)sh.style.setProperty('--fit',f.toFixed(3));nudge();fitTup();return}
   /* 電腦版：維持一行四小節。稍微放不下就整首一起縮字（所有和弦一樣大）；
      和弦很密（縮到 85% 還放不下）時，長和弦名往左借前面的空位，再整首縮字，縮到 60% 還不夠才改一行兩小節 */
   let r=ratio();const dense=r>1/.85;sh.dataset.dense=dense?'1':'';
@@ -1303,6 +1309,9 @@ function drawStructured(s,C){
   const occs=songOccs(s),tot=occTotals(s),lyr=getLyr(s),changed=lyrChangedKeys(s,lyr),warnKeys=new Set(changed.map(x=>x.key));
   const warnTag=key=>warnKeys.has(key)?`<span class="stag warn">!</span>`:'';
   const capoOf=C.capoOf||(()=>st.capo),cc=m=>c=>C(c,capoOf(m));let run=st.capo;
+  /* 數字只標在「第N次」彈法不一樣的段落；其他重複的段落在標題旁寫「彈 N 次」 */
+  const needN=k=>tot[k]>1&&rowsOf(s.sections[k]).some(r=>r.only!==undefined);
+  const timesTag=k=>tot[k]>1&&!needN(k)?`<span class="ptimes">${t('playTimes')(tot[k])}</span>`:'';
   const capTag=sec=>sec.capo!==undefined?`<span class="ctag">Capo ${capoOf(sec.capo)}</span>`:'';
   /* 用「對齊」放進去的歌詞是一列一行，直接放在每一列和弦下面 */
   const rowMode=o=>!!((lyr.M||{})[o.key]||{})[o.n];
@@ -1326,7 +1335,14 @@ function drawStructured(s,C){
     for(let rep=1;rep<=reps;rep++){const li=o.lineOf[ri+':'+rep];if(li===undefined||!L[li])continue;it.push(lyItem(o,li,`${list.filter(rowMode).length>1?nb(o.n):''}${xp}${reps>1?`<i class="rpn">${rep}.</i>`:''}`,L[li]))}});
     return it};
   /* 合併後的一組：每一列下面依序放每一遍的歌詞 */
-  const grpRows=(rows,one)=>collapseRows(rows).map(g=>g.block.map((r,j)=>{const last=j===g.block.length-1;
+  /* 一排排滿 4 小節：沒有反覆、沒有「第N次」、沒有另外夾 Capo 的相鄰列，小節接起來重新分成每排 4 個。
+     用「對齊」把歌詞一列一列放在和弦下面時不重排（歌詞跟著原本的列） */
+  const plainRow=r=>!r.x&&r.only===undefined&&r.capo===undefined&&r.b.every(b=>b.length<=8);/* 16 分音符、連音那種特別密的列維持原樣 */
+  const reflow=(G,lst)=>{if(lst&&lst.some(rowMode))return G;const out=[];let run=[];
+    const flush=()=>{if(!run.length)return;const bars=run.flatMap(r=>r.b);
+      for(let i=0;i<bars.length;i+=4){const r={...run[0],b:bars.slice(i,i+4)};out.push({block:[r],k:1,copies:[[r]]})}run=[]};
+    G.forEach(g=>{if(g.k===1&&g.block.length===1&&plainRow(g.block[0]))run.push(g.block[0]);else{flush();out.push(g)}});flush();return out};
+  const grpRows=(rows,one,lst)=>reflow(collapseRows(rows),lst).map(g=>g.block.map((r,j)=>{const last=j===g.block.length-1;
     const rr=g.k<2?r:g.block.length===1?{...r,x:g.k}:{...r,grp:j===0?'L':last?'R':'',gx:last?g.k:0};
     if(g.k>1&&g.block.length>1&&j===0&&last)rr.grp='';
     return one(rr,lst=>{const it=[];g.copies.forEach((cp,c)=>it.push(...rowLyIt(lst,cp[j].ri,cp[j].x||1,g.k>1?`<i class="rpn">${c+1}.</i>`:'')));return pack(it)})}).join('')).join('');
@@ -1337,21 +1353,21 @@ function drawStructured(s,C){
     html=firstSeen.map(k=>{const sec=s.sections[k],mine=occs.filter(o=>o.k===k),inst=isInst(sec),key=secKeys(s)[k];
       const rows=grpRows(rowsOf(sec).map((r,ri)=>({...r,ri})),(r,ly)=>{const only=r.only===undefined?'':`<span class="only">${r.only==='last'?t('onlyLast')(esc(secName(sec.name))):t('onlyIn')(esc(secName(sec.name)),nb(r.only))}</span>`;
         const rc=r.capo!==undefined?`<span class="ctag">Capo ${capoOf(r.capo)}</span>`:'';
-        return `<div class="row">${only}${rc}${(L=>barsHtml(r,cc(r.capo??sec.capo),L.b)+L.t)(inst?{t:'',b:null}:ly(mine))}</div>`});
+        return `<div class="row">${only}${rc}${(L=>barsHtml(r,cc(r.capo??sec.capo),L.b)+L.t)(inst?{t:'',b:null}:ly(mine))}</div>`},mine);
       const ly=inst?'':mine.filter(o=>!rowMode(o)).map(o=>lyrBlock(o,mine.length>1?nb(o.n):'',lyr)).join('');
-      return `<section class="sec" id="sec-${k}"><h3>${esc(secName(sec.name))}${tot[k]>1?mine.map(o=>nb(o.n)).join(''):''}${capTag(sec)}${warnTag(key)}</h3>${rows}${ly}</section>`}).join('');
-    chips=occs.map(o=>`<button class="chip${isInst(o.sec)?' inst':''}" data-go="sec-${o.k}" data-hl="${o.k}-${o.n}">${esc(secName(o.sec.name))}${tot[o.k]>1?nb(o.n):''}</button>`).join('<span class="arrow">→</span>');
+      return `<section class="sec" id="sec-${k}"><h3>${esc(secName(sec.name))}${needN(k)?mine.map(o=>nb(o.n)).join(''):timesTag(k)}${capTag(sec)}${warnTag(key)}</h3>${rows}${ly}</section>`}).join('');
+    chips=occs.map(o=>`<button class="chip${isInst(o.sec)?' inst':''}" data-go="sec-${o.k}" data-hl="${o.k}-${o.n}">${esc(secName(o.sec.name))}${needN(o.k)?nb(o.n):''}</button>`).join('<span class="arrow">→</span>');
   }else{
     const groups=[];occs.forEach(o=>{const g=groups[groups.length-1];if(g&&g.k===o.k&&g.sig===o.sig)g.occs.push(o);else groups.push({k:o.k,sig:o.sig,sec:o.sec,occs:[o]})});
     html=groups.map((g,gi)=>{const o0=g.occs[0],inst=isInst(g.sec);
-      let tag=tot[g.k]>1?g.occs.map(o=>nb(o.n)).join(''):'';
+      let tag=needN(g.k)?g.occs.map(o=>nb(o.n)).join(''):timesTag(g.k);
       tag+=warnTag(o0.key);
       const rows=grpRows(o0.rows,(r,ly)=>{const m=r.capo??g.sec.capo,cp=capoOf(m);let mv='';
         if(cp!==run){mv=`<div class="capmove">${t('capoMove')(run,cp)}</div>`;run=cp}
-        return `${mv}<div class="row">${r.capo!==undefined?`<span class="ctag">Capo ${cp}</span>`:''}${(L=>barsHtml(r,cc(m),L.b)+L.t)(inst?{t:'',b:null}:ly(g.occs))}</div>`});
+        return `${mv}<div class="row">${r.capo!==undefined?`<span class="ctag">Capo ${cp}</span>`:''}${(L=>barsHtml(r,cc(m),L.b)+L.t)(inst?{t:'',b:null}:ly(g.occs))}</div>`},g.occs);
       const ly=inst?'':g.occs.filter(o=>!rowMode(o)).map(o=>lyrBlock(o,g.occs.length>1?nb(o.n):'',lyr)).join('');
       return `<section class="sec" id="grp-${gi}" data-rep="${g.occs.length}"><h3>${esc(secName(g.sec.name))}${tag}${capTag(g.sec)}</h3>${rows}${ly}</section>`}).join('');
-    chips=groups.map((g,gi)=>`<button class="chip${isInst(g.sec)?' inst':''}" data-go="grp-${gi}">${esc(secName(g.sec.name))}${tot[g.k]>1?g.occs.map(o=>nb(o.n)).join(''):''}</button>`).join('<span class="arrow">→</span>');
+    chips=groups.map((g,gi)=>`<button class="chip${isInst(g.sec)?' inst':''}" data-go="grp-${gi}">${esc(secName(g.sec.name))}${needN(g.k)?g.occs.map(o=>nb(o.n)).join(''):''}</button>`).join('<span class="arrow">→</span>');
   }
   $('#sheet').innerHTML=html;
   const ob=$('#orderbar');ob.hidden=false;ob.innerHTML=`<span class="lbl">${t('orderLbl')}</span>`+chips;
