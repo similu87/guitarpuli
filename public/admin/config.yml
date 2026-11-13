@@ -28,7 +28,7 @@ collections:
       - { name: title, label: 歌名, widget: string }
       - { name: artist, label: 歌手, widget: string, required: false }
       - { name: key, label: 原調（實際音高）, widget: select, options: [C, C#, Db, D, Eb, E, F, F#, Gb, G, Ab, A, Bb, B, Cm, C#m, Dm, D#m, Ebm, Em, Fm, F#m, Gm, G#m, Am, Bbm, Bm] }
-      - { name: capo, label: 建議 Capo（0 = 不夾）, widget: number, value_type: int, min: 0, max: 9, default: 0 }
+      - { name: capo, label: 建議 Capo（0 = 不夾）, widget: number, value_type: int, min: 0, max: 12, default: 0 }
       - { name: bpm, label: BPM, widget: number, value_type: int, min: 30, max: 260, default: 90 }
       - { name: time, label: 拍號, widget: select, options: ["4/4", "3/4", "6/8", "12/8", "2/4"], default: "4/4" }
       - name: feel
