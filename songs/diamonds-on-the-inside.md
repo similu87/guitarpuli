@@ -14,14 +14,16 @@ language: en
 genre: [搖滾, 藍調]
 added: 2026-11-16
 ---
+## 主歌A
+| Ab | Bbm7 | Cm7 Bbm7 | Ab Dbadd9 | ×4
 
-## 主歌
+## 主歌B
 | Ab | Bbm7 | Cm7 Bbm7 | Ab Dbadd9 | ×2
 
-## 副歌
+## 副歌A
 | Gb Db | Ab | ×3
 
-## 副歌2
+## 副歌B
 | Gb Db | Ab | ×4
 
 ## 間奏
@@ -29,4 +31,4 @@ added: 2026-11-16
 | Db Eb | Fm | Db | Eb |
 
 ## 順序
-主歌 ×2 → 副歌 → 主歌 ×2 → 副歌2 → 間奏 → 主歌 → 副歌2
+主歌A → 副歌A → 主歌A → 副歌B → 間奏 → 主歌B → 副歌B

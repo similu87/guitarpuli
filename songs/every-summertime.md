@@ -44,3 +44,4 @@ A♭/B♭＝7x7657
 Adim7＝6x565x
 Bmaj7＝x35453
 F#maj7＝3x443x
+Ebmaj7＝x79897

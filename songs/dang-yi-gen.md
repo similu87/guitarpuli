@@ -20,24 +20,24 @@ added: 2026-11-16
 | NC |
 | F#m C#m | D - A A/G# | ×4
 
-## 主歌
-| F#m C#m | D - A A/G# | ×2
+## 主歌A
+| F#m C#m | D - A A/G# | ×4
 
-## 副歌前
+## 副歌前A
 | F#m C#m | D - A A/G# | ×3
 | F#m C#m | D |
 
-## 副歌前2
+## 副歌前B
 | F#m C#m | D - A A/G# | ×3
 | F#m C#m | D | D |
 
-## 副歌
+## 副歌A
 | A C#m | F#m E |
 | D A | D E |
 | A C7 | F#m E |
 | D A | D E |
 
-## 副歌2
+## 副歌B
 | A C#m | F#m E |
 | D A | D E |
 | F#m F#m(maj9)/E# | D C7 |
@@ -46,6 +46,9 @@ added: 2026-11-16
 ## 間奏
 | A | A - - G A - - - |
 
+## 主歌B
+| F#m C#m | D - A A/G# | ×2
+
 ## 尾奏
 | F#m C#m | D - A A/G# |
 | F#m C#m | D |
@@ -53,7 +56,7 @@ added: 2026-11-16
 | F#m C#m | D |
 
 ## 順序
-前奏 → 主歌 ×2 → 副歌前 → 副歌 → 間奏 → 副歌前2 → 副歌2 → 主歌 → 尾奏
+前奏 → 主歌A → 副歌前A → 副歌A → 間奏 → 副歌前B → 副歌B → 主歌B → 尾奏
 
 ## 指法
 A/G#（Capo 2）＝2x000x
