@@ -819,7 +819,9 @@ function toggleFav(id){const f=favs();const i=f.indexOf(id);i<0?f.unshift(id):f.
 const DONATE_URL='';   // 餵食普利：收款頁網址，留空就不顯示按鈕
 const heart='<svg class="i" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg>';
 const diffDots=d=>`<span class="diff" title="${t('diff')[d]}">${[1,2,3].map(n=>`<i class="${n<=d?'on':''}"></i>`).join('')}</span>`;
-const secName=n=>t('sec')[n]||n;
+/* 段落名稱後面加 A／B／C（或數字）是編者分的不同版本，例如 副歌A、副歌B：中文照原樣顯示，英文介面翻成 Chorus A */
+const SEC_BASE={'前奏':'intro','主歌':'verse','導歌':'prechorus','副歌前':'prechorus','副歌':'chorus','橋段':'bridge','間奏':'solo','尾奏':'outro'};
+const secName=n=>{const d=t('sec');if(d[n])return d[n];if(lang!=='en')return n;const m=/^(前奏|主歌|導歌|副歌前|副歌|橋段|間奏|尾奏)\s*([A-Z]|\d+)$/i.exec(String(n));return m?d[SEC_BASE[m[1]]]+' '+m[2].toUpperCase():n};
 
 /* ---------- rail + theme menu ---------- */
 const ICON={
