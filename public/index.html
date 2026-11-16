@@ -681,7 +681,7 @@ home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲明',c
   back:'返回',origKey:'原調',transpose:'移調',reset:'原調',resetTip:'回原調並套用編者建議的 Capo',capoNone:'無',real:'實音',realTip:'顯示實際音高（關閉時顯示夾 Capo 後手上按的和弦）',
   size:'字體',playTimes:n=>`彈 ${n} 次`,metro:'節拍器',sub:'細分',subTip:'依律動加入細分拍',practice:'練習面板',tools:'工具',myCover:'我的 Cover',igCover:'到 Instagram 看',repTip:n=>`這一列彈 ${n} 次`,repTipN:n=>`反覆記號之間彈 ${n} 次`,simple:'簡單版',simpleTip:'和弦簡化成三和弦（保留屬七），一小節最多兩個和弦',noteSimple:'簡單版：和弦已簡化，想彈原曲的和弦再按一次「簡單版」',lyrics:'我的歌詞',cols:'兩欄',perform:'全螢幕演奏',endPerform:'離開全螢幕',viewFull:'完整',viewCompact:'精簡',viewFullTip:'照彈奏順序從頭看到尾。連續、一模一樣的段落只顯示一次，歌詞分 1. 2.。',viewCompactTip:'每段只寫一次，照上方的順序彈。點順序裡的段落，會標出那一次的歌詞。',orderLbl:'順序',singN:n=>`唱 ${n} 次`,nthTime:n=>`第 ${n} 次`,onlyIn:(s,n)=>`只有${s}${n}`,onlyLast:s=>`只有最後一次${s}`,lyrEmpty:'（還沒填歌詞）',lyrChanged:s=>`<b>${s}</b> 的譜有更新，這幾段的歌詞可能對不上，請打開「我的歌詞」確認。其他段落不受影響。`,lyrOk:'我確認過了',lyrLines:a=>`${a} 行`,
   noteCapo:(a,c,s,r)=>r?`調性 <b>${a}</b>，夾 Capo ${c}：譜上照實際音高寫，和弦圖是夾 Capo 後的按法`:`調性 <b>${a}</b>，夾 Capo ${c}：譜上是 <b>${s}</b> 調按法，實際音高高 ${c} 個半音`,noteKey:a=>`目前調性 <b>${a}</b>`,noteCapoM:(a,c,s,r)=>r?`<b>${a}</b> 調 · Capo ${c} · 譜上是實際音高`:`<b>${a}</b> 調 · Capo ${c} · 照 <b>${s}</b> 調指型彈`,lyrFind:'搜尋這首歌的歌詞',tupTip:n=>`${n} 連音：這幾個和弦平分這一拍`,sumKey:'調',sumOrig:k=>`（原 ${k}）`,sumShape:'指型',lyrQ:'歌詞',
-  noteFinger:(a,c)=>`調性 <b>${a}</b>，夾 Capo ${c}：這首的 Capo 是當多一根手指按和弦用，譜上照實際音高寫，和弦圖格數從 Capo 算起`,tuneLbl:'調弦',tuneStd:'標準調弦',noteTune:(tn,nm)=>`這首用<b>${nm?nm+'（'+tn+'）':tn}</b>調弦：沒有標「編者按法」的和弦圖是標準調弦的按法，只能參考`,
+  noteFinger:(a,c)=>`調性 <b>${a}</b>，夾 Capo ${c}：這首的 Capo 是當多一根手指按和弦用，譜上照實際音高寫，和弦圖格數從 Capo 算起`,tuneLbl:'調弦',tuneStd:'標準調弦',noteTune:(tn,nm,off)=>`這首用<b>${nm?nm+'（'+tn+'）':tn}</b>調弦：`+(off?`和弦圖已換成這個調弦的按法`:`沒有標「編者按法」的和弦圖是標準調弦的按法，只能參考`),
   noteShift:(o,n)=>`（原調 ${o}，${n>0?'升':'降'} ${Math.abs(n)} 個半音）`,noteEditor:(c,s)=>`編者建議 Capo ${c}`,notePub:'公開譜只含和弦與段落；歌詞由你自己輸入，只存在這台裝置',notePubAcct:'公開譜只含和弦與段落；你的歌詞存在你的帳號裡，只有你看得到',
   capoMove:(a,b)=>`${b>a?'↑':'↓'} Capo 從 ${a||'不夾'} 移到 ${b||'不夾'}`,chordsTitle:c=>c?`本曲和弦（Capo ${c}，格數從 Capo 算起）`:'本曲和弦',chordsShort:'本曲和弦',dockOpen:'和弦圖 ▴',dockClose:'收起 ▾',feel:'律動',strum:'刷法',noDiagram:'指法圖待補',noDiagramTip:'這個和弦的指法圖之後補上',
   feels:{straight8:'平均八分',swing:'搖擺八分',shuffle:'三連音拖曳',straight16:'平均十六分',triplet:'12/8 三連音'},
@@ -715,7 +715,7 @@ home:'Home',library:'My Library',theme:'Theme',legal:'Copyright',changelog:'Chan
   back:'Back',origKey:'Original key',transpose:'Transpose',reset:'Reset',resetTip:'Back to the original key and the editor’s capo',capoNone:'None',real:'Concert',realTip:'Show concert pitch (off: show the chord shapes you play with the capo on)',
   size:'Text',playTimes:n=>`play ${n}×`,metro:'Metronome',sub:'Subdivide',subTip:'Add subdivisions that follow the feel',practice:'Practice Panel',tools:'Tools',myCover:'My Cover',igCover:'Watch on Instagram',repTip:n=>`Play this row ${n} times`,repTipN:n=>`Play between the repeat signs ${n} times`,simple:'Simple',simpleTip:'Simplify to triads (dominant 7ths kept), at most two chords per bar',noteSimple:'Simple version: chords are simplified. Tap “Simple” again for the original chords.',lyrics:'My Lyrics',cols:'Two Columns',perform:'Full Screen',endPerform:'Exit Full Screen',viewFull:'Full',viewCompact:'Compact',viewFullTip:'Read top to bottom in playing order. Back-to-back identical sections show once, with lyrics as 1. 2.',viewCompactTip:'Each section shows once. Follow the order above. Tap a section in the order to highlight its lyrics.',orderLbl:'ORDER',singN:n=>`${n} times`,nthTime:n=>`time ${n}`,onlyIn:(s,n)=>`${s} ${n} only`,onlyLast:s=>`Last ${s} only`,lyrEmpty:'(no lyrics yet)',lyrChanged:s=>`The chords for <b>${s}</b> were updated, so those lyrics may be out of place. Open My Lyrics to check. Other sections are fine.`,lyrOk:'Looks right',lyrLines:a=>`${a} line${a===1?'':'s'}`,
   noteCapo:(a,c,s,r)=>r?`Key <b>${a}</b>, Capo ${c}: chords are shown at concert pitch; diagrams show the fingering with the capo on`:`Key <b>${a}</b>, Capo ${c}: chords are <b>${s}</b> shapes; they sound ${c} semitone${c>1?'s':''} higher`,noteKey:a=>`Key: <b>${a}</b>`,noteCapoM:(a,c,s,r)=>r?`Key <b>${a}</b> · Capo ${c} · concert pitch`:`Key <b>${a}</b> · Capo ${c} · play <b>${s}</b> shapes`,lyrFind:'Search for this song’s lyrics',tupTip:n=>`${n}-tuplet: these chords split the beat evenly`,sumKey:'',sumOrig:k=>` (orig. ${k})`,sumShape:'shapes',lyrQ:'lyrics',
-  noteFinger:(a,c)=>`Key <b>${a}</b>, Capo ${c}: the capo works as an extra finger for these voicings, so chords are written at concert pitch; diagram frets are counted from the capo`,tuneLbl:'Tuning',tuneStd:'Standard',noteTune:(tn,nm)=>`This song uses <b>${nm?nm+' ('+tn+')':tn}</b> tuning. Diagrams not marked “Editor’s voicing” show standard-tuning shapes, for reference only`,
+  noteFinger:(a,c)=>`Key <b>${a}</b>, Capo ${c}: the capo works as an extra finger for these voicings, so chords are written at concert pitch; diagram frets are counted from the capo`,tuneLbl:'Tuning',tuneStd:'Standard',noteTune:(tn,nm,off)=>`This song uses <b>${nm?nm+' ('+tn+')':tn}</b> tuning. `+(off?'Diagrams show the fingerings for this tuning':'Diagrams not marked “Editor’s voicing” show standard-tuning shapes, for reference only'),
   noteShift:(o,n)=>` (original ${o}, ${n>0?'up':'down'} ${Math.abs(n)} ${Math.abs(n)===1?'semitone':'semitones'})`,noteEditor:(c,s)=>`Editor’s pick: Capo ${c}`,notePub:'Public sheets show chords and sections only. Lyrics you add stay on this device.',notePubAcct:'Public sheets show chords and sections only. Your lyrics are saved to your account and only you can see them.',
   capoMove:(a,b)=>`${b>a?'↑':'↓'} Move the capo from ${a||'none'} to ${b||'none'}`,chordsTitle:c=>c?`Chords (Capo ${c}; frets counted from the capo)`:'Chords',chordsShort:'Chords',dockOpen:'Diagrams ▴',dockClose:'Hide ▾',feel:'Feel',strum:'Strumming',noDiagram:'Diagram coming',noDiagramTip:'Diagram for this chord is coming',
   feels:{straight8:'Straight 8ths',swing:'Swing',shuffle:'Shuffle',straight16:'Straight 16ths',triplet:'12/8 Triplet'},
@@ -735,6 +735,9 @@ const t=k=>I[lang][k];
 /* ---------- music theory ---------- */
 const TUNE_NAMES={'D A D G B E':'Drop D','D A D F# A D':'Open D','D G D G B D':'Open G','E B E G# B E':'Open E','E A E A C# E':'Open A','D A D G A D':'DADGAD','C G C G C E':'Open C','Eb Ab Db Gb Bb Eb':'降半音','D# G# C# F# A# D#':'降半音'};
 const tuneName=tn=>{const n=TUNE_NAMES[tn];return n==='降半音'&&lang==='en'?'Half-step down':n||''};
+/* 六條弦一起降（或升）同樣半音數的調弦（例如降半音）：沒有編者按法的和弦，改查高（低）這個半音數的標準按法，例如降半音的 E♭ 畫 E 的 022100 */
+const tuneOff=tn=>{const n=String(tn||'').trim().split(/\s+/).map(x=>idx(x));if(n.length!==6||n.some(x=>x<0))return 0;const d=n.map((x,i)=>{const v=mod(x-[4,9,2,7,11,4][i]);return v>6?v-12:v});return d.every(x=>x===d[0])?d[0]:0};
+let TOFF=0;const tShape=c=>TOFF?tChord(c,-TOFF,false):c;
 const SH=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'],FL=['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
 const ODD={Cb:11,Fb:4,'E#':5,'B#':0};const idx=n=>{const i=SH.indexOf(n);return i>=0?i:FL.indexOf(n)>=0?FL.indexOf(n):(n in ODD?ODD[n]:-1)};
 const mod=n=>((n%12)+12)%12;
@@ -799,9 +802,9 @@ function strumHtml(raw,feel){const s=String(raw).replace(/\s+/g,''),n=STRUM_N[fe
 /* 括號裡的延伸音（例如 F#7(#9,b13)）縮小寫在右上，名字變短，小節才不會被撐寬 */
 function chordTxt(n){const m=String(n).match(/^([^(\/]+)\(([^)]*)\)(\/.*)?$/);if(!m)return esc(n);const xs=m[2].split(/\s*,\s*/);
   return `${esc(m[1])}${xs.length>1?`<span class="ext stk">${xs.map(x=>`<span>${esc(x)}</span>`).join('')}</span>`:`<sup class="ext">${esc(m[2])}</sup>`}${esc(m[3]||'')}`}
-let CUR={};const shapeFor=c=>(CUR[c]&&CUR[c][0])||shapeOf(c);
+let CUR={};const shapeFor=c=>(CUR[c]&&CUR[c][0])||shapeOf(tShape(c));
 const hpNote=sh=>{const f=frets(sh).filter(x=>x.h);return f.length?f.map(x=>`${x.a}→${x.v} ${x.h==='h'?t('hammer'):t('pull')}`).join('、'):''};
-function chordCard(c,shape,cp){shape=shape||c;const alts=CUR[shape],sh=alts?alts[0]:shapeOf(shape),hp=sh?hpNote(sh):'';
+function chordCard(c,shape,cp){shape=shape||c;const alts=CUR[shape],sh=alts?alts[0]:shapeOf(tShape(shape)),hp=sh?hpNote(sh):'';
   return `<div class="cd${alts?' ed':''}"${alts&&alts.length>1?` data-alts="${esc(alts.join('|'))}" data-i="0" role="button" tabindex="0" title="${esc(t('altShape')(alts.length-1))}"`:''}><b>${chordTxt(c)}${cp!==undefined?`<small class="cpn">Capo ${cp}</small>`:''}</b>${sh?diagram(sh):`<small>${t('noDiagram')}</small>`}${alts?`<small class="edtag">${t('editorShape')}${alts.length>1?` <span>1/${alts.length}</span>`:''}</small>`:''}${hp?`<small class="hp">${esc(hp)}</small>`:''}</div>`}
 
 /* ---------- state ---------- */
@@ -1035,7 +1038,8 @@ function drawSheet(){PS=null;
   $('#keyv').textContent=sounding;$('#bpmv').textContent=st.bpm;$('#capo').value=st.capo;
   const real=isReal(s),rb=$('#realbtn');if(rb){rb.classList.toggle('on',real);rb.setAttribute('aria-pressed',real);rb.disabled=!st.capo}
   let note=st.capo?`<span>${s.capoUse==='finger'&&real?t('noteFinger')(sounding,st.capo):t('noteCapo')(sounding,st.capo,shape,real)}</span>`:'';
-  if(s.tuning)note+=`<span class="tunenote">${t('noteTune')(esc(s.tuning),tuneName(s.tuning))}</span>`;
+  TOFF=tuneOff(s.tuning);
+  if(s.tuning)note+=`<span class="tunenote">${t('noteTune')(esc(s.tuning),tuneName(s.tuning),TOFF)}</span>`;
   if(s.capo&&!st.shift)note+=`<span class="ednote">${t('noteEditor')(s.capo,tKey(s.key,-s.capo))}</span>`;
   if(st.simple&&!st.isMine)note+=`<span class="simplenote">${t('noteSimple')}</span>`;
   if(!st.isMine)note+=`<span class="pubnote">${user?t('notePubAcct'):t('notePub')}</span>`;
