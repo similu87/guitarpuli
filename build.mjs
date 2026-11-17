@@ -34,7 +34,8 @@ const parseFrets = f => { const s = f.replace(/\s+/g, '').replace(/[ＸX×]/g, '
 const ORDER_NAMES = ['順序', 'order', 'Order', 'ORDER'];
 // Obsidian 習慣寫法 → 網站寫法：♯→#、♭→b、△ 接數字是大七系列（△7→maj7、△9→maj9、△13→maj13）、單獨的 △（大三和弦）拿掉、—→-
 const gcd = (a, b) => b ? gcd(b, a % b) : a;
-const normChord = c => c.replace(/♯/g, '#').replace(/♭/g, 'b').replace(/△(\d+)/g, 'maj$1').replace(/△/g, '').replace(/^[—–]$/, '-');
+// ø（半減七）＝ m7b5：Fø、Fø7、Fø/Ab 都可以
+const normChord = c => c.replace(/[øØ]7?/g, 'm7b5').replace(/♯/g, '#').replace(/♭/g, 'b').replace(/△(\d+)/g, 'maj$1').replace(/△/g, '').replace(/^[—–]$/, '-');
 const CAPO = /\s*[（(]\s*capo\s*(\d+)\s*[)）]/i;          // 段落標題或「末次」後面的 (Capo 3)：這一段換 Capo
 const ONLY = /^(?:第\s*(\d+)\s*次[^:：|(（]*|末次|最後一次)\s*(?:[（(]\s*capo\s*(\d+)\s*[)）])?\s*[:：]\s*/i;
 // 刷法：D 下刷、U 上刷、- 空拍、x 切音，一個字一格；律動決定一小節幾格
@@ -297,7 +298,7 @@ ${hasOg ? `<meta property="og:image" content="${SITE}/og/${s.id}.png">
     const rows = sec.rows.filter(r => r.only === undefined || r.only === n || (r.only === 'last' && n === total[k]));
     // 跟畫面一樣：顯示夾 Capo 後的按法
     const capOf = r => s.capoUse === 'finger' ? 0 : (r.capo ?? sec.capo ?? s.capo);
-    return `<h2>${esc(SECTION_ZH[sec.name] || sec.name)}${total[k] > 1 ? `（第 ${n} 次）` : ''}${sec.capo !== undefined ? `（Capo ${sec.capo}）` : ''}</h2><pre>${rows.map(r => (r.capo !== undefined ? `（Capo ${r.capo}）` : '') + '| ' + r.b.map(b => b.map(c => shapeName(c, capOf(r), s.key)).join(' ')).join(' | ') + ' |' + (r.x ? ' ×' + r.x : '')).join('\n')}</pre>`;
+    return `<h2>${esc(SECTION_ZH[sec.name] || sec.name)}${total[k] > 1 ? `（第 ${n} 次）` : ''}${sec.capo !== undefined ? `（Capo ${sec.capo}）` : ''}</h2><pre>${rows.map(r => (r.capo !== undefined ? `（Capo ${r.capo}）` : '') + '| ' + r.b.map(b => b.map(c => shapeName(c.replace(/\*+/g, ''), capOf(r), s.key)).join(' ')).join(' | ') + ' |' + (r.x ? ' ×' + r.x : '')).join('\n')}</pre>`;
   }).join('');
   const body = `<div id="app"><article class="prose"><h1>${esc(s.title)}</h1><p>${esc(s.artist)} · 原調 ${esc(s.key)}${s.capo ? ` · Capo ${s.capo}` : ''}${s.tuning ? ` · 調弦 ${esc(s.tuning)}` : ''} · ${s.bpm} BPM · ${esc(s.time)} · ${FEELS[s.feel]} · ${LANGS[s.language]}</p>${s.strum ? `<p>刷法：${esc(s.strum)}</p>` : ''}${chart}</article></div>`;
   const html = shell.replace(META, '').replace('<title>吉他普利</title>', head).replace('<div id="app"></div>', body);

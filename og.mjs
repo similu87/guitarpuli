@@ -82,7 +82,7 @@ export async function makeImages({ songs, pub, pu, shapeName }) {
     const seen = [];
     for (const k of s.order) { const sec = s.sections[k]; for (const r of sec.rows) for (const b of r.b) for (const c of b) {
       if (!/^[A-G]/.test(c)) continue; const cap = s.capoUse === 'finger' ? 0 : (r.capo ?? sec.capo ?? s.capo);
-      const n = shapeName(c, cap, s.key); if (!seen.includes(n)) seen.push(n); } }
+      const n = shapeName(c.replace(/\*+/g, ''), cap, s.key); if (!seen.includes(n)) seen.push(n); } }
     const chords = seen.slice(0, 6);
     const tt = fitTitle(s.title, 670);
     const lh = tt.size * 1.18, top = tt.lines.length > 1 ? 232 : 290;
