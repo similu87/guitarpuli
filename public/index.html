@@ -499,6 +499,9 @@ body.perform .covers{display:none}
 .seg .c{min-height:1.35em;padding-right:.5em;font-family:var(--f-mono);font-weight:700;color:var(--chord);white-space:nowrap}
 .seg .l{white-space:pre}
 
+.pclose{position:absolute;top:4px;right:4px;width:36px;height:36px;border:0;background:none;color:var(--muted);font-size:24px;line-height:1;cursor:pointer;border-radius:8px;z-index:2}
+.pclose:hover{background:var(--bg);color:var(--ink)}
+.practice,.lyrpanel{position:relative}
 .lyrpanel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:18px;display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
 .lyrpanel p{margin:0;font-size:12.5px;color:var(--muted)}
 textarea{width:100%;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:10px 12px;font-size:14px;line-height:1.6;resize:vertical}
@@ -789,7 +792,8 @@ function shapeOf(c){if(SHAPES[c])return SHAPES[c];const[h,b]=c.split('/');const 
 function frets(sh){return (String(sh).match(/\(\d{1,2}[hp]\d{1,2}\)|\(\d{1,2}\)|x|\d/g)||[]).map(t=>{if(t==='x')return {v:-1};if(/^\(\d+\)$/.test(t))return {v:+t.slice(1,-1)};const m=t.match(/^\((\d+)([hp])(\d+)\)$/);return m?{v:+m[3],a:+m[1],h:m[2]}:{v:+t}})}
 function diagram(sh){const f=frets(sh);const pos=f.flatMap(x=>[x.v,x.a]).filter(n=>n>0);const max=Math.max(0,...pos);const base=max>4?Math.min(...pos):1;
   let s=`<svg width="96" height="112" viewBox="7.5 0 96 112" style="overflow:visible" role="img" aria-label="${esc(sh)}">`;const X=i=>23+i*13,Y=r=>26+r*17;
-  s+=base===1?`<line x1="23" y1="26" x2="88" y2="26" stroke="currentColor" stroke-width="4"/>`:`<text x="16" y="${Y(.5)+4}" font-size="9.5" font-weight="700" fill="var(--brass,currentColor)" text-anchor="end">${base}fr</text>`;
+  const lo=pos.length?Math.min(...pos):0;
+  s+=base===1?`<line x1="23" y1="26" x2="88" y2="26" stroke="currentColor" stroke-width="4"/>`+(lo>=3?`<text x="16" y="${Y(lo-.5)+4}" font-size="9.5" font-weight="700" fill="var(--brass,currentColor)" text-anchor="end">${lo}fr</text>`:''):`<text x="16" y="${Y(.5)+4}" font-size="9.5" font-weight="700" fill="var(--brass,currentColor)" text-anchor="end">${base}fr</text>`;
   for(let r=0;r<=5;r++)s+=`<line x1="23" y1="${Y(r)}" x2="88" y2="${Y(r)}" stroke="currentColor" stroke-width="1" opacity=".5"/>`;
   for(let i=0;i<6;i++)s+=`<line x1="${X(i)}" y1="26" x2="${X(i)}" y2="${Y(5)}" stroke="currentColor" stroke-width="1"/>`;
   const yOf=v=>v===0?14:Y(v-base+.5);let lab='';/* 搥／勾弦的 h、p 最後才畫，加白邊，不會被旁邊弦的黑點蓋住 */
@@ -1044,7 +1048,7 @@ function act(a){
   if(a==='real'){const s=st.song;if(s&&s.capoUse==='finger')LS.set('real_'+s.id,!isReal(s));else{st.real=!st.real;LS.set('real',st.real)}drawSheet()}
   if(a==='size-'||a==='size+'){st.size=Math.min(26,Math.max(9,st.size+(a==='size+'?1:-1)));LS.set('size',st.size);document.documentElement.style.setProperty('--sheet-size',st.size+'px');fitBars()}
   if(a==='cols'){if(MOB()){st.colsM=!st.colsM;LS.set('colsM',st.colsM);$('#colsbtn').classList.toggle('on',st.colsM);fitBars()}else{st.cols=!st.cols;LS.set('cols',st.cols);$('#colsbtn').classList.toggle('on',st.cols);drawSheet()}}
-  if(a==='bpm-'||a==='bpm+'){st.bpm=Math.min(240,Math.max(40,st.bpm+(a==='bpm+'?1:-1)));$('#bpmv').textContent=st.bpm;if($('#tsbpm'))$('#tsbpm').textContent=st.bpm;if(st.metro){metroStop();metroStart(true)}}
+  if(a==='bpm-'||a==='bpm+'){st.bpm=Math.min(240,Math.max(40,st.bpm+(a==='bpm+'?1:-1)));$('#bpmv').textContent=st.bpm;if($('#tsbpm'))$('#tsbpm').textContent=st.bpm;}
   if(a==='metro')st.metro?metroStop():metroStart();
   if(a==='sub'){st.sub=!st.sub;LS.set('sub',st.sub);$('#subbtn').classList.toggle('on',st.sub)}
   if(a==='tools')setTools(!st.toolsOpen);
@@ -1086,7 +1090,7 @@ function drawSheet(){PS=null;
   const P=st.practice&&!st.pracOff,dock=P&&st.cols&&matchMedia('(min-width:980px)').matches;if($('#pracbtn'))$('#pracbtn').classList.toggle('on',P);
   const uniq=used.map(([c,cp])=>[N(c,cp),T2(c,cp),cp]).filter((c,i,a)=>a.findIndex(x=>x[0]===c[0]&&x[2]===c[2])===i);
   const dockBar=dock?`<div class="pdock"><b>${t('chordsShort')}</b><span class="pchips">${uniq.map(([n])=>`<span>${esc(dispName(n))}</span>`).join('')}</span><span class="psum">${t('feels')[s.feel]||t('feels').straight8}${s.strum?' · '+esc(s.strum):''}</span><button type="button" class="tb" id="dockbtn" aria-expanded="${st.dockOpen}">${st.dockOpen?t('dockClose'):t('dockOpen')}</button></div>`:'';
-  $('#practice').innerHTML=P?`<div class="practice${dock?' docked'+(st.dockOpen?' open':''):''}">${dockBar}<div class="pchords"><h4>${t('chordsTitle')(st.capo)}</h4><div class="chordgrid">${uniq.map(([n,sh,cp])=>chordCard(n,sh,cp!==st.capo?cp:undefined)).join('')}</div></div>
+  $('#practice').innerHTML=P?`<div class="practice${dock?' docked'+(st.dockOpen?' open':''):''}">${dock?'':`<button type="button" class="pclose" data-close="practice" aria-label="${t('close')}">×</button>`}${dockBar}<div class="pchords"><h4>${t('chordsTitle')(st.capo)}</h4><div class="chordgrid">${uniq.map(([n,sh,cp])=>chordCard(n,sh,cp!==st.capo?cp:undefined)).join('')}</div></div>
     <div class="rhythm">${s.tuning?`<div><h4>${t('tuneLbl')}</h4><div class="v">${esc(tuneName(s.tuning)||s.tuning)}${tuneName(s.tuning)?`<small>${esc(s.tuning)}</small>`:''}</div></div>`:''}<div><h4>${t('feel')}</h4><div class="v">${t('feels')[s.feel]||t('feels').straight8}<small>${s.time||'4/4'}</small></div></div>${s.strum?`<div><h4>${t('strum')}</h4>${strumHtml(s.strum,s.feel)}${strumNote?`<div class="snote">${strumNote}</div>`:''}</div>`:''}</div></div>`:'';
   $('.songbody').classList.toggle('withside',P&&!dock);document.body.classList.toggle('docked',dock);
   if($('#dockbtn'))$('#dockbtn').onclick=e=>{e.stopPropagation();st.dockOpen=!st.dockOpen;LS.set('dockOpen',st.dockOpen);drawSheet()};
@@ -1168,7 +1172,7 @@ function drawLyrPanel(){
   const p=$('#lyrpanel');if(!st.lyrOpen){p.innerHTML='';drawSheet();return}
   const s=st.song,lyr=getLyr(s),tot=occTotals(s),occs=songOccs(s).filter(o=>!isInst(o.sec));
   const lab=o=>esc(secName(o.sec.name))+(tot[o.k]>1?nb(o.n):'');
-  p.innerHTML=`<div class="lyrpanel"><p>${user?t('lyrHelpAcct')():t('lyrHelp')()}</p>
+  p.innerHTML=`<div class="lyrpanel"><button type="button" class="pclose" data-close="lyr" aria-label="${t('close')}">×</button><p>${user?t('lyrHelpAcct')():t('lyrHelp')()}</p>
   <div class="lpaste"><b class="lph">${t('lyrPaste')}</b><p>${t('lyrPasteHelp')}</p><a class="lsearch" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent([s.title,s.artist,t('lyrQ')].filter(Boolean).join(' '))}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>${t('lyrFind')}</a><textarea id="lyrall" rows="8" placeholder="${esc(t('lyrPastePh'))}"></textarea>
   <div class="btns"><span class="lres" id="lyrres" role="status"></span></div>
   <div id="lalwrap" hidden><p class="alhelp">${t('lyrAlHelp')}</p><div class="lal" id="lal"></div>
@@ -1438,9 +1442,13 @@ function parsePro(txt){const secs=[];let cur={name:'',lines:[]};const push=()=>{
   push();return secs}
 
 /* metronome */
-let actx,mT,beat=0;
-function metroStart(keep){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume()}catch(e){return}
-  st.metro=true;beat=0;if(!keep){psI=st.cue??0;st.cue=null;st.pre=beatsOf(st.song&&st.song.time);if(!PS)PS=playSeq();document.querySelectorAll('.bar.cue').forEach(e=>e.classList.remove('cue'));if(PS.length)PS[psI%PS.length].bar.classList.add('cue')}$('#metrobtn').classList.add('on');$('#metrobtn').textContent='❚❚';click();mT=setInterval(click,60000/st.bpm)}
+let actx,mT,beat=0,nextT=0,vis=[];
+/* 用音訊時鐘排程：每 25ms 檢查一次，把接下來 0.12 秒內的拍子先排好，速度才會穩 */
+function metroTick(){if(!st.metro)return;while(nextT<actx.currentTime+.12){click(nextT);nextT+=60/st.bpm}}
+function metroStart(keep){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)()}catch(e){return}
+  st.metro=true;beat=0;if(!keep){psI=st.cue??0;st.cue=null;st.pre=beatsOf(st.song&&st.song.time);if(!PS)PS=playSeq();document.querySelectorAll('.bar.cue').forEach(e=>e.classList.remove('cue'));if(PS.length)PS[psI%PS.length].bar.classList.add('cue')}$('#metrobtn').classList.add('on');$('#metrobtn').textContent='❚❚';
+  const go=()=>{if(!st.metro)return;clearInterval(mT);nextT=actx.currentTime+.06;metroTick();mT=setInterval(metroTick,25)};
+  actx.state==='running'?go():actx.resume().then(go,go)}
 /* 節拍器跟譜：照彈奏順序（含 ×N、反覆記號、連續相同段落）一拍一拍亮小節下的節奏線 */
 var PS=null,psI=0;
 function playSeq(){const out=[];[...document.querySelectorAll('#orderbar [data-go]')].map(c=>document.getElementById(c.dataset.go)).filter(Boolean).forEach(sec=>{const rep=+sec.dataset.rep||1;
@@ -1454,18 +1462,24 @@ function playSeq(){const out=[];[...document.querySelectorAll('#orderbar [data-g
 /* 點小節：播放中直接跳過去；沒播放就從那一小節開始 */
 function cueBar(bar){if(!PS)PS=playSeq();const idx=[];PS.forEach((x,i)=>{if(x.bar===bar&&(i===0||PS[i-1].bar!==bar))idx.push(i)});if(!idx.length)return;
   const cur=psI%PS.length,i=idx.find(j=>j>=cur-1)??idx[0];
-  if(st.metro){psI=i;st.pre=0}else if(bar.classList.contains('cue')){st.cue=null;bar.classList.remove('cue')}else{st.cue=i;document.querySelectorAll('.bar.cue,.bar.now').forEach(e=>e.classList.remove('cue','now'));bar.classList.add('cue')}}
+  if(st.metro){psI=i;beat=0;st.pre=beatsOf(st.song&&st.song.time);document.querySelectorAll('.bar.now,.bk.now,.bar.cue').forEach(e=>e.classList.remove('now','cue'));bar.classList.add('cue')}else if(bar.classList.contains('cue')){st.cue=null;bar.classList.remove('cue')}else{st.cue=i;document.querySelectorAll('.bar.cue,.bar.now').forEach(e=>e.classList.remove('cue','now'));bar.classList.add('cue')}}
+document.addEventListener('click',e=>{const x=e.target.closest('.pclose');if(x){act(x.dataset.close);return}});
 document.addEventListener('click',e=>{const b=e.target.closest('#sheet .bar');if(!b||e.target.closest('.ch,button,a'))return;cueBar(b)});
 function metroFollow(){if(!PS)PS=playSeq();if(!PS.length)return;
   document.querySelectorAll('.bar.now,.bk.now,.bar.cue').forEach(e=>e.classList.remove('now','cue'));
   const it=PS[psI%PS.length];psI++;it.bar.classList.add('now');it.bk.classList.add('now');
   const r=it.bar.getBoundingClientRect(),top=($('.toolwrap')?$('.toolwrap').getBoundingClientRect().bottom:0)+8;
   if(r.top<top||r.bottom>innerHeight-40)scrollTo({top:scrollY+r.top-top-40,behavior:'smooth'})}
-function metroStop(){st.metro=false;st.pre=0;document.body.classList.remove('precount');clearInterval(mT);PS=null;document.querySelectorAll('.bar.now,.bk.now').forEach(e=>e.classList.remove('now'));const b=$('#metrobtn');if(b){b.classList.remove('on');b.textContent='▶'}document.querySelectorAll('#dots i').forEach(d=>d.classList.remove('on'))}
-function blip(tm,freq,vol){const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=freq;g.gain.setValueAtTime(vol,tm);g.gain.exponentialRampToValueAtTime(.001,tm+.045);o.connect(g).connect(actx.destination);o.start(tm);o.stop(tm+.05)}
-function click(){const tm=actx.currentTime+.01,dur=60/st.bpm;blip(tm,beat%4===0?1600:1000,.35);
-  if(st.sub&&st.song)(SUB[st.song.feel]||SUB.straight8).forEach(fr=>blip(tm+fr*dur,2200,.08));
-  document.querySelectorAll('#dots i').forEach((d,i)=>d.classList.toggle('on',i===beat%4));beat++;if(st.pre>0){st.pre--;const pb=$('#metrobtn');if(pb)pb.dataset.pre=st.pre+1;document.body.classList.add('precount');return}document.body.classList.remove('precount');metroFollow()}
+function metroStop(){st.metro=false;st.pre=0;document.body.classList.remove('precount');clearInterval(mT);vis.forEach(clearTimeout);vis=[];PS=null;document.querySelectorAll('.bar.now,.bk.now').forEach(e=>e.classList.remove('now'));const b=$('#metrobtn');if(b){b.classList.remove('on');b.textContent='▶'}document.querySelectorAll('#dots i').forEach(d=>d.classList.remove('on'))}
+function blip(tm,freq,vol,type,len){len=len||.045;const o=actx.createOscillator(),g=actx.createGain();if(type)o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(vol,tm);g.gain.exponentialRampToValueAtTime(.001,tm+len);o.connect(g).connect(actx.destination);o.start(tm);o.stop(tm+len+.01)}
+/* 預備拍用不同的聲音（較低、較圓的木魚聲），一聽就知道還沒開始 */
+function click(tm){const dur=60/st.bpm,b=beat,pre=st.pre>0;
+  if(pre){blip(tm,b%4===0?880:660,.5,'triangle',.09)}else{blip(tm,b%4===0?1600:1000,.35);if(st.sub&&st.song)(SUB[st.song.feel]||SUB.straight8).forEach(fr=>blip(tm+fr*dur,2200,.08))}
+  beat++;let left=0;if(pre){st.pre--;left=st.pre+1}
+  const id=setTimeout(()=>{vis=vis.filter(x=>x!==id);if(!st.metro)return;
+    document.querySelectorAll('#dots i').forEach((d,i)=>d.classList.toggle('on',i===b%4));
+    if(pre){const pb=$('#metrobtn');if(pb)pb.dataset.pre=left;document.body.classList.add('precount');return}
+    document.body.classList.remove('precount');metroFollow()},Math.max(0,(tm-actx.currentTime)*1000));vis.push(id)}
 function setPerform(on){document.body.classList.toggle('perform',on);const b=$('#perfbtn');if(b)b.classList.toggle('on',on);
   try{if(on&&!document.fullscreenElement&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{});
     if(!on&&document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}}
