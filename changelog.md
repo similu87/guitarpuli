@@ -3,6 +3,17 @@
 # 新增歌曲每行寫一個網址代稱（songs/ 裡的檔名，不含 .md），網站會自動顯示歌名並連到譜。
 # 最新的版本放最上面。版本號：大改版加第一碼、新功能加第二碼、修小問題或加歌加第三碼。
 
+## v1.14.3 · 2026-11-21
+### 新增歌曲
+- ma-de-li-bu-si-yi
+- wo-xi-huan-ni
+- tiao-lou-ji
+- du-shang-c-lou
+- bags
+- photograph
+- blue
+- i-hate-myself-sometimes
+
 ## v1.14.2 · 2026-11-19
 ### 網站
 - 和弦圖會標出按的是第幾格
