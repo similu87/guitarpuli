@@ -97,6 +97,7 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .pagehead .count{color:var(--muted);font-size:13px}
 .search{flex:1 1 260px;max-width:420px;margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:0 12px;height:38px;color:var(--muted)}
 .search input{border:0;background:none;outline:none;flex:1;width:0;min-width:0;color:var(--ink)}
+.search{position:relative}.qhot{position:absolute;left:-1px;right:-1px;top:calc(100% + 4px);z-index:30;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px;box-shadow:0 8px 24px rgba(0,0,0,.08);display:flex;flex-direction:column}.qhot[hidden]{display:none}.qhot small{font-size:11.5px;color:var(--muted);padding:2px 8px 4px}.qhot button{text-align:left;border:0;background:none;color:var(--ink);padding:7px 8px;border-radius:6px;font-size:14px}.qhot button:hover,.qhot button:focus-visible{background:var(--sunk)}
 /* 手機：搜尋框自己一行、跟下面的卡片同寬。input 寬度設 0，Safari 才不會用輸入框原本的寬度把搜尋框撐出畫面 */
 @media (max-width:720px){.search{flex:1 1 100%;max-width:none;min-width:0;margin-left:0}}
 .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:20px}
@@ -225,6 +226,7 @@ main{margin-left:calc(var(--rail) + env(safe-area-inset-left,0px));padding:28px 
 .tg{display:flex;flex-direction:column;gap:5px;padding:8px 14px 10px;background:var(--panel);flex:1 1 auto}
 .tc{display:flex;align-items:center;gap:3px}
 .tl{font-size:10.5px;letter-spacing:.14em;color:var(--muted);font-weight:700;white-space:nowrap}
+.admrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0 2px;padding:6px 8px;border:1px dashed var(--brass);border-radius:8px;font-size:13px}.admrow .al{color:var(--brass);font-weight:700;margin-right:2px}.admrow input{width:64px;height:30px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:inherit;padding:0 6px;font-size:13px}.admrow .msg{color:var(--muted);font-size:12px}
 .tb{min-width:30px;height:30px;border:0;border-radius:6px;background:var(--sunk);padding:0 8px;font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap}
 .tb:disabled{opacity:.4;cursor:default}
 .tb:hover{background:var(--line)}
@@ -878,7 +880,7 @@ function renderRail(){
   <a class="bottom m-hide" href="/#changelog" data-nav="changelog">${ico('log')}<span class="lbl">${t('changelog')}</span></a>
   <a class="bottom m-hide" href="/#legal" data-nav="legal">${ico('legal')}<span class="lbl">${t('legal')}</span></a>
   ${isAdmin()?`<a class="bottom m-hide" href="/#stats" data-nav="stats">${ico('stats')}<span class="lbl">${t('stAdmin')}</span></a>`:''}
-  ${LS.get('admin',false)?`<a class="bottom m-hide" href="/admin/" target="_blank" rel="noopener">${ico('admin')}<span class="lbl">${t('admin')}</span></a>`:''}
+  ${isAdmin()||LS.get('admin',false)?`<a class="bottom m-hide" href="/admin/" target="_blank" rel="noopener">${ico('admin')}<span class="lbl">${t('admin')}</span></a>`:''}
   <p class="foot">${t('foot')}</p>`;
   if($('#acctbtn'))$('#acctbtn').onclick=openAccount;
   const sw={system:'linear-gradient(135deg,#F2F3EF 50%,#111413 50%)',light:'#F2F3EF',dark:'#111413',sepia:'#EEE5D0',amber:'radial-gradient(circle at 35% 35%,#F2B84B 30%,#0E0D0B 32%)'};
@@ -923,7 +925,7 @@ function viewHome(){
   const LBL={lang:v=>t('langs')[v],genre:v=>t('genre')[v],diff:v=>t('diff')[v],key:v=>v};
   const HEAD={lang:'fltLang',genre:'fltGenre',diff:'fltDiff',key:'fltKey'};
   F.forEach(f=>{if(!Array.isArray(st.f[f]))st.f[f]=[]});
-  const qOk=s=>{const q=st.f.q.trim().toLowerCase();return !q||(s.title+s.artist).toLowerCase().includes(q)};
+  const qOk=s=>srankOf(s,st.f.q)>=0;
   const match=(s,skip)=>F.every(f=>f===skip||!st.f[f].length||VAL[f](s).some(v=>st.f[f].includes(v)));
   const nOpt=(f,v)=>SONGS.filter(s=>qOk(s)&&match(s,f)&&VAL[f](s).includes(v)).length;
   const nSel=()=>F.reduce((n,f)=>n+st.f[f].length,0);
@@ -931,7 +933,7 @@ function viewHome(){
   $('#app').innerHTML=`
   <header class="pagehead"><h1>${t('allSheets')}</h1><span class="count" id="count"></span>
     <label class="search"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg>
-    <input id="q" placeholder="${t('search')}" value="${esc(st.f.q)}" aria-label="${t('search')}"></label></header>
+    <input id="q" placeholder="${t('search')}" value="${esc(st.f.q)}" aria-label="${t('search')}" autocomplete="off"><div class="qhot" id="qhot" hidden></div></label></header>
   <div class="filters">
     <button class="fbtn" id="fbtn" aria-expanded="false" aria-controls="fwrap"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>${t('flt')}<span class="n" id="fn"></span></button>
     <div class="pills" id="pills"></div>
@@ -952,6 +954,7 @@ function viewHome(){
   const draw=()=>{
     let list=SONGS.filter(s=>qOk(s)&&match(s));
     if(st.f.sort==='new')list.sort((a,b)=>b.added.localeCompare(a.added));if(st.f.sort==='title')list.sort((a,b)=>a.title.localeCompare(b.title,lang==='zh'?'zh-Hant':'en'));if(st.f.sort==='easy')list.sort((a,b)=>a.diff-b.diff);
+    if(st.f.q.trim()){const r=sranks(st.f.q);list.sort((a,b)=>r.get(a)-r.get(b))}
     $('#count').textContent=t('count')(list.length);
     if(!list.length){$('#results').innerHTML=`<div class="empty"><b>${t('noMatch')[0]}</b>${t('noMatch')[1]}</div>`;return}
     renderItems($('#results'),list.map(pubItem))};
@@ -972,7 +975,7 @@ function viewHome(){
     const b=e.target.closest('[data-f]');if(b)toggle(b.dataset.f,b.dataset.v)};
   ['.filters','#fwrap','#aside'].forEach(x=>$(x).onclick=onF);
   document.onkeydown=e=>{if(e.key==='Escape'&&$('#fwrap')&&!$('#fwrap').hidden)setOpen(false)};
-  const upd=()=>{st.f.q=$('#q').value;st.f.sort=$('#f-sort').value;refresh()};
+  const upd=()=>{st.f.q=$('#q').value;st.f.sort=$('#f-sort').value;refresh();if(!PY&&CJK.test(st.f.q))loadPy().then(()=>{if($('#q'))refresh()})};
   ['#q','#f-sort'].forEach(s=>$(s).addEventListener('input',upd));
   let kwT;$('#q').addEventListener('input',()=>{clearTimeout(kwT);const v=$('#q').value;kwT=setTimeout(()=>statSearch(v),1500)});
   const drawHot=()=>{const hb=$('#hotbar');if(!hb)return;if(!STATS){hb.hidden=true;return}hb.hidden=false;
@@ -986,6 +989,7 @@ function viewHome(){
 `;
     hb.querySelectorAll('[data-ht]').forEach(b=>b.onclick=()=>{hotTab=b.dataset.ht;drawHot()});
     hb.querySelectorAll('[data-kw]').forEach(b=>b.onclick=()=>{$('#q').value=b.dataset.kw;upd();statSearch(b.dataset.kw);$('#q').scrollIntoView({block:'center'})})};
+  bindQHot($('#q'),$('#qhot'),v=>{$('#q').value=v;upd();statSearch(v)});
   bindLayout(viewHome);refresh();drawHot();loadStats().then(()=>{if($('#hotbar'))drawHot()});
 }
 
@@ -1024,11 +1028,12 @@ function openSong(song,isMine,keepState){
     <div class="grow"><h1>${esc(song.title)}</h1><p>${esc(song.artist||'')}<span class="hmeta">${song.artist?' · ':''}${t('origKey')} <span class="k">${song.key}</span> · ${st.bpm} BPM · ${song.time||'4/4'}${song.tuning?` · ${t('tuneLbl')} <b class="tune">${esc(tuneName(song.tuning)||song.tuning)}</b>`:''} · ${t('feels')[song.feel]||t('feels').straight8}${song.language?' · '+(t('langs')[song.language]||''):''}${song.diff?' · '+t('diff')[song.diff]:''}</span></p></div>
     ${!isMine&&song.videos&&song.videos.length?`<button class="hbtn vidbtn" id="vidbtn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10 9.2l5 2.8-5 2.8z" fill="currentColor"/></svg><span>${t('myCover')}</span></button>`:''}${isMine?`<a class="hbtn" href="/#edit-${song.id}">${t('edit')}</a>`:`<div class="hacts"><span class="views" id="views" hidden title="${t('viewsTip')}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg><b></b></span>${DONATE_URL?`<a class="hbtn feed" href="${DONATE_URL}" target="_blank" rel="noopener" title="${t('feedTip')}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M9.5 9.5c0-1.1 1.1-1.8 2.5-1.8s2.5.7 2.5 1.8-1 1.6-2.5 1.9-2.6.9-2.6 2.1 1.2 1.9 2.6 1.9 2.6-.7 2.6-1.8"/></svg><span>${t('feed')}</span></a>`:''}<button class="hbtn ${isFav?'on':''}" id="favbtn" aria-label="${t('save')}" title="${t('save')}">${heart}<span>${isFav?t('saved'):t('save')}</span></button></div>`}
   </div>
+  ${isAdmin()&&!isMine?admRow(song):''}
   <div class="toolwrap${st.toolsOpen?' open':''}"><button class="tb tooltog" data-act="tools" id="toolsbtn" aria-expanded="${st.toolsOpen}">${t('tools')}<i aria-hidden="true">▾</i></button><span class="tsum" id="tsum"></span><div class="tools" role="toolbar">
     <div class="tg"><span class="tl">${t('transpose')}</span><div class="tc"><button class="tb" data-act="key-" aria-label="−1">−</button><span class="tv" id="keyv"></span><button class="tb" data-act="key+" aria-label="+1">+</button><button class="tb" data-act="key0" title="${t('resetTip')}">${t('reset')}</button></div></div>
     <div class="tg"><label class="tl" for="capo">CAPO</label><div class="tc"><select id="capo">${[...Array(13)].map((_,i)=>`<option value="${i}">${i||t('capoNone')}</option>`).join('')}</select><button class="tb ${isReal(song)?'on':''}" data-act="real" id="realbtn" aria-pressed="${isReal(song)}" title="${t('realTip')}">${t('real')}</button></div></div>
     <div class="tg"><span class="tl">${t('size')}</span><div class="tc"><button class="tb" data-act="size-">A−</button><button class="tb" data-act="size+">A+</button></div></div>
-    <div class="tg"><span class="tl">${t('metro')}</span><div class="tc"><button class="tb" data-act="bpm-" aria-label="−">−</button><span class="tv" id="bpmv"></span><button class="tb" data-act="bpm+" aria-label="+">+</button><button class="tb" data-act="metro" id="metrobtn" aria-label="${t('metro')}">▶</button><button class="tb ${st.sub?'on':''}" data-act="sub" id="subbtn" title="${t('subTip')}">${t('sub')}</button><span class="dots" id="dots"><i></i><i></i><i></i><i></i></span></div></div>
+    <div class="tg"><span class="tl">${t('metro')}</span><div class="tc"><button class="tb" data-act="bpm-" aria-label="−">−</button><span class="tv" id="bpmv"></span><button class="tb" data-act="bpm+" aria-label="+">+</button><button class="tb" data-act="metro" id="metrobtn" aria-label="${t('metro')}">▶</button><button class="tb ${st.sub?'on':''}" data-act="sub" id="subbtn" title="${t('subTip')}">${t('sub')}</button>${isAdmin()&&!isMine?`<button class="tb" data-act="tap" id="tapbtn" title="跟著歌曲節奏連續點，算出 BPM">點拍</button>`:''}<span class="dots" id="dots"><i></i><i></i><i></i><i></i></span></div></div>
     </div><div class="viewbtns">${isMine?'':`<div class="seg-toggle" role="group"><button class="${st.view==='full'?'on':''}" data-act="view-full" id="vfull" data-tip="${t('viewFullTip')}">${t('viewFull')}</button><button class="${st.view==='compact'?'on':''}" data-act="view-compact" id="vcompact" data-tip="${t('viewCompactTip')}">${t('viewCompact')}</button></div>`}${isMine?'':`<button class="tb ${st.simple?'on':''}" data-act="simple" id="simplebtn" data-tip="${t('simpleTip')}" aria-pressed="${st.simple}">${t('simple')}</button>`}<button class="tb ${st.practice?'on':''}" data-act="practice" id="pracbtn">${t('practice')}</button>${isMine?'':`<button class="tb ${st.lyrOpen?'on':''}" data-act="lyr" id="lyrbtn">${t('lyrics')}</button>`}<button class="tb ${(MOB()?st.colsM:st.cols)?'on':''}" data-act="cols" id="colsbtn">${t('cols')}</button></div><button class="tb ibtn" data-act="perform" id="perfbtn" aria-label="${t('perform')}" title="${t('perform')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button><p class="tinfo">${song.time||'4/4'}${song.tuning?` · ${t('tuneLbl')} ${esc(tuneName(song.tuning)||song.tuning)}`:''} · ${t('feels')[song.feel]||t('feels').straight8}${song.language?' · '+(t('langs')[song.language]||''):''}${song.diff?' · '+t('diff')[song.diff]:''}</p>
   </div>
   <p class="note" id="note"></p>
@@ -1039,6 +1044,7 @@ function openSong(song,isMine,keepState){
   if($('#vidbtn'))$('#vidbtn').onclick=()=>{const v=$('#covers');if(v)v.scrollIntoView({behavior:'smooth',block:'start'})};
   if($('#favbtn'))$('#favbtn').onclick=()=>{const on=toggleFav(song.id);$('#favbtn').classList.toggle('on',on);$('#favbtn span').textContent=on?t('saved'):t('save')};
   $('.toolwrap').onclick=e=>{const b=e.target.closest('[data-act]');if(b)act(b.dataset.act)};
+  if($('#admrow'))$('#admrow').onclick=e=>{const b=e.target.closest('[data-act]');if(b)act(b.dataset.act)};
   st.lyrOpen?drawLyrPanel():drawSheet();fitTitle();
 }
 function savePref(){LS.set('pref_'+st.song.id,{shift:st.shift,capo:st.capo})}
@@ -1050,6 +1056,9 @@ function act(a){
   if(a==='cols'){if(MOB()){st.colsM=!st.colsM;LS.set('colsM',st.colsM);$('#colsbtn').classList.toggle('on',st.colsM);fitBars()}else{st.cols=!st.cols;LS.set('cols',st.cols);$('#colsbtn').classList.toggle('on',st.cols);drawSheet()}}
   if(a==='bpm-'||a==='bpm+'){st.bpm=Math.min(240,Math.max(40,st.bpm+(a==='bpm+'?1:-1)));$('#bpmv').textContent=st.bpm;if($('#tsbpm'))$('#tsbpm').textContent=st.bpm;}
   if(a==='metro')st.metro?metroStop():metroStart();
+  if(a==='tap')tapTempo();
+  if(a==='adm-diff1'||a==='adm-diff2'||a==='adm-diff3')admDiff(+a.slice(-1));
+  if(a==='adm-save')admSave(null);
   if(a==='sub'){st.sub=!st.sub;LS.set('sub',st.sub);$('#subbtn').classList.toggle('on',st.sub)}
   if(a==='tools')setTools(!st.toolsOpen);
   if(a==='practice'){if(st.pracOff)st.pracOff=false;else{st.practice=!st.practice;LS.set(MOB()?'practiceM':'practice',st.practice)}drawSheet()}
@@ -1563,6 +1572,72 @@ function viewLegal(){
   <p style="color:var(--muted);font-size:13px">For bugs or problems using the site, please use <a href="/#report" style="text-decoration:underline">Report a Bug</a>.</p></article>`;
 }
 
+/* ---------- 管理者：難易度、BPM 覆寫（Supabase song_meta，見 supabase-admin.sql） ---------- */
+let META={};
+function applyMeta(){for(const s of SONGS){const m=META[s.id];if(!m)continue;if(m.diff)s.diff=m.diff;if(m.bpm)s.bpm=m.bpm}}
+function loadMeta(){if(!sb)return;sb.from('song_meta').select('id,diff,bpm').then(({data,error})=>{if(error||!data)return;META={};for(const r of data)META[r.id]=r;if(SONGS.length){applyMeta();refresh()}},()=>{})}
+function admRow(song){const d=song.diff||0;return `<div class="admrow" id="admrow"><span class="al">管理</span><span>難易度</span>${[1,2,3].map(n=>`<button class="tb ${d===n?'on':''}" data-act="adm-diff${n}">${t('diff')[n]}</button>`).join('')}<span style="margin-left:6px">BPM</span><input type="number" id="admbpm" min="30" max="260" value="${song.bpm||''}" inputmode="numeric"><button class="tb" data-act="adm-save">儲存</button><span class="msg" id="admmsg"></span></div>`}
+function admDiff(n){document.querySelectorAll('#admrow [data-act^="adm-diff"]').forEach(b=>b.classList.toggle('on',b.dataset.act==='adm-diff'+n));admSave(n,null)}
+async function admSave(diff,bpm){const song=st.song;if(!sb||!isAdmin()||!song)return;const msg=$('#admmsg');
+  if(bpm===undefined){bpm=parseInt($('#admbpm').value,10);if(!(bpm>=30&&bpm<=260)){msg.textContent='BPM 要在 30–260';return}}
+  msg.textContent='儲存中…';
+  const {error}=await sb.rpc('song_meta_set',{p_id:song.id,p_diff:diff||null,p_bpm:bpm||null});
+  if(error){msg.textContent='沒存成功：'+error.message;return}
+  const m=META[song.id]||(META[song.id]={id:song.id});const g=SONGS.find(x=>x.id===song.id);
+  if(diff){m.diff=diff;song.diff=diff;if(g)g.diff=diff}
+  if(bpm){m.bpm=bpm;song.bpm=bpm;if(g)g.bpm=bpm;st.bpm=bpm;if($('#bpmv'))$('#bpmv').textContent=bpm}
+  msg.textContent=diff?'難易度已改成「'+t('diff')[diff]+'」':'BPM 已存成 '+bpm}
+let taps=[];
+function tapTempo(){const now=performance.now();if(taps.length&&now-taps[taps.length-1]>2000)taps=[];taps.push(now);taps=taps.slice(-9);const b=$('#tapbtn');
+  if(taps.length<2){b.textContent='再點…';return}
+  const iv=(taps[taps.length-1]-taps[0])/(taps.length-1),bpm=Math.round(60000/iv);if(bpm<30||bpm>260)return;
+  b.textContent='點拍 '+bpm;st.bpm=bpm;$('#bpmv').textContent=bpm;if($('#tsbpm'))$('#tsbpm').textContent=bpm;if($('#admbpm'))$('#admbpm').value=bpm;
+  if(st.metro){metroStop();metroStart(true)}}
+/* ---------- 搜尋：注音、拼音、同音字、常見混淆音、英文拼錯（songs.json 的 sx 由 search-index.mjs 建置時產生） ---------- */
+const CJK=/[㐀-鿿豈-﫿]/,ZYC=/[ㄅ-ㄩ]/,ZYT=/[ˊˇˋ˙ˉ]/g;
+const snorm=s=>String(s||'').toLowerCase().replace(/[\s'’\-_.,!?()（）·・、，。！？「」]/g,'');
+// 台灣常見混淆：ㄓㄗ、ㄔㄘ、ㄕㄙ（zh/z、ch/c、sh/s），ㄣㄥ、ㄢㄤ（in/ing、en/eng、an/ang）；ü 打成 u 或 v 都算
+const foldPy=s=>s.replace(/zh/g,'z').replace(/ch/g,'c').replace(/sh/g,'s').replace(/ng/g,'n').replace(/[vü]/g,'u');
+const foldZy=s=>s.replace(/ㄓ/g,'ㄗ').replace(/ㄔ/g,'ㄘ').replace(/ㄕ/g,'ㄙ').replace(/ㄥ/g,'ㄣ').replace(/ㄤ/g,'ㄢ');
+// q 有沒有出現在 t 裡（允許 k 個字母打錯、漏打或多打）
+function approxIn(q,t,k){let prev=new Array(q.length+1);for(let i=0;i<=q.length;i++)prev[i]=i;let best=prev[q.length];
+  for(let j=1;j<=t.length;j++){const cur=[0];for(let i=1;i<=q.length;i++)cur[i]=Math.min(prev[i]+1,cur[i-1]+1,prev[i-1]+(q[i-1]===t[j-1]?0:1));prev=cur;if(cur[q.length]<best)best=cur[q.length]}
+  return best<=k}
+// 中文關鍵字轉拼音：用到時才載入（建置時從 pinyin-pro 複製到 /vendor/）
+let PY=null,pyP=null;
+const loadPy=()=>pyP||(pyP=new Promise(res=>{const sc=document.createElement('script');sc.src='/vendor/pinyin-pro.js';
+  sc.onload=()=>{const P=window.pinyinPro;if(P&&P.pinyin)PY=q=>P.pinyin(q,{toneType:'none',type:'array',nonZh:'consecutive',v:true}).map(snorm).join('');res()};sc.onerror=()=>res();document.head.appendChild(sc)}));
+// 回傳 0 一字不差、1 讀音相同（注音、拼音、同音字、簡體字）、2 混淆音、3 英文／拼音拼錯、-1 不符合
+function srank(s,raw){const q=snorm(raw);if(!q)return 0;
+  if([s.title,s.artist].some(x=>snorm(x).includes(q)))return 0;
+  const x=s.sx;if(!x)return -1;const any=(a,f)=>a.some(f);
+  if(ZYC.test(q)){const z=q.replace(ZYT,'');if(!z)return -1;
+    if(any(x.zy,v=>v.includes(z))||(z.length>=2&&any(x.zi,v=>v.includes(z))))return 1;
+    const fz=foldZy(z);if(any(x.zy,v=>foldZy(v).includes(fz))||(z.length>=2&&any(x.zi,v=>foldZy(v).includes(fz))))return 2;return -1}
+  let p=q;if(CJK.test(q)){if(!PY)return -1;p=PY(q);if(!p)return -1}
+  if(any(x.py,v=>v.includes(p))||(!CJK.test(q)&&p.length>=2&&any(x.pi,v=>v.includes(p))))return 1;
+  const fp=foldPy(p);if(any(x.py,v=>foldPy(v).includes(fp)))return 2;
+  if(!CJK.test(q)){const k=p.length>=9?2:p.length>=5?1:0;if(k&&[snorm(s.title),snorm(s.artist),...x.py].some(v=>approxIn(p,v,k)))return 3}
+  return -1}
+// 整個曲庫的排名：有一字不差或讀音相同的結果時，就不列拼錯比對（避免太多不相干的歌）
+let rkQ=null,rkM=null;
+function sranks(q){if(q===rkQ&&rkM&&rkM.size===SONGS.length)return rkM;const m=new Map(SONGS.map(s=>[s,srank(s,q)]));
+  if([...m.values()].some(r=>r>=0&&r<=1))for(const [s,r] of m)if(r===3)m.set(s,-1);
+  rkQ=(PY||!CJK.test(q))?q:null;rkM=m;return m}
+const srankOf=(s,q)=>{const r=sranks(q).get(s);return r===undefined?srank(s,q):r};
+// 點搜尋框時列出 3–5 個熱門搜尋：本週搜尋字（stat_public 的 search_week），不足 3 個用本週熱門歌補
+function hotTerms(){if(!STATS)return [];const out=(STATS.search_week||[]).map(x=>x.key).filter(Boolean).slice(0,5);
+  if(out.length<3)for(const x of STATS.songs_week||[]){const s=SONGS.find(y=>y.id===x.key);if(s&&!out.includes(s.title))out.push(s.title);if(out.length>=5)break}
+  return out}
+function bindQHot(inp,box,pick){if(!inp||!box)return;
+  const show=()=>{const terms=inp.value.trim()?[]:hotTerms();if(!terms.length){box.hidden=true;return}
+    box.innerHTML=`<small>${lang==='zh'?'熱門搜尋':'Popular searches'}</small>`+terms.map(v=>`<button type="button" data-v="${esc(v)}">${esc(v)}</button>`).join('');box.hidden=false};
+  inp.addEventListener('focus',()=>{show();loadStats().then(()=>{if(document.activeElement===inp)show()})});
+  inp.addEventListener('input',show);
+  inp.addEventListener('blur',()=>setTimeout(()=>{box.hidden=true},150));
+  inp.addEventListener('keydown',e=>{if(e.key==='Escape')box.hidden=true});
+  box.addEventListener('mousedown',e=>e.preventDefault());
+  box.onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;box.hidden=true;pick(b.dataset.v)}}
 /* ---------- site stats (Supabase: stat_hit / stat_public / stat_admin，見 supabase-stats.sql) ---------- */
 const ADMIN_EMAILS=['similu87@gmail.com','pulipapa5986@gmail.com'];
 const isAdmin=()=>!!(typeof user!=='undefined'&&user&&ADMIN_EMAILS.includes((user.email||'').toLowerCase()));
@@ -1675,6 +1750,7 @@ function initSync(){
     if(user&&!merged){merged=true;setTimeout(()=>pull(true).then(()=>{renderRail();refresh()}),0)}
     if(!user)merged=false;
     if(changedUser){renderRail();if($('#modal').dataset.kind==='acct')openAccount();if(location.hash==='#stats'&&SONGS.length)viewStats()}});
+  loadMeta();
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&user&&!pending)pull(false).then(ch=>{if(ch)refresh()})});
   renderRail();
 }
@@ -1693,7 +1769,9 @@ function openAccount(){
   const m=$('#modal');m.dataset.kind='acct';m.hidden=false;
   if(user){
     m.innerHTML=`<div class="box" role="dialog" aria-modal="true"><h2>${t('account')}</h2><p>${t('signedIn')}：${esc(user.email||'')}</p><p class="msg" id="acctsync">${syncState==='err'?t('syncErr'):syncState==='syncing'?t('syncing'):t('synced')}</p>
+      ${isAdmin()?`<a class="btn wide" href="/admin/" target="_blank" rel="noopener">${t('admin')}</a><a class="btn wide" href="/#stats" id="mstats">${t('stAdmin')}</a>`:''}
       <button class="btn wide" id="logout">${t('logout')}</button><button class="btn wide" id="mclose">${t('close')}</button></div>`;
+    if($('#mstats'))$('#mstats').onclick=closeModal;
     $('#logout').onclick=async()=>{await sb.auth.signOut();closeModal();renderRail();refresh()};
   }else{
     m.innerHTML=`<div class="box" role="dialog" aria-modal="true"><h2>${t('loginTitle')}</h2><p>${t('loginWhy')}</p>
@@ -1744,7 +1822,7 @@ document.documentElement.lang=lang==='zh'?'zh-Hant':'en';
 applyTheme(curTheme);renderRail();renderFooter();initSync();statVisit();
 window.addEventListener('hashchange',()=>route());
 if(!window.PAGE_SONG)$('#app').innerHTML='<p style="color:var(--muted)">…</p>';
-fetch('/songs.json',{cache:'no-cache'}).then(r=>r.json()).then(d=>{SONGS=d;route()}).catch(()=>{$('#app').innerHTML='<div class="empty"><b>'+(lang==='zh'?'樂譜載入失敗':'Could not load sheets')+'</b>'+(lang==='zh'?'請重新整理頁面。':'Please reload the page.')+'</div>'});
+fetch('/songs.json',{cache:'no-cache'}).then(r=>r.json()).then(d=>{SONGS=d;applyMeta();route()}).catch(()=>{$('#app').innerHTML='<div class="empty"><b>'+(lang==='zh'?'樂譜載入失敗':'Could not load sheets')+'</b>'+(lang==='zh'?'請重新整理頁面。':'Please reload the page.')+'</div>'});
 </script>
 </body>
 </html>

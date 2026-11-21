@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "gray-matter": "4.0.3",
-    "@resvg/resvg-js": "2.6.2"
+    "@resvg/resvg-js": "2.6.2",
+    "pinyin-pro": "3.26.0"
   }
 }

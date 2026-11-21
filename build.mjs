@@ -7,6 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
 import { makeImages } from './og.mjs';
+import { searchKeys, copyPinyinLib } from './search-index.mjs';
 
 const SRC = 'songs', PUB = 'public';
 const SITE = (process.env.SITE_URL || 'https://guitarpuli.pages.dev').replace(/\/$/, '');
@@ -251,8 +252,9 @@ if (fs.existsSync('changelog.md')) {
 }
 fs.writeFileSync(path.join(PUB, 'changelog.json'), JSON.stringify(changelog));
 
-/* 1. songs.json */
-fs.writeFileSync(path.join(PUB, 'songs.json'), JSON.stringify(songs));
+/* 1. songs.json（sx：搜尋用的拼音／注音，見 search-index.mjs） */
+fs.writeFileSync(path.join(PUB, 'songs.json'), JSON.stringify(songs.map(s => ({ ...s, sx: searchKeys(s.title, s.artist) }))));
+copyPinyinLib(PUB);
 
 /* 2. 每首歌的網頁：用 index.html 當外框，換上標題、說明，並預先放入和弦內容讓搜尋引擎讀得到 */
 const shell = fs.readFileSync(path.join(PUB, 'index.html'), 'utf8');
