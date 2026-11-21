@@ -252,6 +252,13 @@ if (fs.existsSync('changelog.md')) {
 }
 fs.writeFileSync(path.join(PUB, 'changelog.json'), JSON.stringify(changelog));
 
+/* 歌曲先後：加入日期新的在前；同一天加入的，看更新紀錄裡哪一版比較新，同一版照列出來的順序。
+   網站「最新加入」只比日期，同一天的會保留這裡的順序 */
+const clRank = new Map();
+changelog.forEach((v, vi) => v.songs.forEach((x, si) => { if (!clRank.has(x.id)) clRank.set(x.id, vi * 1000 + si); }));
+const rk = id => clRank.has(id) ? clRank.get(id) : Infinity;
+songs.sort((a, b) => String(b.added || '').localeCompare(String(a.added || '')) || rk(a.id) - rk(b.id));
+
 /* 1. songs.json（sx：搜尋用的拼音／注音，見 search-index.mjs） */
 fs.writeFileSync(path.join(PUB, 'songs.json'), JSON.stringify(songs.map(s => ({ ...s, sx: searchKeys(s.title, s.artist) }))));
 copyPinyinLib(PUB);

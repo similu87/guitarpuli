@@ -658,6 +658,38 @@ body.perform main{margin-left:0;max-width:none;padding-left:max(24px,env(safe-ar
   body.perform .toolwrap{padding-right:16px}body.perform .toolwrap .tsum{margin-right:40px}
   body.perform main{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 }
+#gptoast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,16px);background:var(--ink,#222);color:var(--surface,#fff);padding:10px 16px;border-radius:10px;font-weight:700;font-size:15px;box-shadow:0 6px 24px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:9999;max-width:calc(100vw - 32px);text-align:center}#gptoast.show{opacity:1;transform:translate(-50%,0)}
+/* 管理者：編輯這首 */
+.admed{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.5);display:grid;place-items:center;padding:12px}
+.admed .edbox{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:14px;width:min(820px,100%);max-height:calc(100dvh - 24px);display:flex;flex-direction:column;overflow:hidden}
+.admed .edhead{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)}.admed .edhead b{font-size:16px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admed .edmsg{color:var(--brass);font-size:12.5px}
+.admed .edbody{overflow:auto;padding:4px 14px 16px;-webkit-overflow-scrolling:touch}
+.admed h3{font-size:15px;margin:16px 0 8px}.admed h3 small{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:2px;line-height:1.5}
+.admed h4{margin:12px 0 6px;font-size:13.5px}.admed h4 small{color:var(--muted);font-weight:400}
+.admed .edchips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.admed .edrow{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin:4px 0}
+.admed .edbar{min-width:64px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--sunk);color:inherit;font:inherit;font-size:13px;cursor:pointer;text-align:left}
+.admed .edbar.on{border-color:var(--brass);box-shadow:0 0 0 2px var(--brass) inset}
+.admed .edadd{width:32px;height:30px;border:1px dashed var(--line);border-radius:6px;background:none;color:var(--muted);cursor:pointer;font-size:16px}
+.admed .edtag{font-size:11.5px;color:var(--muted);padding:0 4px}
+.admed .edbared{border:1px dashed var(--brass);border-radius:10px;padding:10px;margin:6px 0 10px;display:grid;gap:8px}
+.admed .edrowh{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px}
+.admed .edcells{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:3px}
+.admed .edcell{min-height:44px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:inherit;font:inherit;font-size:13px;font-weight:700;cursor:pointer;touch-action:none;padding:2px;overflow:hidden;text-overflow:ellipsis}
+.admed .edcell i{font-style:normal;color:var(--muted);font-weight:400}.admed .edcell.bt{border-left:3px solid var(--ink)}
+.admed .edcell.cur{outline:2px solid var(--brass);outline-offset:-2px;background:var(--sunk)}
+.admed .edchip{padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:var(--sunk);color:inherit;font:inherit;font-size:13px;font-weight:700;cursor:grab;touch-action:none}
+.admed .edchip.ext{font-weight:400}
+.admed input{height:32px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:inherit;padding:0 8px;font:inherit;font-size:13px;min-width:0}
+.admed input.bad{border-color:#d33}
+.admed #ednew{width:150px}.admed #edsc{width:150px}.admed #edscp{width:56px}.admed #edsf{width:130px}
+.admed .edshape{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:6px 0}.admed .edshape input[data-edf]{width:150px}
+.admed .edshape.add{gap:6px;padding-top:8px;border-top:1px dashed var(--line)}
+.admed .edsv svg{width:58px;height:68px}
+.admed .edhint{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
+.admed .edfoot{display:flex;justify-content:space-between;gap:8px;margin-top:18px}
+.edghost{position:fixed;left:0;top:0;z-index:100;pointer-events:none;padding:8px 12px;border-radius:999px;background:var(--brass,#b80);color:#fff;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,.3)}
 </style>
 </head>
 <body>
@@ -694,7 +726,7 @@ home:'首頁',library:'我的曲庫',theme:'網頁顏色',legal:'版權聲明',c
   empty:{library:['曲庫是空的','在任何一首譜按「收藏」，或按右上角「新增譜」抄寫自己的版本，都會集中在這裡。'],'library-saved':['還沒有收藏','在卡片上按愛心，或在譜面頁按「收藏」。'],
     'library-mine':['還沒有自建譜','用 ChordPro 格式輸入歌詞和和弦，只存在你自己的瀏覽器，一樣可以移調、夾 Capo。'],'library-recent':['還沒有瀏覽紀錄','打開任一首譜後會出現在這裡。']},
   back:'返回',origKey:'原調',transpose:'移調',reset:'原調',resetTip:'回原調並套用編者建議的 Capo',capoNone:'無',real:'實音',realTip:'顯示實際音高（關閉時顯示夾 Capo 後手上按的和弦）',
-  size:'字體',playTimes:n=>`彈 ${n} 次`,metro:'節拍器',sub:'細分',subTip:'依律動加入細分拍',practice:'練習面板',tools:'工具',myCover:'我的 Cover',igCover:'到 Instagram 看',repTip:n=>`這一列彈 ${n} 次`,repTipN:n=>`反覆記號之間彈 ${n} 次`,simple:'簡單版',simpleTip:'和弦簡化成三和弦（保留屬七），一小節最多兩個和弦',noteSimple:'簡單版：和弦已簡化，想彈原曲的和弦再按一次「簡單版」',lyrics:'我的歌詞',cols:'兩欄',perform:'全螢幕演奏',endPerform:'離開全螢幕',viewFull:'完整',viewCompact:'精簡',viewFullTip:'照彈奏順序從頭看到尾。連續、一模一樣的段落只顯示一次，歌詞分 1. 2.。',viewCompactTip:'每段只寫一次，照上方的順序彈。點順序裡的段落，會標出那一次的歌詞。',orderLbl:'順序',singN:n=>`唱 ${n} 次`,nthTime:n=>`第 ${n} 次`,onlyIn:(s,n)=>`只有${s}${n}`,onlyLast:s=>`只有最後一次${s}`,lyrEmpty:'（還沒填歌詞）',lyrChanged:s=>`<b>${s}</b> 的譜有更新，這幾段的歌詞可能對不上，請打開「我的歌詞」確認。其他段落不受影響。`,lyrOk:'我確認過了',lyrLines:a=>`${a} 行`,
+  size:'字體',playTimes:n=>`彈 ${n} 次`,metro:'節拍器',sub:'細分',subTip:'依律動加入細分拍',practice:'練習面板',tools:'工具',myCover:'我的 Cover',igCover:'到 Instagram 看',repTip:n=>`這一列彈 ${n} 次`,repTipN:n=>`反覆記號之間彈 ${n} 次`,simple:'簡單版',simpleTip:'和弦簡化成三和弦（保留屬七），一小節最多兩個和弦，並自動換成 C 型或 G 型來彈（會提示夾幾格 Capo）',noteSimple:(c,k)=>`簡單版：${c?`<b>請夾 Capo ${c}</b>，`:'不用夾 Capo，'}用 <b>${k}</b> 型彈，和弦已簡化。想彈原曲的和弦再按一次「簡單版」`,simpleToast:(c,k)=>c?`簡單版：請夾 Capo ${c}，用 ${k} 型彈`:`簡單版：不用夾 Capo，用 ${k} 型彈`,lyrics:'我的歌詞',cols:'兩欄',perform:'全螢幕演奏',endPerform:'離開全螢幕',viewFull:'完整',viewCompact:'精簡',viewFullTip:'照彈奏順序從頭看到尾。連續、一模一樣的段落只顯示一次，歌詞分 1. 2.。',viewCompactTip:'每段只寫一次，照上方的順序彈。點順序裡的段落，會標出那一次的歌詞。',orderLbl:'順序',singN:n=>`唱 ${n} 次`,nthTime:n=>`第 ${n} 次`,onlyIn:(s,n)=>`只有${s}${n}`,onlyLast:s=>`只有最後一次${s}`,lyrEmpty:'（還沒填歌詞）',lyrChanged:s=>`<b>${s}</b> 的譜有更新，這幾段的歌詞可能對不上，請打開「我的歌詞」確認。其他段落不受影響。`,lyrOk:'我確認過了',lyrLines:a=>`${a} 行`,
   noteCapo:(a,c,s,r)=>r?`調性 <b>${a}</b>，夾 Capo ${c}：譜上照實際音高寫，和弦圖是夾 Capo 後的按法`:`調性 <b>${a}</b>，夾 Capo ${c}：譜上是 <b>${s}</b> 調按法，實際音高高 ${c} 個半音`,noteKey:a=>`目前調性 <b>${a}</b>`,noteCapoM:(a,c,s,r)=>r?`<b>${a}</b> 調 · Capo ${c} · 譜上是實際音高`:`<b>${a}</b> 調 · Capo ${c} · 照 <b>${s}</b> 調指型彈`,lyrFind:'搜尋這首歌的歌詞',tupTip:n=>`${n} 連音：這幾個和弦平分這一拍`,sumKey:'調',sumOrig:k=>`（原 ${k}）`,sumShape:'指型',lyrQ:'歌詞',
   noteFinger:(a,c)=>`調性 <b>${a}</b>，夾 Capo ${c}：這首的 Capo 是當多一根手指按和弦用，譜上照實際音高寫，和弦圖格數從 Capo 算起`,tuneLbl:'調弦',tuneStd:'標準調弦',noteTune:(tn,nm,off)=>`這首用<b>${nm?nm+'（'+tn+'）':tn}</b>調弦：`+(off?`和弦圖已換成這個調弦的按法`:`沒有標「編者按法」的和弦圖是標準調弦的按法，只能參考`),
   noteShift:(o,n)=>`（原調 ${o}，${n>0?'升':'降'} ${Math.abs(n)} 個半音）`,noteEditor:(c,s)=>`編者建議 Capo ${c}`,notePub:'公開譜只含和弦與段落；歌詞由你自己輸入，只存在這台裝置',notePubAcct:'公開譜只含和弦與段落；你的歌詞存在你的帳號裡，只有你看得到',
@@ -728,7 +760,7 @@ home:'Home',library:'My Library',theme:'Theme',legal:'Copyright',changelog:'Chan
   empty:{library:['Your library is empty','Save any sheet, or use New Sheet to write your own arrangement.'],'library-saved':['Nothing saved yet','Tap the heart on a card or Save on a sheet.'],
     'library-mine':['No sheets of your own yet','Write lyrics and chords in ChordPro. They stay in your browser and still transpose and use a capo.'],'library-recent':['No history yet','Sheets you open will appear here.']},
   back:'Back',origKey:'Original key',transpose:'Transpose',reset:'Reset',resetTip:'Back to the original key and the editor’s capo',capoNone:'None',real:'Concert',realTip:'Show concert pitch (off: show the chord shapes you play with the capo on)',
-  size:'Text',playTimes:n=>`play ${n}×`,metro:'Metronome',sub:'Subdivide',subTip:'Add subdivisions that follow the feel',practice:'Practice Panel',tools:'Tools',myCover:'My Cover',igCover:'Watch on Instagram',repTip:n=>`Play this row ${n} times`,repTipN:n=>`Play between the repeat signs ${n} times`,simple:'Simple',simpleTip:'Simplify to triads (dominant 7ths kept), at most two chords per bar',noteSimple:'Simple version: chords are simplified. Tap “Simple” again for the original chords.',lyrics:'My Lyrics',cols:'Two Columns',perform:'Full Screen',endPerform:'Exit Full Screen',viewFull:'Full',viewCompact:'Compact',viewFullTip:'Read top to bottom in playing order. Back-to-back identical sections show once, with lyrics as 1. 2.',viewCompactTip:'Each section shows once. Follow the order above. Tap a section in the order to highlight its lyrics.',orderLbl:'ORDER',singN:n=>`${n} times`,nthTime:n=>`time ${n}`,onlyIn:(s,n)=>`${s} ${n} only`,onlyLast:s=>`Last ${s} only`,lyrEmpty:'(no lyrics yet)',lyrChanged:s=>`The chords for <b>${s}</b> were updated, so those lyrics may be out of place. Open My Lyrics to check. Other sections are fine.`,lyrOk:'Looks right',lyrLines:a=>`${a} line${a===1?'':'s'}`,
+  size:'Text',playTimes:n=>`play ${n}×`,metro:'Metronome',sub:'Subdivide',subTip:'Add subdivisions that follow the feel',practice:'Practice Panel',tools:'Tools',myCover:'My Cover',igCover:'Watch on Instagram',repTip:n=>`Play this row ${n} times`,repTipN:n=>`Play between the repeat signs ${n} times`,simple:'Simple',simpleTip:'Simplify to triads (dominant 7ths kept), at most two chords per bar, and switch to C or G shapes (with a capo hint)',noteSimple:(c,k)=>`Simple version: ${c?`<b>put a capo on fret ${c}</b> and `:''}play with <b>${k}</b> shapes; chords are simplified. Tap “Simple” again for the original chords.`,simpleToast:(c,k)=>c?`Simple version: capo ${c}, ${k} shapes`:`Simple version: no capo, ${k} shapes`,lyrics:'My Lyrics',cols:'Two Columns',perform:'Full Screen',endPerform:'Exit Full Screen',viewFull:'Full',viewCompact:'Compact',viewFullTip:'Read top to bottom in playing order. Back-to-back identical sections show once, with lyrics as 1. 2.',viewCompactTip:'Each section shows once. Follow the order above. Tap a section in the order to highlight its lyrics.',orderLbl:'ORDER',singN:n=>`${n} times`,nthTime:n=>`time ${n}`,onlyIn:(s,n)=>`${s} ${n} only`,onlyLast:s=>`Last ${s} only`,lyrEmpty:'(no lyrics yet)',lyrChanged:s=>`The chords for <b>${s}</b> were updated, so those lyrics may be out of place. Open My Lyrics to check. Other sections are fine.`,lyrOk:'Looks right',lyrLines:a=>`${a} line${a===1?'':'s'}`,
   noteCapo:(a,c,s,r)=>r?`Key <b>${a}</b>, Capo ${c}: chords are shown at concert pitch; diagrams show the fingering with the capo on`:`Key <b>${a}</b>, Capo ${c}: chords are <b>${s}</b> shapes; they sound ${c} semitone${c>1?'s':''} higher`,noteKey:a=>`Key: <b>${a}</b>`,noteCapoM:(a,c,s,r)=>r?`Key <b>${a}</b> · Capo ${c} · concert pitch`:`Key <b>${a}</b> · Capo ${c} · play <b>${s}</b> shapes`,lyrFind:'Search for this song’s lyrics',tupTip:n=>`${n}-tuplet: these chords split the beat evenly`,sumKey:'',sumOrig:k=>` (orig. ${k})`,sumShape:'shapes',lyrQ:'lyrics',
   noteFinger:(a,c)=>`Key <b>${a}</b>, Capo ${c}: the capo works as an extra finger for these voicings, so chords are written at concert pitch; diagram frets are counted from the capo`,tuneLbl:'Tuning',tuneStd:'Standard',noteTune:(tn,nm,off)=>`This song uses <b>${nm?nm+' ('+tn+')':tn}</b> tuning. `+(off?'Diagrams show the fingerings for this tuning':'Diagrams not marked “Editor’s voicing” show standard-tuning shapes, for reference only'),
   noteShift:(o,n)=>` (original ${o}, ${n>0?'up':'down'} ${Math.abs(n)} ${Math.abs(n)===1?'semitone':'semitones'})`,noteEditor:(c,s)=>`Editor’s pick: Capo ${c}`,notePub:'Public sheets show chords and sections only. Lyrics you add stay on this device.',notePubAcct:'Public sheets show chords and sections only. Your lyrics are saved to your account and only you can see them.',
@@ -1020,6 +1052,7 @@ function openSong(song,isMine,keepState){
   if(!keepState){st.pracOff=false;st.pracChk=false;st.shift=0;st.capo=song.capo||0;st.bpm=song.bpm||90;st.real=false;st.size=defSize();LS.set('real_'+song.id,true);document.documentElement.style.setProperty('--sheet-size',st.size+'px')}
   /* 手機：每次開譜工具列收起、所有工具和檢視按鈕回到預設 */
   if(!keepState&&MOB()){st.toolsOpen=false;st.sub=true;st.view='full';st.simple=false;st.practice=false;st.colsM=false}
+  if(!keepState){st.simpAuto=false;st.simpPrev=null;if(st.simple)simpEnter()}   // 電腦版記住簡單版：開譜時就換成 C／G 型
   if(!isMine){statSong(song.id);songViews(song.id)}
   if(!isMine&&!keepState){const r=LS.get('recent',[]).filter(x=>x!==song.id);r.unshift(song.id);LS.set('recent',r.slice(0,20))}
   const isFav=favs().includes(song.id);
@@ -1040,7 +1073,7 @@ function openSong(song,isMine,keepState){
   <div class="songbody"><div class="songmain"><div id="lyrpanel"></div><div id="lyrwarn"></div><div class="orderbar" id="orderbar" hidden></div><div class="sheet" id="sheet"></div></div><div id="practice"></div></div>${!isMine&&song.videos&&song.videos.length?vidSection(song):''}
   <button class="tb ibtn exitperf" id="exitperf" aria-label="${t('endPerform')}" title="${t('endPerform')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg></button>`;
   $('#exitperf').onclick=()=>setPerform(false);
-  $('#capo').onchange=e=>{st.capo=+e.target.value;savePref();drawSheet()};
+  $('#capo').onchange=e=>{st.capo=+e.target.value;st.simpAuto=false;savePref();drawSheet()};
   if($('#vidbtn'))$('#vidbtn').onclick=()=>{const v=$('#covers');if(v)v.scrollIntoView({behavior:'smooth',block:'start'})};
   if($('#favbtn'))$('#favbtn').onclick=()=>{const on=toggleFav(song.id);$('#favbtn').classList.toggle('on',on);$('#favbtn span').textContent=on?t('saved'):t('save')};
   $('.toolwrap').onclick=e=>{const b=e.target.closest('[data-act]');if(b)act(b.dataset.act)};
@@ -1059,12 +1092,13 @@ function act(a){
   if(a==='tap')tapTempo();
   if(a==='adm-diff1'||a==='adm-diff2'||a==='adm-diff3')admDiff(+a.slice(-1));
   if(a==='adm-save')admSave(null);
+  if(a==='adm-edit')openEd();
   if(a==='sub'){st.sub=!st.sub;LS.set('sub',st.sub);$('#subbtn').classList.toggle('on',st.sub)}
   if(a==='tools')setTools(!st.toolsOpen);
   if(a==='practice'){if(st.pracOff)st.pracOff=false;else{st.practice=!st.practice;LS.set(MOB()?'practiceM':'practice',st.practice)}drawSheet()}
   if(a==='perform')setPerform(!document.body.classList.contains('perform'));
   if(a==='view-full'||a==='view-compact'){st.view=a==='view-full'?'full':'compact';LS.set('view',st.view);$('#vfull').classList.toggle('on',st.view==='full');$('#vcompact').classList.toggle('on',st.view==='compact');drawSheet()}
-  if(a==='simple'){st.simple=!st.simple;LS.set('simple',st.simple);const b=$('#simplebtn');b.classList.toggle('on',st.simple);b.setAttribute('aria-pressed',st.simple);drawSheet()}
+  if(a==='simple'){st.simple=!st.simple;LS.set('simple',st.simple);simpEnter();if(st.simple&&!st.isMine)toast(t('simpleToast')(st.capo,tKey(tKey(st.song.key,st.shift),-st.capo)));const b=$('#simplebtn');b.classList.toggle('on',st.simple);b.setAttribute('aria-pressed',st.simple);drawSheet()}
   if(a==='lyr'){st.lyrOpen=!st.lyrOpen;if(st.lyrOpen&&MOB()&&st.toolsOpen)setTools(false);$('#lyrbtn').classList.toggle('on',st.lyrOpen);drawLyrPanel()}
 }
 /* 手機工具列開關；收起時如果工具列正貼在畫面頂端，捲動位置補回去，譜才不會跳 */
@@ -1075,14 +1109,14 @@ function setTools(on){const w=$('.toolwrap');if(!w){st.toolsOpen=on;return}const
   addEventListener('touchmove',e=>{if(tY===null||!st.toolsOpen||!MOB()||!st.song||(e.target.closest&&e.target.closest('.toolwrap')))return;if(Math.abs(e.touches[0].clientY-tY)>24){tY=null;setTools(false)}},{passive:true});
   addEventListener('wheel',e=>{if(st.toolsOpen&&MOB()&&st.song&&!(e.target.closest&&e.target.closest('.toolwrap')))setTools(false)},{passive:true})}
 function drawSheet(){PS=null;
-  const s=st.song;const sounding=tKey(s.key,st.shift);const shape=tKey(sounding,-st.capo);const flat=keyFlat(shape);const total=st.shift-st.capo;
+  const s=st.song;if(st.simple&&st.simpAuto&&!st.isMine)st.capo=simpCapo(s).c;const sounding=tKey(s.key,st.shift);const shape=tKey(sounding,-st.capo);const flat=keyFlat(shape);const total=st.shift-st.capo;
   $('#keyv').textContent=sounding;$('#bpmv').textContent=st.bpm;$('#capo').value=st.capo;
   const real=isReal(s),rb=$('#realbtn');if(rb){rb.classList.toggle('on',real);rb.setAttribute('aria-pressed',real);rb.disabled=!st.capo}
   let note=st.capo?`<span>${s.capoUse==='finger'&&real?t('noteFinger')(sounding,st.capo):t('noteCapo')(sounding,st.capo,shape,real)}</span>`:'';
   TOFF=tuneOff(s.tuning);
   if(s.tuning)note+=`<span class="tunenote">${t('noteTune')(esc(s.tuning),tuneName(s.tuning),TOFF)}</span>`;
   if(s.capo&&!st.shift)note+=`<span class="ednote">${t('noteEditor')(s.capo,tKey(s.key,-s.capo))}</span>`;
-  if(st.simple&&!st.isMine)note+=`<span class="simplenote">${t('noteSimple')}</span>`;
+  if(st.simple&&!st.isMine)note+=`<span class="simplenote">${t('noteSimple')(st.capo,shape)}</span>`;
   if(!st.isMine)note+=`<span class="pubnote">${user?t('notePubAcct'):t('notePub')}</span>`;
   $('#note').innerHTML=note;
   $('#tsum').innerHTML=`<b>${sounding}</b> ${t('sumKey')}${st.shift?t('sumOrig')(s.key):''}${st.capo?` · Capo ${st.capo} · ${real?t('real'):`<b>${shape}</b> ${t('sumShape')}`}`:''} · <span id="tsbpm">${st.bpm}</span> BPM`;
@@ -1319,6 +1353,14 @@ function fitBars0(){const sh=$('#sheet');
   if(r>1)sh.style.setProperty('--fit',Math.max(.6,1/r*.97).toFixed(3));if(dense)nudge();fitTup()}
 /* 只有寬度變了才重排：iPhone 捲到底時網址列伸縮只改高度，重排會讓頁面瞬間變短、捲動位置被拉回上面 */
 let fitT,fitW=innerWidth;addEventListener('resize',()=>{if(innerWidth===fitW)return;clearTimeout(fitT);fitT=setTimeout(()=>{fitW=innerWidth;const d=!!document.querySelector('.practice.docked'),want=st.practice&&!st.pracOff&&st.cols&&matchMedia('(min-width:980px)').matches;if(st.song&&$('#sheet')&&d!==want)drawSheet();else fitBars()},150)});if(document.fonts)document.fonts.ready.then(()=>fitBars());
+/* 簡單版的夾法：換成 C 型或 G 型（小調用 Am 型或 Em 型），挑要夾比較低格數的那個（2026-11-21 使用者要求）。
+   讀者自己改 Capo 後就不再自動換（simpAuto=false）；關掉簡單版時回到原本的 Capo 和實音設定 */
+function simpCapo(s){const k=tKey(s.key,st.shift),minor=/m$/.test(k),r=idx(k.replace(/m$/,''));
+  return (minor?[['Am',9],['Em',4]]:[['C',0],['G',7]]).map(([n,i])=>({n,c:mod(r-i)})).sort((a,b)=>a.c-b.c)[0]}
+function simpEnter(){if(!st.song||st.isMine)return;if(st.simple){if(!st.simpAuto){st.simpPrev={capo:st.capo,real:st.real}}st.simpAuto=true;st.real=false;st.capo=simpCapo(st.song).c}
+  else if(st.simpPrev){st.capo=st.simpPrev.capo;st.real=st.simpPrev.real;st.simpPrev=null;st.simpAuto=false}else st.simpAuto=false}
+function toast(msg){let el=document.getElementById('gptoast');if(!el){el=document.createElement('div');el.id='gptoast';el.setAttribute('role','status');document.body.appendChild(el)}
+  el.textContent=msg;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),3200)}
 /* 簡單版：和弦簡化成三和弦（保留屬七），一小節最多兩個和弦（留前兩個，各彈半小節） */
 function simpChord(c){const m=String(c).replace(/\*+/g,'').match(/^([A-G][#b]?)([^/]*)(\/.*)?$/);if(!m)return c;let q=m[2].replace(/\(.*?\)/g,'');
   q=/^(m7b5|m7-5|ø)/.test(q)||/^dim/.test(q)?'dim':/^(aug|\+)/.test(q)?'aug':/^m(?!aj)/.test(q)?'m':/^(7|9|11|13)/.test(q)?'7':'';return m[1]+q}
@@ -1574,9 +1616,16 @@ function viewLegal(){
 
 /* ---------- 管理者：難易度、BPM 覆寫（Supabase song_meta，見 supabase-admin.sql） ---------- */
 let META={};
-function applyMeta(){for(const s of SONGS){const m=META[s.id];if(!m)continue;if(m.diff)s.diff=m.diff;if(m.bpm)s.bpm=m.bpm}}
-function loadMeta(){if(!sb)return;sb.from('song_meta').select('id,diff,bpm').then(({data,error})=>{if(error||!data)return;META={};for(const r of data)META[r.id]=r;if(SONGS.length){applyMeta();refresh()}},()=>{})}
-function admRow(song){const d=song.diff||0;return `<div class="admrow" id="admrow"><span class="al">管理</span><span>難易度</span>${[1,2,3].map(n=>`<button class="tb ${d===n?'on':''}" data-act="adm-diff${n}">${t('diff')[n]}</button>`).join('')}<span style="margin-left:6px">BPM</span><input type="number" id="admbpm" min="30" max="260" value="${song.bpm||''}" inputmode="numeric"><button class="tb" data-act="adm-save">儲存</button><span class="msg" id="admmsg"></span></div>`}
+function applyMeta(){for(const s of SONGS){const m=META[s.id];if(!m)continue;if(m.diff)s.diff=m.diff;if(m.bpm)s.bpm=m.bpm;
+  if(!ORIG[s.id])ORIG[s.id]={genres:clone(s.genres),genre:s.genre,shapes:clone(s.shapes),sections:clone(s.sections)};const o=ORIG[s.id];
+  if(Array.isArray(m.genres)&&m.genres.length){s.genres=m.genres.slice(0,3);s.genre=s.genres[0]}else{s.genres=clone(o.genres);s.genre=o.genre}
+  s.shapes=Array.isArray(m.shapes)?m.shapes:clone(o.shapes);
+  /* 段落數不一樣（songs/ 後來改過）就不套用，免得順序對不上 */
+  s.sections=Array.isArray(m.sections)&&o.sections&&m.sections.length===o.sections.length?m.sections:clone(o.sections)}}
+function loadMeta(){if(!sb)return;const got=({data,error})=>{if(error||!data)return false;META={};for(const r of data)META[r.id]=r;if(SONGS.length){applyMeta();refresh()}return true};
+  /* 還沒跑新的 supabase-admin.sql 時沒有 genres 等欄位：退回只讀難易度、BPM */
+  sb.from('song_meta').select('id,diff,bpm,genres,shapes,sections').then(r=>{if(!got(r))sb.from('song_meta').select('id,diff,bpm').then(got,()=>{})},()=>{})}
+function admRow(song){const d=song.diff||0;return `<div class="admrow" id="admrow"><span class="al">管理</span><span>難易度</span>${[1,2,3].map(n=>`<button class="tb ${d===n?'on':''}" data-act="adm-diff${n}">${t('diff')[n]}</button>`).join('')}<span style="margin-left:6px">BPM</span><input type="number" id="admbpm" min="30" max="260" value="${song.bpm||''}" inputmode="numeric"><button class="tb" data-act="adm-save">儲存</button><button class="tb" data-act="adm-edit">編輯曲風、和弦、指法</button><span class="msg" id="admmsg"></span></div>`}
 function admDiff(n){document.querySelectorAll('#admrow [data-act^="adm-diff"]').forEach(b=>b.classList.toggle('on',b.dataset.act==='adm-diff'+n));admSave(n,null)}
 async function admSave(diff,bpm){const song=st.song;if(!sb||!isAdmin()||!song)return;const msg=$('#admmsg');
   if(bpm===undefined){bpm=parseInt($('#admbpm').value,10);if(!(bpm>=30&&bpm<=260)){msg.textContent='BPM 要在 30–260';return}}
@@ -1587,6 +1636,101 @@ async function admSave(diff,bpm){const song=st.song;if(!sb||!isAdmin()||!song)re
   if(diff){m.diff=diff;song.diff=diff;if(g)g.diff=diff}
   if(bpm){m.bpm=bpm;song.bpm=bpm;if(g)g.bpm=bpm;st.bpm=bpm;if($('#bpmv'))$('#bpmv').textContent=bpm}
   msg.textContent=diff?'難易度已改成「'+t('diff')[diff]+'」':'BPM 已存成 '+bpm}
+/* ---------- 管理者：編輯這首（曲風、和弦與拍子、指法），存成 song_meta 的覆寫（supabase-admin.sql 的 song_meta_put） ----------
+   網站載入時用覆寫蓋過 songs/ 的內容；下次上傳新歌時把覆寫抄回筆記和 songs/，再清掉覆寫（2026-11-21 使用者要求） */
+const ORIG={},GKEYS=['ballad','upbeat','folk','rock','jazz','blues','rnb','rap','ost'];
+const CH_RE=/^[A-G][#b]?[^\s/|]*(\/[A-G][#b]?)?$/;
+const normC=c=>String(c).trim().replace(/[øØ]7?/g,'m7b5').replace(/♯/g,'#').replace(/♭/g,'b').replace(/△(\d+)/g,'maj$1').replace(/△/g,'');
+const parseF=f=>{const s=String(f).replace(/\s+/g,'').replace(/[ＸX×]/g,'x').replace(/（/g,'(').replace(/）/g,')');const toks=s.match(/x|\d{1,2}|\(\d{1,2}[hp-]\d{1,2}\)|\(\d{1,2}\)/g)||[];
+  if(toks.join('')!==s)return null;const out=[];for(const t of toks){if(/^\d{2}$/.test(t))out.push(t[0],t[1]);else out.push(t.replace('-','h'))}return out.length===6?out.join(''):null};
+const clone=o=>o==null?o:JSON.parse(JSON.stringify(o));
+let ED=null;
+function openEd(){const s=st.song;if(!s||!isAdmin()||st.isMine)return;
+  ED={s,genres:(s.genres&&s.genres.length?s.genres:[s.genre]).filter(g=>GKEYS.includes(g)).slice(0,3),sections:clone(s.sections)||[],shapes:clone(s.shapes)||[],dirty:new Set(),sel:null,cells:null,cur:0,sub:1};
+  let m=$('#admed');if(!m){m=document.createElement('div');m.id='admed';m.className='admed';document.body.appendChild(m);
+    m.addEventListener('click',edClick);m.addEventListener('change',edChange);m.addEventListener('pointerdown',edDown)}
+  m.hidden=false;document.documentElement.style.overflow='hidden';edDraw()}
+function closeEd(force){if(!ED)return;if(!force&&ED.dirty.size&&!confirm('還沒儲存的修改會不見，確定關掉？'))return;ED=null;$('#admed').hidden=true;document.documentElement.style.overflow=''}
+const edMsg=t=>{const m=$('#edmsg');if(m)m.textContent=t};
+const edRow=(k,ri)=>rowsOf(ED.sections[k])[ri];
+function edChords(){const set=[];ED.sections.forEach(sec=>rowsOf(sec).forEach(r=>r.b.forEach(b=>b.forEach(c=>{if(/^[A-G]/.test(c)&&!set.includes(c))set.push(c)}))));return set}
+const barTxt=b=>b.length===1&&b[0]==='-'?'N.C.':b.join(' ');
+function edDraw(){const s=ED.s,g=t('genre'),y=scrollTopOf();
+  const gen=GKEYS.map(k=>{const i=ED.genres.indexOf(k);return `<button class="tb${i>=0?' on':''}" data-ed="g" data-v="${k}">${i>=0?`<b>${i+1}</b> `:''}${esc(g[k]||k)}</button>`}).join('');
+  const secs=ED.sections.map((sec,k)=>`<div class="edsec"><h4>${esc(secName(sec.name))}${sec.capo!==undefined?` <small>(Capo ${sec.capo})</small>`:''}</h4>${rowsOf(sec).map((r,ri)=>{const on=ED.sel&&ED.sel.k===k&&ED.sel.r===ri;
+    return `<div class="edrow">${r.only!==undefined?`<span class="edtag">${r.only==='last'?'末次':'第 '+r.only+' 次'}</span>`:''}${r.b.map((b,bi)=>`<button class="edbar${on&&ED.sel.b===bi?' on':''}" data-ed="bar" data-k="${k}" data-r="${ri}" data-b="${bi}">${esc(barTxt(b))}</button>`).join('')}${r.wc?'':`<button class="edadd" data-ed="addbar" data-k="${k}" data-r="${ri}" title="在這列最後加一個小節" aria-label="在這列最後加一個小節">＋</button>`}${r.x?`<span class="edtag">×${r.x}</span>`:''}</div>${on?barEd():''}`}).join('')}</div>`).join('');
+  const shp=ED.shapes.map((e,i)=>`<div class="edshape"><span class="edsv">${e.f&&e.f[0]?diagram(e.f[0]):''}</span><div><b>${esc(e.c)}</b>${e.capo?`（Capo ${e.capo}）`:''}＝<input data-edf="${i}" value="${esc((e.f||[]).join('、'))}" spellcheck="false" autocomplete="off"> <button class="tb" data-ed="delshape" data-i="${i}">刪除</button></div></div>`).join('');
+  $('#admed').innerHTML=`<div class="edbox" role="dialog" aria-modal="true" aria-label="編輯這首">
+  <div class="edhead"><b>編輯：${esc(s.title)}</b><span class="edmsg" id="edmsg">${ED.dirty.size?'有修改還沒儲存':''}</span><button class="tb on" data-ed="save">儲存</button><button class="tb" data-ed="close" aria-label="關閉">✕</button></div>
+  <div class="edbody">
+  <h3>曲風 <small>依序點 1～3 個，第 1 個決定卡片顏色；再點一次取消</small></h3><div class="edchips">${gen}</div>
+  <h3>和弦與拍子 <small>和弦寫實際音高（跟筆記一樣，不是夾 Capo 後的按法）。點小節來改；同一段在順序裡出現幾次都會一起改</small></h3>${secs}
+  <h3>指法 <small>6 碼，第 6 弦到第 1 弦（x 不彈、0 空弦）；有 Capo 的歌格數從 Capo 算起；多種按法用「、」分開</small></h3>${shp||'<p class="edhint">這首還沒有自己的指法</p>'}
+  <div class="edshape add"><input id="edsc" placeholder="和弦，例如 G7sus4" spellcheck="false" autocomplete="off"><span>Capo</span><input id="edscp" type="number" min="0" max="12" value="${s.capo||0}" inputmode="numeric"><span>＝</span><input id="edsf" placeholder="353433" spellcheck="false" autocomplete="off"><button class="tb" data-ed="addshape">加入</button></div>
+  <div class="edfoot"><button class="tb" data-ed="reset">還原成原本的譜</button><button class="tb on" data-ed="save">儲存</button></div></div></div>`;
+  const b=$('#admed .edbody');if(b)b.scrollTop=y}
+const scrollTopOf=()=>{const b=document.querySelector('#admed .edbody');return b?b.scrollTop:0};
+function edOpenBar(k,ri,bi){const bar=edRow(k,ri).b[bi];let m='',b=bar;if(b.length>1&&METER.test(b[0])){m=b[0];b=b.slice(1)}
+  const beats=m?beatsOf(m):beatsOf(ED.s.time);
+  let sl=b.length===1?(b[0]==='-'?Array(beats).fill('-'):[b[0],...Array(beats-1).fill('-')]):barSlots(b,beats);
+  ED.sel={k,r:ri,b:bi,m,beats};ED.cells=sl.slice();ED.sub=sl.length%beats===0?sl.length/beats:0;ED.cur=0;edDraw()}
+function barEd(){const S=ED.sel,n=ED.cells.length;
+  const cells=ED.cells.map((c,i)=>`<button class="edcell${i===ED.cur?' cur':''}${ED.sub&&i%ED.sub===0?' bt':''}" data-ed="cell" data-i="${i}" data-drop="${i}"${c!=='-'?` data-drag="${esc(c)}" data-from="${i}"`:''}>${c==='-'?'<i>－</i>':esc(c)}</button>`).join('');
+  const chips=[...edChords(),'%'].map(c=>`<button class="edchip" data-ed="chip" data-c="${esc(c)}" data-drag="${esc(c)}">${c==='%'?'% 同上一小節':esc(c)}</button>`).join('')+`<button class="edchip ext" data-ed="chip" data-c="-" data-drag="-">－ 延續</button>`;
+  return `<div class="edbared"><div class="edrowh">${S.m?`拍號 ${esc(S.m)} · `:''}${S.beats} 拍，每拍 ${[1,2,4].map(v=>`<button class="tb${ED.sub===v?' on':''}" data-ed="sub" data-v="${v}">${v} 格${v===2?'（八分）':v===4?'（十六分）':''}</button>`).join('')}</div>
+  <div class="edcells" style="--n:${n}">${cells}</div>
+  <p class="edhint">點格子選位置，再點下面的和弦填進去（會自動跳到下一格）；也可以把和弦拖到格子上，或把格子裡的和弦拖到別格。「－」是延續前一個和弦；整小節都是「－」就是不彈（N.C.）。</p>
+  <div class="edchips">${chips}<input id="ednew" placeholder="其他和弦，例如 Fmaj7" spellcheck="false" autocomplete="off"><button class="tb" data-ed="newchip">填入</button></div>
+  <div class="edrowh"><button class="tb on" data-ed="apply">套用這小節</button><button class="tb" data-ed="delbar">刪除這小節</button><button class="tb" data-ed="cancelbar">取消</button></div></div>`}
+function edSetCell(i,c){if(c==='%'){ED.cells=ED.cells.map((_,j)=>j?'-':'%');ED.cur=0;return}if(ED.cells.includes('%'))ED.cells=ED.cells.map(x=>x==='%'?'-':x);ED.cells[i]=c;ED.cur=Math.min(i+1,ED.cells.length-1)}
+function edResample(np){const S=ED.sel,n=ED.cells.length,op=n/S.beats,out=[];let lost=false;
+  for(let j=0;j<S.beats*np;j++){const p=j/np*op;out.push(Number.isInteger(p)?ED.cells[p]:'-')}
+  ED.cells.forEach((c,i)=>{if(c!=='-'&&!Number.isInteger(i/op*np))lost=true});
+  ED.cells=out;ED.sub=np;ED.cur=0;edDraw();if(lost)edMsg('有和弦不在新的格子上，被拿掉了，請檢查')}
+function edApply(){const S=ED.sel,row=edRow(S.k,S.r);let out=ED.cells.slice();
+  if(out.includes('%'))out=['%'];else if(!out.some(c=>c!=='-'))out=['-'];else if(out.length>1&&out[0]!=='-'&&out.slice(1).every(c=>c==='-'))out=[out[0]];
+  if(S.m)out=[S.m,...out];row.b[S.b]=out;ED.dirty.add('sections');ED.sel=null;edDraw()}
+let edDrag=null,edNoClick=false;
+function edDown(e){const src=e.target.closest('[data-drag]');if(!src||e.button>0||!ED||!ED.sel)return;
+  edDrag={c:src.dataset.drag,from:src.dataset.from,x:e.clientX,y:e.clientY,ghost:null};
+  const mv=ev=>{if(!edDrag)return;if(!edDrag.ghost){if(Math.hypot(ev.clientX-edDrag.x,ev.clientY-edDrag.y)<6)return;
+      const g=document.createElement('div');g.className='edghost';g.textContent=edDrag.c==='-'?'－':edDrag.c;document.body.appendChild(g);edDrag.ghost=g}
+    edDrag.ghost.style.transform=`translate(${ev.clientX-20}px,${ev.clientY-20}px)`;ev.preventDefault()};
+  const up=ev=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);removeEventListener('pointercancel',up);const d=edDrag;edDrag=null;if(!d||!d.ghost)return;
+    d.ghost.remove();edNoClick=true;setTimeout(()=>edNoClick=false,50);
+    const el=document.elementFromPoint(ev.clientX,ev.clientY),cell=el&&el.closest('[data-drop]');if(!cell||!ED||!ED.sel)return;
+    const to=+cell.dataset.drop;if(d.from!==undefined){const f=+d.from;if(f===to)return;ED.cells[f]='-'}edSetCell(to,d.c);edDraw()};
+  addEventListener('pointermove',mv,{passive:false});addEventListener('pointerup',up);addEventListener('pointercancel',up)}
+function edClick(e){if(edNoClick)return;if(e.target.id==='admed'){closeEd();return}const b=e.target.closest('[data-ed]');if(!b||!ED)return;const a=b.dataset.ed,k=+b.dataset.k,ri=+b.dataset.r;
+  if(a==='close')closeEd();
+  else if(a==='save')edSave();
+  else if(a==='reset')edReset();
+  else if(a==='g'){const v=b.dataset.v,i=ED.genres.indexOf(v);if(i>=0)ED.genres.splice(i,1);else if(ED.genres.length>=3){edMsg('曲風最多 3 個，先取消一個');return}else ED.genres.push(v);ED.dirty.add('genres');edDraw()}
+  else if(a==='bar'){if(ED.sel&&ED.sel.k===k&&ED.sel.r===ri&&ED.sel.b===+b.dataset.b){ED.sel=null;edDraw()}else edOpenBar(k,ri,+b.dataset.b)}
+  else if(a==='addbar'){const r=edRow(k,ri);r.b.push(['-']);ED.dirty.add('sections');edOpenBar(k,ri,r.b.length-1)}
+  else if(a==='cell'){ED.cur=+b.dataset.i;edDraw()}
+  else if(a==='chip'){edSetCell(ED.cur,b.dataset.c);edDraw()}
+  else if(a==='newchip'){const c=normC($('#ednew').value);if(!CH_RE.test(c)){edMsg('看不懂這個和弦名稱');return}edSetCell(ED.cur,c);edDraw()}
+  else if(a==='sub')edResample(+b.dataset.v);
+  else if(a==='apply')edApply();
+  else if(a==='cancelbar'){ED.sel=null;edDraw()}
+  else if(a==='delbar'){const S=ED.sel,r=edRow(S.k,S.r);if(r.wc){edMsg('這列有歌詞字數，不能刪小節');return}if(r.b.length<2){edMsg('一列至少要有一個小節');return}r.b.splice(S.b,1);ED.dirty.add('sections');ED.sel=null;edDraw()}
+  else if(a==='delshape'){ED.shapes.splice(+b.dataset.i,1);ED.dirty.add('shapes');edDraw()}
+  else if(a==='addshape'){const c=normC($('#edsc').value),cp=parseInt($('#edscp').value,10)||0,fs=$('#edsf').value.split(/[、,，]/).map(x=>x.trim()).filter(Boolean).map(parseF);
+    if(!CH_RE.test(c)){edMsg('看不懂這個和弦名稱');return}if(cp<0||cp>12){edMsg('Capo 要在 0–12');return}if(!fs.length||fs.some(x=>!x)){edMsg('指法要 6 碼，例如 353433、x02210');return}
+    const i=ED.shapes.findIndex(x=>x.c===c&&(x.capo||0)===cp);if(i>=0)ED.shapes[i].f=fs;else ED.shapes.push({c,capo:cp,f:fs});ED.dirty.add('shapes');edDraw()}}
+function edChange(e){const i=e.target.dataset.edf;if(i===undefined||!ED)return;const fs=e.target.value.split(/[、,，]/).map(x=>x.trim()).filter(Boolean).map(parseF);
+  if(!fs.length||fs.some(x=>!x)){e.target.classList.add('bad');edMsg('指法要 6 碼，例如 353433、x02210');return}
+  e.target.classList.remove('bad');ED.shapes[+i].f=fs;ED.dirty.add('shapes');edDraw()}
+async function edSave(){if(!ED)return;if(ED.sel){edMsg('先按「套用這小節」或「取消」');return}if(!ED.dirty.size){closeEd(true);return}if(!sb){edMsg('沒有連到資料庫');return}
+  edMsg('儲存中…');const s=ED.s,val={genres:ED.genres.length?ED.genres:null,shapes:ED.shapes,sections:ED.sections};
+  for(const f of ED.dirty){const {error}=await sb.rpc('song_meta_put',{p_id:s.id,p_field:f,p_value:val[f]});
+    if(error){edMsg('沒存成功：'+(/song_meta_put|function/i.test(error.message)?'Supabase 還沒跑新的設定（supabase-admin.sql）':error.message));return}
+    const m=META[s.id]||(META[s.id]={id:s.id});m[f]=val[f]}
+  applyMeta();closeEd(true);if(st.song===s)drawSheet();toast('已儲存，網站上馬上生效')}
+async function edReset(){if(!ED||!sb)return;if(!confirm('把這首的曲風、和弦、指法都還原成原本上架的版本？（難易度、BPM 不受影響）'))return;const s=ED.s;edMsg('還原中…');
+  for(const f of ['genres','shapes','sections']){const {error}=await sb.rpc('song_meta_put',{p_id:s.id,p_field:f,p_value:null});if(error){edMsg('沒還原成功：'+error.message);return}if(META[s.id])META[s.id][f]=null}
+  applyMeta();closeEd(true);if(st.song===s)drawSheet();toast('已還原成原本的譜')}
 let taps=[];
 function tapTempo(){const now=performance.now();if(taps.length&&now-taps[taps.length-1]>2000)taps=[];taps.push(now);taps=taps.slice(-9);const b=$('#tapbtn');
   if(taps.length<2){b.textContent='再點…';return}
